@@ -1,4 +1,4 @@
-import { ElementRef, Renderer } from '@angular/core';
+import { ElementRef, EventEmitter, Renderer } from '@angular/core';
 import { App } from '../app/app';
 import { Config } from '../../config/config';
 import { NavController } from '../../navigation/nav-controller';
@@ -67,6 +67,10 @@ export declare class Navbar extends ToolbarBase {
      * @input {boolean} If true, the back button will be hidden.
      */
     hideBackButton: boolean;
+    /**
+     * @output {UIEvent} If provided, will emit event when back button is pressed.
+     */
+    back: EventEmitter<UIEvent>;
     constructor(_app: App, viewCtrl: ViewController, navCtrl: NavController, config: Config, elementRef: ElementRef, renderer: Renderer);
     backButtonClick(ev: UIEvent): void;
     /**
