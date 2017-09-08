@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, Optional, Output, Renderer } from '@angular/core';
+import { Component, ElementRef, Input, Optional, Renderer } from '@angular/core';
 import { App } from '../app/app';
 import { Config } from '../../config/config';
 import { isTrueProperty } from '../../util/util';
@@ -66,7 +66,6 @@ export class Navbar extends ToolbarBase {
         this._bbIcon = config.get('backButtonIcon');
         this._sbPadding = config.getBoolean('statusbarPadding');
         this._backText = config.get('backButtonText', 'Back');
-        this.back = new EventEmitter();
     }
     /**
      * \@input {boolean} If true, the back button will be hidden.
@@ -89,12 +88,7 @@ export class Navbar extends ToolbarBase {
     backButtonClick(ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        if (this.back.observers.length > 0) {
-            this.back.emit(ev);
-        }
-        else {
-            this.navCtrl && this.navCtrl.pop(null, null);
-        }
+        this.navCtrl && this.navCtrl.pop(null, null);
     }
     /**
      * Set the text of the Back Button in the Nav Bar. Defaults to "Back".
@@ -160,7 +154,6 @@ Navbar.ctorParameters = () => [
 ];
 Navbar.propDecorators = {
     'hideBackButton': [{ type: Input },],
-    'back': [{ type: Output },],
 };
 function Navbar_tsickle_Closure_declarations() {
     /** @type {?} */
@@ -197,11 +190,6 @@ function Navbar_tsickle_Closure_declarations() {
      * @type {?}
      */
     Navbar.prototype._sbPadding;
-    /**
-     * \@output {UIEvent} If provided, will emit event when back button is pressed.
-     * @type {?}
-     */
-    Navbar.prototype.back;
     /** @type {?} */
     Navbar.prototype._app;
     /** @type {?} */

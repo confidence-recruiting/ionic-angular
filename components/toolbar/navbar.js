@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-import { Component, ElementRef, EventEmitter, Input, Optional, Output, Renderer } from '@angular/core';
+import { Component, ElementRef, Input, Optional, Renderer } from '@angular/core';
 import { App } from '../app/app';
 import { Config } from '../../config/config';
 import { isTrueProperty } from '../../util/util';
@@ -77,7 +77,6 @@ var Navbar = (function (_super) {
         _this._bbIcon = config.get('backButtonIcon');
         _this._sbPadding = config.getBoolean('statusbarPadding');
         _this._backText = config.get('backButtonText', 'Back');
-        _this.back = new EventEmitter();
         return _this;
     }
     Object.defineProperty(Navbar.prototype, "hideBackButton", {
@@ -105,12 +104,7 @@ var Navbar = (function (_super) {
     Navbar.prototype.backButtonClick = function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        if (this.back.observers.length > 0) {
-            this.back.emit(ev);
-        }
-        else {
-            this.navCtrl && this.navCtrl.pop(null, null);
-        }
+        this.navCtrl && this.navCtrl.pop(null, null);
     };
     /**
      * Set the text of the Back Button in the Nav Bar. Defaults to "Back".
@@ -178,7 +172,6 @@ Navbar.ctorParameters = function () { return [
 ]; };
 Navbar.propDecorators = {
     'hideBackButton': [{ type: Input },],
-    'back': [{ type: Output },],
 };
 function Navbar_tsickle_Closure_declarations() {
     /** @type {?} */
@@ -215,11 +208,6 @@ function Navbar_tsickle_Closure_declarations() {
      * @type {?}
      */
     Navbar.prototype._sbPadding;
-    /**
-     * \@output {UIEvent} If provided, will emit event when back button is pressed.
-     * @type {?}
-     */
-    Navbar.prototype.back;
     /** @type {?} */
     Navbar.prototype._app;
     /** @type {?} */

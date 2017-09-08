@@ -605,13 +605,13 @@ var __extends = (this && this.__extends) || (function () {
             return '';
         };
         /**
-         * @param {?=} secondaryId
+         * @param {?} secondaryId
          * @param {?=} fallbackIndex
          * @return {?}
          */
         Tabs.prototype._getSelectedTabIndex = function (secondaryId, fallbackIndex) {
-            if (secondaryId === void 0) { secondaryId = ''; }
             if (fallbackIndex === void 0) { fallbackIndex = 0; }
+            secondaryId = secondaryId || '';
             // we found a segment which probably represents which tab to select
             var /** @type {?} */ indexMatch = secondaryId.match(/tab-(\d+)/);
             if (indexMatch) {

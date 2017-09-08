@@ -410,11 +410,12 @@ export class NavController {
      *
      * @abstract
      * @param {?} page
+     * @param {?=} params
      * @param {?=} opts
      * @param {?=} done
      * @return {?}
      */
-    popTo(page, opts, done) { }
+    popTo(page, params, opts, done) { }
     /**
      * @hidden
      * Pop sequently all the pages in the stack.
