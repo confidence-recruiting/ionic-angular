@@ -32,13 +32,13 @@ export class DeepLinker {
      */
     init() {
         // scenario 1: Initial load of all navs from the initial browser URL
-        const /** @type {?} */ browserUrl = normalizeUrl(this._location.path());
+        const /** @type {?} */ browserUrl = normalizeUrl(this._location.path(), this._baseHref);
         (void 0) /* console.debug */;
         // remember this URL in our internal history stack
         this._historyPush(browserUrl);
         // listen for browser URL changes
         this._location.subscribe((locationChg) => {
-            this._urlChange(normalizeUrl(locationChg.url));
+            this._urlChange(normalizeUrl(locationChg.url, this._baseHref));
         });
     }
     /**
@@ -117,7 +117,7 @@ export class DeepLinker {
      */
     getCurrentSegments(browserUrl) {
         if (!browserUrl) {
-            browserUrl = normalizeUrl(this._location.path());
+            browserUrl = normalizeUrl(this._location.path(), this._baseHref);
         }
         return this._serializer.parse(browserUrl);
     }
@@ -308,7 +308,7 @@ export class DeepLinker {
      * @return {?}
      */
     getSegmentByNavIdOrName(navId, name) {
-        const /** @type {?} */ browserUrl = normalizeUrl(this._location.path());
+        const /** @type {?} */ browserUrl = normalizeUrl(this._location.path(), this._baseHref);
         const /** @type {?} */ segments = this._serializer.parse(browserUrl);
         for (const /** @type {?} */ segment of segments) {
             if (segment.navId === navId || segment.navId === name) {
@@ -492,16 +492,17 @@ export function setupDeepLinker(app, serializer, location, moduleLoader, cfr, ba
 }
 /**
  * @param {?} browserUrl
+ * @param {?=} baseHref
  * @return {?}
  */
-export function normalizeUrl(browserUrl) {
+export function normalizeUrl(browserUrl, baseHref = '/') {
     browserUrl = browserUrl.trim();
     if (browserUrl.charAt(0) !== '/') {
         // ensure first char is a /
         browserUrl = '/' + browserUrl;
     }
-    if (!browserUrl.startsWith(this._baseHref)) {
-        browserUrl = this._baseHref + browserUrl;
+    if (!browserUrl.startsWith(baseHref)) {
+        browserUrl = baseHref + browserUrl;
     }
     if (browserUrl.length > 1 && browserUrl.charAt(browserUrl.length - 1) === '/') {
         // ensure last char is not a /

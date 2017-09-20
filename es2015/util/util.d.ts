@@ -17,7 +17,7 @@ export declare function debounce(fn: Function, wait: number, immediate?: boolean
  * @hidden
  * Rewrites an absolute URL so it works across file and http based engines
  */
-export declare function normalizeURL(url: string): string;
+export declare function normalizeURL(url: string, baseHref?: string): string;
 /**
  * @hidden
  * Apply default arguments if they don't exist in

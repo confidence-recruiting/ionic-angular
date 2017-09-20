@@ -44,13 +44,13 @@
         DeepLinker.prototype.init = function () {
             var _this = this;
             // scenario 1: Initial load of all navs from the initial browser URL
-            var /** @type {?} */ browserUrl = normalizeUrl(this._location.path());
+            var /** @type {?} */ browserUrl = normalizeUrl(this._location.path(), this._baseHref);
             (void 0) /* console.debug */;
             // remember this URL in our internal history stack
             this._historyPush(browserUrl);
             // listen for browser URL changes
             this._location.subscribe(function (locationChg) {
-                _this._urlChange(normalizeUrl(locationChg.url));
+                _this._urlChange(normalizeUrl(locationChg.url, _this._baseHref));
             });
         };
         /**
@@ -131,7 +131,7 @@
          */
         DeepLinker.prototype.getCurrentSegments = function (browserUrl) {
             if (!browserUrl) {
-                browserUrl = normalizeUrl(this._location.path());
+                browserUrl = normalizeUrl(this._location.path(), this._baseHref);
             }
             return this._serializer.parse(browserUrl);
         };
@@ -326,7 +326,7 @@
          * @return {?}
          */
         DeepLinker.prototype.getSegmentByNavIdOrName = function (navId, name) {
-            var /** @type {?} */ browserUrl = normalizeUrl(this._location.path());
+            var /** @type {?} */ browserUrl = normalizeUrl(this._location.path(), this._baseHref);
             var /** @type {?} */ segments = this._serializer.parse(browserUrl);
             for (var _i = 0, segments_1 = segments; _i < segments_1.length; _i++) {
                 var segment = segments_1[_i];
@@ -515,16 +515,18 @@
     exports.setupDeepLinker = setupDeepLinker;
     /**
      * @param {?} browserUrl
+     * @param {?=} baseHref
      * @return {?}
      */
-    function normalizeUrl(browserUrl) {
+    function normalizeUrl(browserUrl, baseHref) {
+        if (baseHref === void 0) { baseHref = '/'; }
         browserUrl = browserUrl.trim();
         if (browserUrl.charAt(0) !== '/') {
             // ensure first char is a /
             browserUrl = '/' + browserUrl;
         }
-        if (!browserUrl.startsWith(this._baseHref)) {
-            browserUrl = this._baseHref + browserUrl;
+        if (!browserUrl.startsWith(baseHref)) {
+            browserUrl = baseHref + browserUrl;
         }
         if (browserUrl.length > 1 && browserUrl.charAt(browserUrl.length - 1) === '/') {
             // ensure last char is not a /

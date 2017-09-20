@@ -68,12 +68,14 @@ export function debounce(fn, wait, immediate) {
  * @hidden
  * Rewrites an absolute URL so it works across file and http based engines
  * @param {?} url
+ * @param {?=} baseHref
  * @return {?}
  */
-export function normalizeURL(url) {
+export function normalizeURL(url, baseHref) {
+    if (baseHref === void 0) { baseHref = ''; }
     var /** @type {?} */ ionic = ((window))['Ionic'];
     if (ionic && ionic.normalizeURL) {
-        return ionic.normalizeURL(url);
+        return ionic.normalizeURL(url, baseHref);
     }
     return url;
 }

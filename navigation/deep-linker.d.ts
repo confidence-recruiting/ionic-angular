@@ -99,5 +99,5 @@ export declare class DeepLinker {
     _loadViewForSegment(navContainer: NavigationContainer, segment: NavSegment, done: TransitionDoneFn): void | Promise<any>;
 }
 export declare function setupDeepLinker(app: App, serializer: UrlSerializer, location: Location, moduleLoader: ModuleLoader, cfr: ComponentFactoryResolver, baseHref: string): DeepLinker;
-export declare function normalizeUrl(browserUrl: string): string;
+export declare function normalizeUrl(browserUrl: string, baseHref?: string): string;
 export declare function getNavFromTree(nav: NavigationContainer, id: string): NavigationContainer;
