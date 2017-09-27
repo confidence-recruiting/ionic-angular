@@ -37,7 +37,7 @@
      * ```
      * \@demo /docs/demos/src/platform/
      */
-    var Platform = /** @class */ (function () {
+    var Platform = (function () {
         function Platform() {
             var _this = this;
             this._versions = {};
@@ -499,7 +499,7 @@
          * @return {?}
          */
         Platform.prototype.getElementFromPoint = function (x, y) {
-            return /** @type {?} */ (this._doc['elementFromPoint'](x, y));
+            return (this._doc['elementFromPoint'](x, y));
         };
         /**
          * @hidden
@@ -1103,7 +1103,7 @@
     /**
      * @hidden
      */
-    var PlatformNode = /** @class */ (function () {
+    var PlatformNode = (function () {
         /**
          * @param {?} registry
          * @param {?} platformName

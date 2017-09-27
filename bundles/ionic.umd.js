@@ -2218,7 +2218,7 @@ function share() {
 var share_2 = share;
 
 /**
- * @license Angular v4.3.6
+ * @license Angular v4.4.3
  * (c) 2010-2017 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -2922,7 +2922,7 @@ var Version = (function () {
 /**
  * \@stable
  */
-var VERSION = new Version('4.3.6');
+var VERSION = new Version('4.4.3');
 /**
  * @license
  * Copyright Google Inc. All Rights Reserved.
@@ -7421,6 +7421,14 @@ var QueryList = (function () {
         enumerable: true,
         configurable: true
     });
+    /**
+     * internal
+     * @return {?}
+     */
+    QueryList.prototype.destroy = function () {
+        this._emitter.complete();
+        this._emitter.unsubscribe();
+    };
     return QueryList;
 }());
 /**
@@ -13572,6 +13580,9 @@ function destroyViewNodes(view) {
         else if (def.flags & 2 /* TypeText */) {
             ((view.renderer.destroyNode))(asTextData(view, i).renderText);
         }
+        else if (def.flags & 67108864 /* TypeContentQuery */ || def.flags & 134217728 /* TypeViewQuery */) {
+            asQueryList(view, i).destroy();
+        }
     }
 }
 var ViewAction = {};
@@ -15108,7 +15119,7 @@ function transition$1(stateChangeExpr, steps, options) {
 }
 
 /**
- * @license Angular v4.3.6
+ * @license Angular v4.4.3
  * (c) 2010-2017 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -19031,10 +19042,10 @@ var PLATFORM_BROWSER_ID = 'browser';
 /**
  * \@stable
  */
-var VERSION$2 = new Version('4.3.6');
+var VERSION$2 = new Version('4.4.3');
 
 /**
- * @license Angular v4.3.6
+ * @license Angular v4.4.3
  * (c) 2010-2017 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -23356,7 +23367,7 @@ var PROFILER_GLOBAL_NAME = 'profiler';
 /**
  * \@stable
  */
-var VERSION$1 = new Version('4.3.6');
+var VERSION$1 = new Version('4.4.3');
 
 var PORTAL_DEFAULT = 1;
 var PORTAL_MODAL = 2;
@@ -23411,7 +23422,7 @@ function deepEqual(a, b) {
  * @return {?}
  */
 function normalizeURL(url, baseHref) {
-    if (baseHref === void 0) { baseHref = ''; }
+    if (baseHref === void 0) { baseHref = '/'; }
     var /** @type {?} */ ionic = ((window))['Ionic'];
     if (ionic && ionic.normalizeURL) {
         return ionic.normalizeURL(url, baseHref);
@@ -23746,7 +23757,7 @@ function requestIonicCallback(functionToLazy) {
  *
  *
  */
-var Config = /** @class */ (function () {
+var Config = (function () {
     function Config() {
         this._c = {};
         this._s = {};
@@ -24027,10 +24038,12 @@ var ConfigToken = new OpaqueToken('USERCONFIG');
  * import { NavParams } from 'ionic-angular';
  *
  * export class MyClass{
- *  constructor(public navParams: NavParams){
+ *
+ *  constructor(navParams: NavParams){
  *    // userParams is an object we have in our nav-parameters
- *    this.navParams.get('userParams');
+ *    navParams.get('userParams');
  *  }
+ *
  * }
  * ```
  * \@demo /docs/demos/src/nav-params/
@@ -24039,7 +24052,7 @@ var ConfigToken = new OpaqueToken('USERCONFIG');
  * @see {\@link /docs/api/components/nav/Nav/ Nav API Docs}
  * @see {\@link /docs/api/components/nav/NavPush/ NavPush API Docs}
  */
-var NavParams = /** @class */ (function () {
+var NavParams = (function () {
     /**
      * @hidden
      * @param {?=} data
@@ -24089,7 +24102,7 @@ var NavParams = /** @class */ (function () {
  * }
  * ```
  */
-var ViewController = /** @class */ (function () {
+var ViewController = (function () {
     /**
      * @param {?=} component
      * @param {?=} data
@@ -24636,11 +24649,11 @@ var ViewController = /** @class */ (function () {
             instance[methodName]();
         }
     };
-    ViewController.propDecorators = {
-        '_emitter': [{ type: Output },],
-    };
     return ViewController;
 }());
+ViewController.propDecorators = {
+    '_emitter': [{ type: Output },],
+};
 /**
  * @param {?} viewCtrl
  * @return {?}
@@ -24777,7 +24790,7 @@ function isNav(nav) {
 /**
  * @hidden
  */
-var DeepLinkMetadata = /** @class */ (function () {
+var DeepLinkMetadata = (function () {
     function DeepLinkMetadata() {
     }
     return DeepLinkMetadata;
@@ -24907,7 +24920,7 @@ var DIRECTION_SWITCH = 'switch';
  * @see {\@link ../Menu Menu API Docs}
  *
  */
-var MenuController = /** @class */ (function () {
+var MenuController = (function () {
     function MenuController() {
         this._menus = [];
     }
@@ -25234,7 +25247,7 @@ function copyInputAttributes(srcElement, destElement) {
 /**
  * @hidden
  */
-var QueryParams = /** @class */ (function () {
+var QueryParams = (function () {
     function QueryParams() {
         this.data = {};
     }
@@ -25292,7 +25305,7 @@ var QueryParams = /** @class */ (function () {
  * ```
  * \@demo /docs/demos/src/platform/
  */
-var Platform = /** @class */ (function () {
+var Platform = (function () {
     function Platform() {
         var _this = this;
         this._versions = {};
@@ -25754,7 +25767,7 @@ var Platform = /** @class */ (function () {
      * @return {?}
      */
     Platform.prototype.getElementFromPoint = function (x, y) {
-        return /** @type {?} */ (this._doc['elementFromPoint'](x, y));
+        return (this._doc['elementFromPoint'](x, y));
     };
     /**
      * @hidden
@@ -26267,7 +26280,7 @@ function insertSuperset(registry, platformNode) {
 /**
  * @hidden
  */
-var PlatformNode = /** @class */ (function () {
+var PlatformNode = (function () {
     /**
      * @param {?} registry
      * @param {?} platformName
@@ -26400,7 +26413,7 @@ function setupPlatform(doc, platformConfigs, zone) {
 /**
  * @hidden
  */
-var Animation = /** @class */ (function () {
+var Animation = (function () {
     /**
      * @param {?} plt
      * @param {?=} ele
@@ -27626,7 +27639,7 @@ var __extends$16 = (undefined && undefined.__extends) || (function () {
  * - RAF
  * - set inline TO styles - DOM WRITE
  */
-var Transition = /** @class */ (function (_super) {
+var Transition = (function (_super) {
     __extends$16(Transition, _super);
     /**
      * @param {?} plt
@@ -27683,7 +27696,7 @@ var __extends$15 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var PageTransition = /** @class */ (function (_super) {
+var PageTransition = (function (_super) {
     __extends$15(PageTransition, _super);
     function PageTransition() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -27734,7 +27747,7 @@ var TRANSLATEX = 'translateX';
 var CENTER = '0%';
 var OFF_OPACITY = 0.8;
 var SHOW_BACK_BTN_CSS = 'show-back-button';
-var IOSTransition = /** @class */ (function (_super) {
+var IOSTransition = (function (_super) {
     __extends$14(IOSTransition, _super);
     function IOSTransition() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -27901,7 +27914,7 @@ var TRANSLATEY = 'translateY';
 var OFF_BOTTOM = '40px';
 var CENTER$1 = '0px';
 var SHOW_BACK_BTN_CSS$1 = 'show-back-button';
-var MDTransition = /** @class */ (function (_super) {
+var MDTransition = (function (_super) {
     __extends$17(MDTransition, _super);
     function MDTransition() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -27965,7 +27978,7 @@ var __extends$18 = (undefined && undefined.__extends) || (function () {
 })();
 var SHOW_BACK_BTN_CSS$2 = 'show-back-button';
 var SCALE_SMALL = .95;
-var WPTransition = /** @class */ (function (_super) {
+var WPTransition = (function (_super) {
     __extends$18(WPTransition, _super);
     function WPTransition() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -28023,7 +28036,7 @@ var WPTransition = /** @class */ (function (_super) {
  * \@description
  * App is a utility class used in Ionic to get information about various aspects of an app
  */
-var App = /** @class */ (function () {
+var App = (function () {
     /**
      * @param {?} _config
      * @param {?} _plt
@@ -28190,16 +28203,16 @@ var App = /** @class */ (function () {
     App.prototype.getActiveNavs = function (rootNavId) {
         var /** @type {?} */ portal = this._appRoot._getPortal(PORTAL_MODAL);
         if (portal.length() > 0) {
-            return /** @type {?} */ (findTopNavs(portal));
+            return (findTopNavs(portal));
         }
         if (!this._rootNavs || !this._rootNavs.size) {
             return [];
         }
         if (this._rootNavs.size === 1) {
-            return /** @type {?} */ (findTopNavs(this._rootNavs.values().next().value));
+            return (findTopNavs(this._rootNavs.values().next().value));
         }
         if (rootNavId) {
-            return /** @type {?} */ (findTopNavs(this._rootNavs.get(rootNavId)));
+            return (findTopNavs(this._rootNavs.get(rootNavId)));
         }
         // fallback to just using all root names
         var /** @type {?} */ activeNavs = [];
@@ -28207,7 +28220,7 @@ var App = /** @class */ (function () {
             var /** @type {?} */ topNavs = findTopNavs(nav);
             activeNavs = activeNavs.concat(topNavs);
         });
-        return /** @type {?} */ (activeNavs);
+        return (activeNavs);
     };
     /**
      * @return {?}
@@ -28403,19 +28416,19 @@ var App = /** @class */ (function () {
         }
         return null;
     };
-    App.decorators = [
-        { type: Injectable },
-    ];
-    /**
-     * @nocollapse
-     */
-    App.ctorParameters = function () { return [
-        { type: Config, },
-        { type: Platform, },
-        { type: MenuController, decorators: [{ type: Optional },] },
-    ]; };
     return App;
 }());
+App.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+App.ctorParameters = function () { return [
+    { type: Config, },
+    { type: Platform, },
+    { type: MenuController, decorators: [{ type: Optional },] },
+]; };
 /**
  * @param {?} nav
  * @param {?} id
@@ -28480,7 +28493,7 @@ var CLICK_BLOCK_BUFFER_IN_MILLIS = 64;
 /**
  * @hidden
  */
-var Ion = /** @class */ (function () {
+var Ion = (function () {
     /**
      * @param {?} config
      * @param {?} elementRef
@@ -28622,17 +28635,17 @@ var Ion = /** @class */ (function () {
     Ion.prototype.getNativeElement = function () {
         return this._elementRef.nativeElement;
     };
-    Ion.propDecorators = {
-        'color': [{ type: Input },],
-        'mode': [{ type: Input },],
-    };
     return Ion;
 }());
+Ion.propDecorators = {
+    'color': [{ type: Input },],
+    'mode': [{ type: Input },],
+};
 
 /**
  * @hidden
  */
-var UrlSerializer = /** @class */ (function () {
+var UrlSerializer = (function () {
     /**
      * @param {?} _app
      * @param {?} config
@@ -29175,7 +29188,7 @@ function hydrateSegment(segment, nav) {
 /**
  * @hidden
  */
-var DeepLinker = /** @class */ (function () {
+var DeepLinker = (function () {
     /**
      * @param {?} _app
      * @param {?} _serializer
@@ -29690,7 +29703,7 @@ function getNavFromTree(nav, id) {
 /**
  * @hidden
  */
-var DomDebouncer = /** @class */ (function () {
+var DomDebouncer = (function () {
     /**
      * @param {?} dom
      */
@@ -29742,7 +29755,7 @@ var DomDebouncer = /** @class */ (function () {
 /**
  * @hidden
  */
-var DomController = /** @class */ (function () {
+var DomController = (function () {
     /**
      * @param {?} plt
      */
@@ -29839,17 +29852,17 @@ var DomController = /** @class */ (function () {
             throw err;
         }
     };
-    DomController.decorators = [
-        { type: Injectable },
-    ];
-    /**
-     * @nocollapse
-     */
-    DomController.ctorParameters = function () { return [
-        { type: Platform, },
-    ]; };
     return DomController;
 }());
+DomController.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+DomController.ctorParameters = function () { return [
+    { type: Platform, },
+]; };
 /**
  * @param {?} timeStamp
  * @param {?} r
@@ -29918,7 +29931,7 @@ var BLOCK_ALL = {
 /**
  * @hidden
  */
-var GestureController = /** @class */ (function () {
+var GestureController = (function () {
     /**
      * @param {?} _app
      */
@@ -30089,21 +30102,21 @@ var GestureController = /** @class */ (function () {
         var /** @type {?} */ disabled = this.disabledGestures[gestureName];
         return !!(disabled && disabled.size > 0);
     };
-    GestureController.decorators = [
-        { type: Injectable },
-    ];
-    /**
-     * @nocollapse
-     */
-    GestureController.ctorParameters = function () { return [
-        { type: App, decorators: [{ type: Inject, args: [forwardRef(function () { return App; }),] },] },
-    ]; };
     return GestureController;
 }());
+GestureController.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+GestureController.ctorParameters = function () { return [
+    { type: App, decorators: [{ type: Inject, args: [forwardRef(function () { return App; }),] },] },
+]; };
 /**
  * @hidden
  */
-var GestureDelegate = /** @class */ (function () {
+var GestureDelegate = (function () {
     /**
      * @param {?} name
      * @param {?} id
@@ -30177,7 +30190,7 @@ var GestureDelegate = /** @class */ (function () {
 /**
  * @hidden
  */
-var BlockerDelegate = /** @class */ (function () {
+var BlockerDelegate = (function () {
     /**
      * @param {?} id
      * @param {?} controller
@@ -30580,7 +30593,7 @@ var BlockerDelegate = /** @class */ (function () {
  * @see {\@link /docs/components#navigation Navigation Component Docs}
  * @abstract
  */
-var NavController = /** @class */ (function () {
+var NavController = (function () {
     function NavController() {
     }
     /**
@@ -30841,7 +30854,7 @@ var NavController = /** @class */ (function () {
     return NavController;
 }());
 
-var PanRecognizer = /** @class */ (function () {
+var PanRecognizer = (function () {
     /**
      * @param {?} direction
      * @param {?} threshold
@@ -30915,7 +30928,7 @@ var PanRecognizer = /** @class */ (function () {
 /**
  * @hidden
  */
-var PointerEvents = /** @class */ (function () {
+var PointerEvents = (function () {
     /**
      * @param {?} plt
      * @param {?} ele
@@ -31048,7 +31061,7 @@ var POINTER_EVENT_TYPE_TOUCH = 2;
 /**
  * @hidden
  */
-var UIEventManager = /** @class */ (function () {
+var UIEventManager = (function () {
     /**
      * @param {?} plt
      */
@@ -31111,7 +31124,7 @@ var UIEventManager = /** @class */ (function () {
 /**
  * @hidden
  */
-var PanGesture = /** @class */ (function () {
+var PanGesture = (function () {
     /**
      * @param {?} plt
      * @param {?} element
@@ -31324,7 +31337,7 @@ var __extends$23 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var SlideGesture = /** @class */ (function (_super) {
+var SlideGesture = (function (_super) {
     __extends$23(SlideGesture, _super);
     /**
      * @param {?} plt
@@ -31448,7 +31461,7 @@ var __extends$22 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var SlideEdgeGesture = /** @class */ (function (_super) {
+var SlideEdgeGesture = (function (_super) {
     __extends$22(SlideEdgeGesture, _super);
     /**
      * @param {?} plt
@@ -31536,7 +31549,7 @@ var __extends$21 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var SwipeBackGesture = /** @class */ (function (_super) {
+var SwipeBackGesture = (function (_super) {
     __extends$21(SwipeBackGesture, _super);
     /**
      * @param {?} plt
@@ -31621,7 +31634,7 @@ var __extends$20 = (undefined && undefined.__extends) || (function () {
  * @hidden
  * This class is for internal use only. It is not exported publicly.
  */
-var NavControllerBase = /** @class */ (function (_super) {
+var NavControllerBase = (function (_super) {
     __extends$20(NavControllerBase, _super);
     /**
      * @param {?} parent
@@ -32921,11 +32934,11 @@ var NavControllerBase = /** @class */ (function (_super) {
         console.warn('(getActiveChildNav) is deprecated and will be removed in the next major release. Use getActiveChildNavs instead.');
         return this._children[this._children.length - 1];
     };
-    NavControllerBase.propDecorators = {
-        'swipeBackEnabled': [{ type: Input },],
-    };
     return NavControllerBase;
 }(Ion));
+NavControllerBase.propDecorators = {
+    'swipeBackEnabled': [{ type: Input },],
+};
 var ctrlIds = -1;
 var DISABLE_APP_MINIMUM_DURATION = 64;
 var ACTIVE_TRANSITION_DEFAULT = 5000;
@@ -32934,7 +32947,7 @@ var ACTIVE_TRANSITION_OFFSET = 2000;
 /**
  * @hidden
  */
-var TransitionController = /** @class */ (function () {
+var TransitionController = (function () {
     /**
      * @param {?} plt
      * @param {?} _config
@@ -32950,7 +32963,7 @@ var TransitionController = /** @class */ (function () {
      * @return {?}
      */
     TransitionController.prototype.getRootTrnsId = function (nav) {
-        nav = /** @type {?} */ (nav.parent);
+        nav = (nav.parent);
         while (nav) {
             if (isPresent(nav._trnsId)) {
                 return nav._trnsId;
@@ -33002,18 +33015,18 @@ var TransitionController = /** @class */ (function () {
             delete this._trns[trnsId];
         }
     };
-    TransitionController.decorators = [
-        { type: Injectable },
-    ];
-    /**
-     * @nocollapse
-     */
-    TransitionController.ctorParameters = function () { return [
-        { type: Platform, },
-        { type: Config, },
-    ]; };
     return TransitionController;
 }());
+TransitionController.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+TransitionController.ctorParameters = function () { return [
+    { type: Platform, },
+    { type: Config, },
+]; };
 
 var __extends$19 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -33028,7 +33041,7 @@ var __extends$19 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var OverlayPortal = /** @class */ (function (_super) {
+var OverlayPortal = (function (_super) {
     __extends$19(OverlayPortal, _super);
     /**
      * @param {?} app
@@ -33088,34 +33101,34 @@ var OverlayPortal = /** @class */ (function (_super) {
     OverlayPortal.prototype.getSecondaryIdentifier = function () {
         return null;
     };
-    OverlayPortal.decorators = [
-        { type: Directive, args: [{
-                    selector: '[overlay-portal]',
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    OverlayPortal.ctorParameters = function () { return [
-        { type: App, decorators: [{ type: Inject, args: [forwardRef(function () { return App; }),] },] },
-        { type: Config, },
-        { type: Platform, },
-        { type: ElementRef, },
-        { type: NgZone, },
-        { type: Renderer, },
-        { type: ComponentFactoryResolver, },
-        { type: GestureController, },
-        { type: TransitionController, },
-        { type: DeepLinker, decorators: [{ type: Optional },] },
-        { type: ViewContainerRef, },
-        { type: DomController, },
-        { type: ErrorHandler, },
-    ]; };
-    OverlayPortal.propDecorators = {
-        '_overlayPortal': [{ type: Input, args: ['overlay-portal',] },],
-    };
     return OverlayPortal;
 }(NavControllerBase));
+OverlayPortal.decorators = [
+    { type: Directive, args: [{
+                selector: '[overlay-portal]',
+            },] },
+];
+/**
+ * @nocollapse
+ */
+OverlayPortal.ctorParameters = function () { return [
+    { type: App, decorators: [{ type: Inject, args: [forwardRef(function () { return App; }),] },] },
+    { type: Config, },
+    { type: Platform, },
+    { type: ElementRef, },
+    { type: NgZone, },
+    { type: Renderer, },
+    { type: ComponentFactoryResolver, },
+    { type: GestureController, },
+    { type: TransitionController, },
+    { type: DeepLinker, decorators: [{ type: Optional },] },
+    { type: ViewContainerRef, },
+    { type: DomController, },
+    { type: ErrorHandler, },
+]; };
+OverlayPortal.propDecorators = {
+    '_overlayPortal': [{ type: Input, args: ['overlay-portal',] },],
+};
 
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -33131,7 +33144,7 @@ var AppRootToken = new OpaqueToken('USERROOT');
 /**
  * @hidden
  */
-var IonicApp = /** @class */ (function (_super) {
+var IonicApp = (function (_super) {
     __extends(IonicApp, _super);
     /**
      * @param {?} _userCmp
@@ -33277,38 +33290,38 @@ var IonicApp = /** @class */ (function (_super) {
             return Promise.resolve(false);
         }
     };
-    IonicApp.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-app',
-                    template: '<div #viewport app-viewport></div>' +
-                        '<div #modalPortal overlay-portal></div>' +
-                        '<div #overlayPortal overlay-portal></div>' +
-                        '<div #loadingPortal class="loading-portal" overlay-portal></div>' +
-                        '<div #toastPortal class="toast-portal" [overlay-portal]="10000"></div>' +
-                        '<div class="click-block"></div>'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    IonicApp.ctorParameters = function () { return [
-        { type: undefined, decorators: [{ type: Inject, args: [AppRootToken,] },] },
-        { type: ComponentFactoryResolver, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: Config, },
-        { type: Platform, },
-        { type: App, },
-    ]; };
-    IonicApp.propDecorators = {
-        '_viewport': [{ type: ViewChild, args: ['viewport', { read: ViewContainerRef },] },],
-        '_modalPortal': [{ type: ViewChild, args: ['modalPortal', { read: OverlayPortal },] },],
-        '_overlayPortal': [{ type: ViewChild, args: ['overlayPortal', { read: OverlayPortal },] },],
-        '_loadingPortal': [{ type: ViewChild, args: ['loadingPortal', { read: OverlayPortal },] },],
-        '_toastPortal': [{ type: ViewChild, args: ['toastPortal', { read: OverlayPortal },] },],
-    };
     return IonicApp;
 }(Ion));
+IonicApp.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-app',
+                template: '<div #viewport app-viewport></div>' +
+                    '<div #modalPortal overlay-portal></div>' +
+                    '<div #overlayPortal overlay-portal></div>' +
+                    '<div #loadingPortal class="loading-portal" overlay-portal></div>' +
+                    '<div #toastPortal class="toast-portal" [overlay-portal]="10000"></div>' +
+                    '<div class="click-block"></div>'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+IonicApp.ctorParameters = function () { return [
+    { type: undefined, decorators: [{ type: Inject, args: [AppRootToken,] },] },
+    { type: ComponentFactoryResolver, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: Config, },
+    { type: Platform, },
+    { type: App, },
+]; };
+IonicApp.propDecorators = {
+    '_viewport': [{ type: ViewChild, args: ['viewport', { read: ViewContainerRef },] },],
+    '_modalPortal': [{ type: ViewChild, args: ['modalPortal', { read: OverlayPortal },] },],
+    '_overlayPortal': [{ type: ViewChild, args: ['overlayPortal', { read: OverlayPortal },] },],
+    '_loadingPortal': [{ type: ViewChild, args: ['loadingPortal', { read: OverlayPortal },] },],
+    '_toastPortal': [{ type: ViewChild, args: ['toastPortal', { read: OverlayPortal },] },],
+};
 
 var KEY_LEFT = 37;
 var KEY_UP = 38;
@@ -33322,7 +33335,7 @@ var KEY_TAB = 9;
 /**
  * @hidden
  */
-var ActionSheetCmp = /** @class */ (function () {
+var ActionSheetCmp = (function () {
     /**
      * @param {?} _viewCtrl
      * @param {?} config
@@ -33463,52 +33476,52 @@ var ActionSheetCmp = /** @class */ (function () {
         this.d = this.cancelButton = null;
         this.gestureBlocker.destroy();
     };
-    ActionSheetCmp.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-action-sheet',
-                    template: '<ion-backdrop (click)="bdClick()" [class.backdrop-no-tappable]="!d.enableBackdropDismiss"></ion-backdrop>' +
-                        '<div class="action-sheet-wrapper">' +
-                        '<div class="action-sheet-container">' +
-                        '<div class="action-sheet-group">' +
-                        '<div class="action-sheet-title" id="{{hdrId}}" *ngIf="d.title">{{d.title}}</div>' +
-                        '<div class="action-sheet-sub-title" id="{{descId}}" *ngIf="d.subTitle">{{d.subTitle}}</div>' +
-                        '<button ion-button="action-sheet-button" (click)="click(b)" *ngFor="let b of d.buttons" class="disable-hover" [attr.icon-start]="b.icon ? \'\' : null" [ngClass]="b.cssClass">' +
-                        '<ion-icon [name]="b.icon" *ngIf="b.icon" class="action-sheet-icon"></ion-icon>' +
-                        '{{b.text}}' +
-                        '</button>' +
-                        '</div>' +
-                        '<div class="action-sheet-group" *ngIf="cancelButton">' +
-                        '<button ion-button="action-sheet-button" (click)="click(cancelButton)" class="action-sheet-cancel disable-hover" [attr.icon-start]="cancelButton.icon ? \'\' : null" [ngClass]="cancelButton.cssClass">' +
-                        '<ion-icon [name]="cancelButton.icon" *ngIf="cancelButton.icon" class="action-sheet-icon"></ion-icon>' +
-                        '{{cancelButton.text}}' +
-                        '</button>' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>',
-                    host: {
-                        'role': 'dialog',
-                        '[attr.aria-labelledby]': 'hdrId',
-                        '[attr.aria-describedby]': 'descId'
-                    },
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    ActionSheetCmp.ctorParameters = function () { return [
-        { type: ViewController, },
-        { type: Config, },
-        { type: ElementRef, },
-        { type: GestureController, },
-        { type: NavParams, },
-        { type: Renderer, },
-    ]; };
-    ActionSheetCmp.propDecorators = {
-        'keyUp': [{ type: HostListener, args: ['body:keyup', ['$event'],] },],
-    };
     return ActionSheetCmp;
 }());
+ActionSheetCmp.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-action-sheet',
+                template: '<ion-backdrop (click)="bdClick()" [class.backdrop-no-tappable]="!d.enableBackdropDismiss"></ion-backdrop>' +
+                    '<div class="action-sheet-wrapper">' +
+                    '<div class="action-sheet-container">' +
+                    '<div class="action-sheet-group">' +
+                    '<div class="action-sheet-title" id="{{hdrId}}" *ngIf="d.title">{{d.title}}</div>' +
+                    '<div class="action-sheet-sub-title" id="{{descId}}" *ngIf="d.subTitle">{{d.subTitle}}</div>' +
+                    '<button ion-button="action-sheet-button" (click)="click(b)" *ngFor="let b of d.buttons" class="disable-hover" [attr.icon-start]="b.icon ? \'\' : null" [ngClass]="b.cssClass">' +
+                    '<ion-icon [name]="b.icon" *ngIf="b.icon" class="action-sheet-icon"></ion-icon>' +
+                    '{{b.text}}' +
+                    '</button>' +
+                    '</div>' +
+                    '<div class="action-sheet-group" *ngIf="cancelButton">' +
+                    '<button ion-button="action-sheet-button" (click)="click(cancelButton)" class="action-sheet-cancel disable-hover" [attr.icon-start]="cancelButton.icon ? \'\' : null" [ngClass]="cancelButton.cssClass">' +
+                    '<ion-icon [name]="cancelButton.icon" *ngIf="cancelButton.icon" class="action-sheet-icon"></ion-icon>' +
+                    '{{cancelButton.text}}' +
+                    '</button>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>',
+                host: {
+                    'role': 'dialog',
+                    '[attr.aria-labelledby]': 'hdrId',
+                    '[attr.aria-describedby]': 'descId'
+                },
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+ActionSheetCmp.ctorParameters = function () { return [
+    { type: ViewController, },
+    { type: Config, },
+    { type: ElementRef, },
+    { type: GestureController, },
+    { type: NavParams, },
+    { type: Renderer, },
+]; };
+ActionSheetCmp.propDecorators = {
+    'keyUp': [{ type: HostListener, args: ['body:keyup', ['$event'],] },],
+};
 var actionSheetIds = -1;
 
 var __extends$25 = (undefined && undefined.__extends) || (function () {
@@ -33521,7 +33534,7 @@ var __extends$25 = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var ActionSheetSlideIn = /** @class */ (function (_super) {
+var ActionSheetSlideIn = (function (_super) {
     __extends$25(ActionSheetSlideIn, _super);
     function ActionSheetSlideIn() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -33539,7 +33552,7 @@ var ActionSheetSlideIn = /** @class */ (function (_super) {
     };
     return ActionSheetSlideIn;
 }(Transition));
-var ActionSheetSlideOut = /** @class */ (function (_super) {
+var ActionSheetSlideOut = (function (_super) {
     __extends$25(ActionSheetSlideOut, _super);
     function ActionSheetSlideOut() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -33557,7 +33570,7 @@ var ActionSheetSlideOut = /** @class */ (function (_super) {
     };
     return ActionSheetSlideOut;
 }(Transition));
-var ActionSheetMdSlideIn = /** @class */ (function (_super) {
+var ActionSheetMdSlideIn = (function (_super) {
     __extends$25(ActionSheetMdSlideIn, _super);
     function ActionSheetMdSlideIn() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -33575,7 +33588,7 @@ var ActionSheetMdSlideIn = /** @class */ (function (_super) {
     };
     return ActionSheetMdSlideIn;
 }(Transition));
-var ActionSheetMdSlideOut = /** @class */ (function (_super) {
+var ActionSheetMdSlideOut = (function (_super) {
     __extends$25(ActionSheetMdSlideOut, _super);
     function ActionSheetMdSlideOut() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -33593,7 +33606,7 @@ var ActionSheetMdSlideOut = /** @class */ (function (_super) {
     };
     return ActionSheetMdSlideOut;
 }(Transition));
-var ActionSheetWpSlideIn = /** @class */ (function (_super) {
+var ActionSheetWpSlideIn = (function (_super) {
     __extends$25(ActionSheetWpSlideIn, _super);
     function ActionSheetWpSlideIn() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -33611,7 +33624,7 @@ var ActionSheetWpSlideIn = /** @class */ (function (_super) {
     };
     return ActionSheetWpSlideIn;
 }(Transition));
-var ActionSheetWpSlideOut = /** @class */ (function (_super) {
+var ActionSheetWpSlideOut = (function (_super) {
     __extends$25(ActionSheetWpSlideOut, _super);
     function ActionSheetWpSlideOut() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -33643,7 +33656,7 @@ var __extends$24 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var ActionSheet = /** @class */ (function (_super) {
+var ActionSheet = (function (_super) {
     __extends$24(ActionSheet, _super);
     /**
      * @param {?} app
@@ -33746,10 +33759,10 @@ var ActionSheet = /** @class */ (function (_super) {
  *
  * export class MyClass{
  *
- *  constructor(public actionSheetCtrl: ActionSheetController) {}
+ *  constructor(public actionSheetCtrl: ActionSheetController) { }
  *
  *  presentActionSheet() {
- *    let actionSheet = this.actionSheetCtrl.create({
+ *    const actionSheet = this.actionSheetCtrl.create({
  *      title: 'Modify your album',
  *      buttons: [
  *        {
@@ -33822,7 +33835,7 @@ var ActionSheet = /** @class */ (function (_super) {
  * out first, *then* start the next transition.
  *
  * ```ts
- * let actionSheet = this.actionSheetCtrl.create({
+ * const actionSheet = this.actionSheetCtrl.create({
  *   title: 'Hello',
  *   buttons: [{
  *     text: 'Ok',
@@ -33861,7 +33874,7 @@ var ActionSheet = /** @class */ (function (_super) {
  * \@demo /docs/demos/src/action-sheet/
  * @see {\@link /docs/components#action-sheets ActionSheet Component Docs}
  */
-var ActionSheetController = /** @class */ (function () {
+var ActionSheetController = (function () {
     /**
      * @param {?} _app
      * @param {?} config
@@ -33879,23 +33892,23 @@ var ActionSheetController = /** @class */ (function () {
         if (opts === void 0) { opts = {}; }
         return new ActionSheet(this._app, opts, this.config);
     };
-    ActionSheetController.decorators = [
-        { type: Injectable },
-    ];
-    /**
-     * @nocollapse
-     */
-    ActionSheetController.ctorParameters = function () { return [
-        { type: App, },
-        { type: Config, },
-    ]; };
     return ActionSheetController;
 }());
+ActionSheetController.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+ActionSheetController.ctorParameters = function () { return [
+    { type: App, },
+    { type: Config, },
+]; };
 
 /**
  * @hidden
  */
-var AlertCmp = /** @class */ (function () {
+var AlertCmp = (function () {
     /**
      * @param {?} _viewCtrl
      * @param {?} _elementRef
@@ -34151,76 +34164,76 @@ var AlertCmp = /** @class */ (function () {
         (void 0) /* assert */;
         this.gestureBlocker.destroy();
     };
-    AlertCmp.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-alert',
-                    template: '<ion-backdrop (click)="bdClick()" [class.backdrop-no-tappable]="!d.enableBackdropDismiss"></ion-backdrop>' +
-                        '<div class="alert-wrapper">' +
-                        '<div class="alert-head">' +
-                        '<h2 id="{{hdrId}}" class="alert-title" *ngIf="d.title" [innerHTML]="d.title"></h2>' +
-                        '<h3 id="{{subHdrId}}" class="alert-sub-title" *ngIf="d.subTitle" [innerHTML]="d.subTitle"></h3>' +
-                        '</div>' +
-                        '<div id="{{msgId}}" class="alert-message" [innerHTML]="d.message"></div>' +
-                        '<div *ngIf="d.inputs.length" [ngSwitch]="inputType">' +
-                        '<ng-template ngSwitchCase="radio">' +
-                        '<div class="alert-radio-group" role="radiogroup" [attr.aria-labelledby]="hdrId" [attr.aria-activedescendant]="activeId">' +
-                        '<button ion-button="alert-radio-button" *ngFor="let i of d.inputs" (click)="rbClick(i)" [attr.aria-checked]="i.checked" [disabled]="i.disabled" [attr.id]="i.id" class="alert-tappable alert-radio" role="radio">' +
-                        '<div class="alert-radio-icon"><div class="alert-radio-inner"></div></div>' +
-                        '<div class="alert-radio-label">' +
-                        '{{i.label}}' +
-                        '</div>' +
-                        '</button>' +
-                        '</div>' +
-                        '</ng-template>' +
-                        '<ng-template ngSwitchCase="checkbox">' +
-                        '<div class="alert-checkbox-group">' +
-                        '<button ion-button="alert-checkbox-button" *ngFor="let i of d.inputs" (click)="cbClick(i)" [attr.aria-checked]="i.checked" [attr.id]="i.id" [disabled]="i.disabled" class="alert-tappable alert-checkbox" role="checkbox">' +
-                        '<div class="alert-checkbox-icon"><div class="alert-checkbox-inner"></div></div>' +
-                        '<div class="alert-checkbox-label">' +
-                        '{{i.label}}' +
-                        '</div>' +
-                        '</button>' +
-                        '</div>' +
-                        '</ng-template>' +
-                        '<ng-template ngSwitchDefault>' +
-                        '<div class="alert-input-group">' +
-                        '<div *ngFor="let i of d.inputs" class="alert-input-wrapper">' +
-                        '<input [placeholder]="i.placeholder" [(ngModel)]="i.value" [type]="i.type" [min]="i.min" [max]="i.max" [attr.id]="i.id" class="alert-input">' +
-                        '</div>' +
-                        '</div>' +
-                        '</ng-template>' +
-                        '</div>' +
-                        '<div class="alert-button-group" [ngClass]="{\'alert-button-group-vertical\':d.buttons.length>2}">' +
-                        '<button ion-button="alert-button" *ngFor="let b of d.buttons" (click)="btnClick(b)" [ngClass]="b.cssClass">' +
-                        '{{b.text}}' +
-                        '</button>' +
-                        '</div>' +
-                        '</div>',
-                    host: {
-                        'role': 'dialog',
-                        '[attr.aria-labelledby]': 'hdrId',
-                        '[attr.aria-describedby]': 'descId'
-                    },
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    AlertCmp.ctorParameters = function () { return [
-        { type: ViewController, },
-        { type: ElementRef, },
-        { type: Config, },
-        { type: GestureController, },
-        { type: NavParams, },
-        { type: Renderer, },
-        { type: Platform, },
-    ]; };
-    AlertCmp.propDecorators = {
-        'keyUp': [{ type: HostListener, args: ['body:keyup', ['$event'],] },],
-    };
     return AlertCmp;
 }());
+AlertCmp.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-alert',
+                template: '<ion-backdrop (click)="bdClick()" [class.backdrop-no-tappable]="!d.enableBackdropDismiss"></ion-backdrop>' +
+                    '<div class="alert-wrapper">' +
+                    '<div class="alert-head">' +
+                    '<h2 id="{{hdrId}}" class="alert-title" *ngIf="d.title" [innerHTML]="d.title"></h2>' +
+                    '<h3 id="{{subHdrId}}" class="alert-sub-title" *ngIf="d.subTitle" [innerHTML]="d.subTitle"></h3>' +
+                    '</div>' +
+                    '<div id="{{msgId}}" class="alert-message" [innerHTML]="d.message"></div>' +
+                    '<div *ngIf="d.inputs.length" [ngSwitch]="inputType">' +
+                    '<ng-template ngSwitchCase="radio">' +
+                    '<div class="alert-radio-group" role="radiogroup" [attr.aria-labelledby]="hdrId" [attr.aria-activedescendant]="activeId">' +
+                    '<button ion-button="alert-radio-button" *ngFor="let i of d.inputs" (click)="rbClick(i)" [attr.aria-checked]="i.checked" [disabled]="i.disabled" [attr.id]="i.id" class="alert-tappable alert-radio" role="radio">' +
+                    '<div class="alert-radio-icon"><div class="alert-radio-inner"></div></div>' +
+                    '<div class="alert-radio-label">' +
+                    '{{i.label}}' +
+                    '</div>' +
+                    '</button>' +
+                    '</div>' +
+                    '</ng-template>' +
+                    '<ng-template ngSwitchCase="checkbox">' +
+                    '<div class="alert-checkbox-group">' +
+                    '<button ion-button="alert-checkbox-button" *ngFor="let i of d.inputs" (click)="cbClick(i)" [attr.aria-checked]="i.checked" [attr.id]="i.id" [disabled]="i.disabled" class="alert-tappable alert-checkbox" role="checkbox">' +
+                    '<div class="alert-checkbox-icon"><div class="alert-checkbox-inner"></div></div>' +
+                    '<div class="alert-checkbox-label">' +
+                    '{{i.label}}' +
+                    '</div>' +
+                    '</button>' +
+                    '</div>' +
+                    '</ng-template>' +
+                    '<ng-template ngSwitchDefault>' +
+                    '<div class="alert-input-group">' +
+                    '<div *ngFor="let i of d.inputs" class="alert-input-wrapper">' +
+                    '<input [placeholder]="i.placeholder" [(ngModel)]="i.value" [type]="i.type" [min]="i.min" [max]="i.max" [attr.id]="i.id" class="alert-input">' +
+                    '</div>' +
+                    '</div>' +
+                    '</ng-template>' +
+                    '</div>' +
+                    '<div class="alert-button-group" [ngClass]="{\'alert-button-group-vertical\':d.buttons.length>2}">' +
+                    '<button ion-button="alert-button" *ngFor="let b of d.buttons" (click)="btnClick(b)" [ngClass]="b.cssClass">' +
+                    '{{b.text}}' +
+                    '</button>' +
+                    '</div>' +
+                    '</div>',
+                host: {
+                    'role': 'dialog',
+                    '[attr.aria-labelledby]': 'hdrId',
+                    '[attr.aria-describedby]': 'descId'
+                },
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+AlertCmp.ctorParameters = function () { return [
+    { type: ViewController, },
+    { type: ElementRef, },
+    { type: Config, },
+    { type: GestureController, },
+    { type: NavParams, },
+    { type: Renderer, },
+    { type: Platform, },
+]; };
+AlertCmp.propDecorators = {
+    'keyUp': [{ type: HostListener, args: ['body:keyup', ['$event'],] },],
+};
 var alertIds = -1;
 
 var __extends$27 = (undefined && undefined.__extends) || (function () {
@@ -34236,7 +34249,7 @@ var __extends$27 = (undefined && undefined.__extends) || (function () {
 /**
  * Animations for alerts
  */
-var AlertPopIn = /** @class */ (function (_super) {
+var AlertPopIn = (function (_super) {
     __extends$27(AlertPopIn, _super);
     function AlertPopIn() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -34258,7 +34271,7 @@ var AlertPopIn = /** @class */ (function (_super) {
     };
     return AlertPopIn;
 }(Transition));
-var AlertPopOut = /** @class */ (function (_super) {
+var AlertPopOut = (function (_super) {
     __extends$27(AlertPopOut, _super);
     function AlertPopOut() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -34280,7 +34293,7 @@ var AlertPopOut = /** @class */ (function (_super) {
     };
     return AlertPopOut;
 }(Transition));
-var AlertMdPopIn = /** @class */ (function (_super) {
+var AlertMdPopIn = (function (_super) {
     __extends$27(AlertMdPopIn, _super);
     function AlertMdPopIn() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -34302,7 +34315,7 @@ var AlertMdPopIn = /** @class */ (function (_super) {
     };
     return AlertMdPopIn;
 }(Transition));
-var AlertMdPopOut = /** @class */ (function (_super) {
+var AlertMdPopOut = (function (_super) {
     __extends$27(AlertMdPopOut, _super);
     function AlertMdPopOut() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -34324,7 +34337,7 @@ var AlertMdPopOut = /** @class */ (function (_super) {
     };
     return AlertMdPopOut;
 }(Transition));
-var AlertWpPopIn = /** @class */ (function (_super) {
+var AlertWpPopIn = (function (_super) {
     __extends$27(AlertWpPopIn, _super);
     function AlertWpPopIn() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -34346,7 +34359,7 @@ var AlertWpPopIn = /** @class */ (function (_super) {
     };
     return AlertWpPopIn;
 }(Transition));
-var AlertWpPopOut = /** @class */ (function (_super) {
+var AlertWpPopOut = (function (_super) {
     __extends$27(AlertWpPopOut, _super);
     function AlertWpPopOut() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -34382,7 +34395,7 @@ var __extends$26 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var Alert = /** @class */ (function (_super) {
+var Alert = (function (_super) {
     __extends$26(Alert, _super);
     /**
      * @param {?} app
@@ -34530,12 +34543,10 @@ var Alert = /** @class */ (function (_super) {
  * ```ts
  * import { AlertController } from 'ionic-angular';
  *
- * constructor(private alertCtrl: AlertController) {
- *
- * }
+ * constructor(public alertCtrl: AlertController) { }
  *
  * presentAlert() {
- *   let alert = this.alertCtrl.create({
+ *   const alert = this.alertCtrl.create({
  *     title: 'Low battery',
  *     subTitle: '10% of battery remaining',
  *     buttons: ['Dismiss']
@@ -34544,7 +34555,7 @@ var Alert = /** @class */ (function (_super) {
  * }
  *
  * presentConfirm() {
- *   let alert = this.alertCtrl.create({
+ *   const alert = this.alertCtrl.create({
  *     title: 'Confirm purchase',
  *     message: 'Do you want to buy this book?',
  *     buttons: [
@@ -34567,7 +34578,7 @@ var Alert = /** @class */ (function (_super) {
  * }
  *
  * presentPrompt() {
- *   let alert = this.alertCtrl.create({
+ *   const alert = this.alertCtrl.create({
  *     title: 'Login',
  *     inputs: [
  *       {
@@ -34660,14 +34671,14 @@ var Alert = /** @class */ (function (_super) {
  * out first, *then* start the next transition.
  *
  * ```ts
- * let alert = this.alertCtrl.create({
+ * const alert = this.alertCtrl.create({
  *   title: 'Hello',
  *   buttons: [{
  *     text: 'Ok',
  *     handler: () => {
  *       // user has clicked the alert button
  *       // begin the alert's dismiss transition
- *       let navTransition = alert.dismiss();
+ *       const navTransition = alert.dismiss();
  *
  *       // start some async method
  *       someAsyncOperation().then(() => {
@@ -34698,7 +34709,7 @@ var Alert = /** @class */ (function (_super) {
  *
  * \@demo /docs/demos/src/alert/
  */
-var AlertController = /** @class */ (function () {
+var AlertController = (function () {
     /**
      * @param {?} _app
      * @param {?} config
@@ -34716,18 +34727,18 @@ var AlertController = /** @class */ (function () {
         if (opts === void 0) { opts = {}; }
         return new Alert(this._app, opts, this.config);
     };
-    AlertController.decorators = [
-        { type: Injectable },
-    ];
-    /**
-     * @nocollapse
-     */
-    AlertController.ctorParameters = function () { return [
-        { type: App, },
-        { type: Config, },
-    ]; };
     return AlertController;
 }());
+AlertController.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+AlertController.ctorParameters = function () { return [
+    { type: App, },
+    { type: Config, },
+]; };
 
 /**
  * \@name Avatar
@@ -34737,25 +34748,25 @@ var AlertController = /** @class */ (function () {
  * Avatars can be placed on the left or right side of an item with the `item-start` or `item-end` directive.
  * @see {\@link /docs/components/#avatar-list Avatar Component Docs}
  */
-var Avatar = /** @class */ (function () {
+var Avatar = (function () {
     function Avatar() {
     }
-    Avatar.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-avatar'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Avatar.ctorParameters = function () { return []; };
     return Avatar;
 }());
+Avatar.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-avatar'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Avatar.ctorParameters = function () { return []; };
 
 /**
  * @hidden
  */
-var Backdrop = /** @class */ (function () {
+var Backdrop = (function () {
     /**
      * @param {?} _elementRef
      * @param {?} _renderer
@@ -34778,25 +34789,25 @@ var Backdrop = /** @class */ (function () {
     Backdrop.prototype.setElementClass = function (className, add) {
         this._renderer.setElementClass(this._elementRef.nativeElement, className, add);
     };
-    Backdrop.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-backdrop',
-                    host: {
-                        'role': 'presentation',
-                        'tappable': '',
-                        'disable-activated': ''
-                    },
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Backdrop.ctorParameters = function () { return [
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
     return Backdrop;
 }());
+Backdrop.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-backdrop',
+                host: {
+                    'role': 'presentation',
+                    'tappable': '',
+                    'disable-activated': ''
+                },
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Backdrop.ctorParameters = function () { return [
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
 
 var __extends$28 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -34815,7 +34826,7 @@ var __extends$28 = (undefined && undefined.__extends) || (function () {
  * Badges are simple components in Ionic containing numbers or text. You can display a badge to indicate that there is new information associated with the item it is on.
  * @see {\@link /docs/components/#badges Badges Component Docs}
  */
-var Badge = /** @class */ (function (_super) {
+var Badge = (function (_super) {
     __extends$28(Badge, _super);
     /**
      * @param {?} config
@@ -34825,21 +34836,21 @@ var Badge = /** @class */ (function (_super) {
     function Badge(config, elementRef, renderer) {
         return _super.call(this, config, elementRef, renderer, 'badge') || this;
     }
-    Badge.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-badge'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Badge.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
     return Badge;
 }(Ion));
+Badge.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-badge'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Badge.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
 
 var __extends$29 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -34966,7 +34977,7 @@ var __extends$29 = (undefined && undefined.__extends) || (function () {
  * @see {\@link ../../fab/FabButton FabButton API Docs}
  * @see {\@link ../../fab/FabContainer FabContainer API Docs}
  */
-var Button = /** @class */ (function (_super) {
+var Button = (function (_super) {
     __extends$29(Button, _super);
     /**
      * @param {?} ionButton
@@ -35240,42 +35251,42 @@ var Button = /** @class */ (function (_super) {
             }
         }
     };
-    Button.decorators = [
-        { type: Component, args: [{
-                    selector: '[ion-button]',
-                    template: '<span class="button-inner">' +
-                        '<ng-content></ng-content>' +
-                        '</span>' +
-                        '<div class="button-effect"></div>',
-                    changeDetection: ChangeDetectionStrategy.OnPush,
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Button.ctorParameters = function () { return [
-        { type: undefined, decorators: [{ type: Attribute, args: ['ion-button',] },] },
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
-    Button.propDecorators = {
-        'large': [{ type: Input },],
-        'small': [{ type: Input },],
-        'default': [{ type: Input },],
-        'outline': [{ type: Input },],
-        'clear': [{ type: Input },],
-        'solid': [{ type: Input },],
-        'round': [{ type: Input },],
-        'block': [{ type: Input },],
-        'full': [{ type: Input },],
-        'strong': [{ type: Input },],
-        'mode': [{ type: Input },],
-        'color': [{ type: Input },],
-    };
     return Button;
 }(Ion));
+Button.decorators = [
+    { type: Component, args: [{
+                selector: '[ion-button]',
+                template: '<span class="button-inner">' +
+                    '<ng-content></ng-content>' +
+                    '</span>' +
+                    '<div class="button-effect"></div>',
+                changeDetection: ChangeDetectionStrategy.OnPush,
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Button.ctorParameters = function () { return [
+    { type: undefined, decorators: [{ type: Attribute, args: ['ion-button',] },] },
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
+Button.propDecorators = {
+    'large': [{ type: Input },],
+    'small': [{ type: Input },],
+    'default': [{ type: Input },],
+    'outline': [{ type: Input },],
+    'clear': [{ type: Input },],
+    'solid': [{ type: Input },],
+    'round': [{ type: Input },],
+    'block': [{ type: Input },],
+    'full': [{ type: Input },],
+    'strong': [{ type: Input },],
+    'mode': [{ type: Input },],
+    'color': [{ type: Input },],
+};
 
 var __extends$30 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -35290,7 +35301,7 @@ var __extends$30 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var Card = /** @class */ (function (_super) {
+var Card = (function (_super) {
     __extends$30(Card, _super);
     /**
      * @param {?} config
@@ -35300,21 +35311,21 @@ var Card = /** @class */ (function (_super) {
     function Card(config, elementRef, renderer) {
         return _super.call(this, config, elementRef, renderer, 'card') || this;
     }
-    Card.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-card'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Card.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
     return Card;
 }(Ion));
+Card.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-card'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Card.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
 
 var __extends$31 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -35329,7 +35340,7 @@ var __extends$31 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var CardContent = /** @class */ (function (_super) {
+var CardContent = (function (_super) {
     __extends$31(CardContent, _super);
     /**
      * @param {?} config
@@ -35339,21 +35350,21 @@ var CardContent = /** @class */ (function (_super) {
     function CardContent(config, elementRef, renderer) {
         return _super.call(this, config, elementRef, renderer, 'card-content') || this;
     }
-    CardContent.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-card-content'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    CardContent.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
     return CardContent;
 }(Ion));
+CardContent.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-card-content'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+CardContent.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
 
 var __extends$32 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -35368,7 +35379,7 @@ var __extends$32 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var CardHeader = /** @class */ (function (_super) {
+var CardHeader = (function (_super) {
     __extends$32(CardHeader, _super);
     /**
      * @param {?} config
@@ -35378,21 +35389,21 @@ var CardHeader = /** @class */ (function (_super) {
     function CardHeader(config, elementRef, renderer) {
         return _super.call(this, config, elementRef, renderer, 'card-header') || this;
     }
-    CardHeader.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-card-header'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    CardHeader.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
     return CardHeader;
 }(Ion));
+CardHeader.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-card-header'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+CardHeader.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
 
 var __extends$33 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -35407,7 +35418,7 @@ var __extends$33 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var CardTitle = /** @class */ (function (_super) {
+var CardTitle = (function (_super) {
     __extends$33(CardTitle, _super);
     /**
      * @param {?} config
@@ -35417,21 +35428,21 @@ var CardTitle = /** @class */ (function (_super) {
     function CardTitle(config, elementRef, renderer) {
         return _super.call(this, config, elementRef, renderer, 'card-title') || this;
     }
-    CardTitle.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-card-title'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    CardTitle.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
     return CardTitle;
 }(Ion));
+CardTitle.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-card-title'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+CardTitle.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
 
 var __extends$35 = (commonjsGlobal && commonjsGlobal.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -35762,7 +35773,7 @@ var MapSubscriber = (function (_super) {
 }(Subscriber_1.Subscriber));
 
 /**
- * @license Angular v4.3.6
+ * @license Angular v4.4.3
  * (c) 2010-2017 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -40323,12 +40334,12 @@ var formControlBinding$1 = {
  * {\@link AbstractControl}.
  *
  * **Set the value**: You can pass in an initial value when instantiating the {\@link FormControl},
- * or you can set it programmatically later using {\@link AbstractControl#setValue} or
- * {\@link AbstractControl#patchValue}.
+ * or you can set it programmatically later using {\@link AbstractControl#setValue setValue} or
+ * {\@link AbstractControl#patchValue patchValue}.
  *
  * **Listen to value**: If you want to listen to changes in the value of the control, you can
- * subscribe to the {\@link AbstractControl#valueChanges} event.  You can also listen to
- * {\@link AbstractControl#statusChanges} to be notified when the validation status is
+ * subscribe to the {\@link AbstractControl#valueChanges valueChanges} event.  You can also listen to
+ * {\@link AbstractControl#statusChanges statusChanges} to be notified when the validation status is
  * re-calculated.
  *
  * ### Example
@@ -40473,12 +40484,13 @@ var formDirectiveProvider$1 = {
  *
  * **Set value**: You can set the form's initial value when instantiating the
  * {\@link FormGroup}, or you can set it programmatically later using the {\@link FormGroup}'s
- * {\@link AbstractControl#setValue} or {\@link AbstractControl#patchValue} methods.
+ * {\@link AbstractControl#setValue setValue} or {\@link AbstractControl#patchValue patchValue}
+ * methods.
  *
  * **Listen to value**: If you want to listen to changes in the value of the form, you can subscribe
- * to the {\@link FormGroup}'s {\@link AbstractControl#valueChanges} event.  You can also listen to
- * its {\@link AbstractControl#statusChanges} event to be notified when the validation status is
- * re-calculated.
+ * to the {\@link FormGroup}'s {\@link AbstractControl#valueChanges valueChanges} event.  You can also
+ * listen to its {\@link AbstractControl#statusChanges statusChanges} event to be notified when the
+ * validation status is re-calculated.
  *
  * Furthermore, you can listen to the directive's `ngSubmit` event to be notified when the user has
  * triggered a form submission. The `ngSubmit` event will be emitted with the original form
@@ -40761,11 +40773,11 @@ var formGroupNameProvider = {
  *
  * **Set the value**: You can set an initial value for each child control when instantiating
  * the {\@link FormGroup}, or you can set it programmatically later using
- * {\@link AbstractControl#setValue} or {\@link AbstractControl#patchValue}.
+ * {\@link AbstractControl#setValue setValue} or {\@link AbstractControl#patchValue patchValue}.
  *
  * **Listen to value**: If you want to listen to changes in the value of the group, you can
- * subscribe to the {\@link AbstractControl#valueChanges} event.  You can also listen to
- * {\@link AbstractControl#statusChanges} to be notified when the validation status is
+ * subscribe to the {\@link AbstractControl#valueChanges valueChanges} event.  You can also listen to
+ * {\@link AbstractControl#statusChanges statusChanges} to be notified when the validation status is
  * re-calculated.
  *
  * ### Example
@@ -41003,7 +41015,7 @@ var controlNameBinding = {
  * closest {\@link FormGroup} or {\@link FormArray} above it.
  *
  * **Access the control**: You can access the {\@link FormControl} associated with
- * this directive by using the {\@link AbstractControl#get} method.
+ * this directive by using the {\@link AbstractControl#get get} method.
  * Ex: `this.form.get('first');`
  *
  * **Get value**: the `value` property is always synced and available on the {\@link FormControl}.
@@ -41011,11 +41023,11 @@ var controlNameBinding = {
  *
  *  **Set value**: You can set an initial value for the control when instantiating the
  *  {\@link FormControl}, or you can set it programmatically later using
- *  {\@link AbstractControl#setValue} or {\@link AbstractControl#patchValue}.
+ *  {\@link AbstractControl#setValue setValue} or {\@link AbstractControl#patchValue patchValue}.
  *
  * **Listen to value**: If you want to listen to changes in the value of the control, you can
- * subscribe to the {\@link AbstractControl#valueChanges} event.  You can also listen to
- * {\@link AbstractControl#statusChanges} to be notified when the validation status is
+ * subscribe to the {\@link AbstractControl#valueChanges valueChanges} event.  You can also listen to
+ * {\@link AbstractControl#statusChanges statusChanges} to be notified when the validation status is
  * re-calculated.
  *
  * ### Example
@@ -41681,7 +41693,7 @@ FormBuilder.ctorParameters = function () { return []; };
 /**
  * \@stable
  */
-var VERSION$3 = new Version('4.3.6');
+var VERSION$3 = new Version('4.4.3');
 /**
  * @license
  * Copyright Google Inc. All Rights Reserved.
@@ -41815,7 +41827,7 @@ ReactiveFormsModule.ctorParameters = function () { return []; };
 /**
  * @hidden
  */
-var Form = /** @class */ (function () {
+var Form = (function () {
     function Form() {
         this._focused = null;
         this._ids = -1;
@@ -41882,20 +41894,20 @@ var Form = /** @class */ (function () {
     Form.prototype.nextId = function () {
         return ++this._ids;
     };
-    Form.decorators = [
-        { type: Injectable },
-    ];
-    /**
-     * @nocollapse
-     */
-    Form.ctorParameters = function () { return []; };
     return Form;
 }());
+Form.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+Form.ctorParameters = function () { return []; };
 /**
  * @hidden
  * @abstract
  */
-var IonicTapInput = /** @class */ (function () {
+var IonicTapInput = (function () {
     function IonicTapInput() {
     }
     /**
@@ -41931,7 +41943,7 @@ var IonicTapInput = /** @class */ (function () {
  * @hidden
  * @abstract
  */
-var IonicFormInput = /** @class */ (function () {
+var IonicFormInput = (function () {
     function IonicFormInput() {
     }
     /**
@@ -41942,7 +41954,7 @@ var IonicFormInput = /** @class */ (function () {
     return IonicFormInput;
 }());
 
-var TimeoutDebouncer = /** @class */ (function () {
+var TimeoutDebouncer = (function () {
     /**
      * @param {?} wait
      */
@@ -41992,7 +42004,7 @@ var __extends$38 = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var BaseInput = /** @class */ (function (_super) {
+var BaseInput = (function (_super) {
     __extends$38(BaseInput, _super);
     /**
      * @param {?} config
@@ -42335,14 +42347,14 @@ var BaseInput = /** @class */ (function (_super) {
             item.setElementClass('item-input-has-value', hasValue);
         }
     };
-    BaseInput.propDecorators = {
-        'ionFocus': [{ type: Output },],
-        'ionChange': [{ type: Output },],
-        'ionBlur': [{ type: Output },],
-        'disabled': [{ type: Input },],
-    };
     return BaseInput;
 }(Ion));
+BaseInput.propDecorators = {
+    'ionFocus': [{ type: Output },],
+    'ionChange': [{ type: Output },],
+    'ionBlur': [{ type: Output },],
+    'disabled': [{ type: Input },],
+};
 /**
  * @param {?} element
  * @param {?} control
@@ -42401,7 +42413,7 @@ var __extends$40 = (undefined && undefined.__extends) || (function () {
  * @see {\@link /docs/components#icons Icon Component Docs}
  *
  */
-var Icon = /** @class */ (function (_super) {
+var Icon = (function (_super) {
     __extends$40(Icon, _super);
     /**
      * @param {?} config
@@ -42573,31 +42585,31 @@ var Icon = /** @class */ (function (_super) {
             .replace('-', ' ');
         this.setElementAttribute('aria-label', label);
     };
-    Icon.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-icon',
-                    host: {
-                        'role': 'img'
-                    }
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Icon.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
-    Icon.propDecorators = {
-        'name': [{ type: Input },],
-        'ios': [{ type: Input },],
-        'md': [{ type: Input },],
-        'isActive': [{ type: Input },],
-        '_hidden': [{ type: HostBinding, args: ['class.hide',] },],
-    };
     return Icon;
 }(Ion));
+Icon.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-icon',
+                host: {
+                    'role': 'img'
+                }
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Icon.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
+Icon.propDecorators = {
+    'name': [{ type: Input },],
+    'ios': [{ type: Input },],
+    'md': [{ type: Input },],
+    'isActive': [{ type: Input },],
+    '_hidden': [{ type: HostBinding, args: ['class.hide',] },],
+};
 
 var __extends$41 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -42657,7 +42669,7 @@ var __extends$41 = (undefined && undefined.__extends) || (function () {
  * @see {\@link ../../input/Input Input API Docs}
  *
  */
-var Label = /** @class */ (function (_super) {
+var Label = (function (_super) {
     __extends$41(Label, _super);
     /**
      * @param {?} config
@@ -42705,28 +42717,28 @@ var Label = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Label.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-label'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Label.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: undefined, decorators: [{ type: Attribute, args: ['floating',] },] },
-        { type: undefined, decorators: [{ type: Attribute, args: ['stacked',] },] },
-        { type: undefined, decorators: [{ type: Attribute, args: ['fixed',] },] },
-        { type: undefined, decorators: [{ type: Attribute, args: ['inset',] },] },
-    ]; };
-    Label.propDecorators = {
-        'id': [{ type: Input },],
-    };
     return Label;
 }(Ion));
+Label.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-label'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Label.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: undefined, decorators: [{ type: Attribute, args: ['floating',] },] },
+    { type: undefined, decorators: [{ type: Attribute, args: ['stacked',] },] },
+    { type: undefined, decorators: [{ type: Attribute, args: ['fixed',] },] },
+    { type: undefined, decorators: [{ type: Attribute, args: ['inset',] },] },
+]; };
+Label.propDecorators = {
+    'id': [{ type: Input },],
+};
 
 /**
  * \@name Keyboard
@@ -42737,13 +42749,13 @@ var Label = /** @class */ (function (_super) {
  * \@usage
  * ```ts
  * export class MyClass {
- *   constructor(public keyboard: Keyboard) {
  *
- *   }
+ *   constructor(public keyboard: Keyboard) { }
+ *
  * }
  * ```
  */
-var Keyboard = /** @class */ (function () {
+var Keyboard = (function () {
     /**
      * @param {?} config
      * @param {?} _plt
@@ -43000,24 +43012,24 @@ var Keyboard = /** @class */ (function () {
         }
         return false;
     };
-    Keyboard.decorators = [
-        { type: Injectable },
-    ];
-    /**
-     * @nocollapse
-     */
-    Keyboard.ctorParameters = function () { return [
-        { type: Config, },
-        { type: Platform, },
-        { type: NgZone, },
-        { type: DomController, },
-    ]; };
     return Keyboard;
 }());
+Keyboard.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+Keyboard.ctorParameters = function () { return [
+    { type: Config, },
+    { type: Platform, },
+    { type: NgZone, },
+    { type: DomController, },
+]; };
 var KEYBOARD_CLOSE_POLLING = 150;
 var KEYBOARD_POLLING_CHECKS_MAX = 100;
 
-var ScrollView = /** @class */ (function () {
+var ScrollView = (function () {
     /**
      * @param {?} _app
      * @param {?} _plt
@@ -43551,7 +43563,7 @@ var __extends$42 = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var EventEmitterProxy = /** @class */ (function (_super) {
+var EventEmitterProxy = (function (_super) {
     __extends$42(EventEmitterProxy, _super);
     function EventEmitterProxy() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -43699,7 +43711,7 @@ var EventEmitterProxy = /** @class */ (function (_super) {
  * ```
  *
  */
-var Content = /** @class */ (function (_super) {
+var Content = (function (_super) {
     __extends$42(Content, _super);
     /**
      * @param {?} config
@@ -44208,7 +44220,7 @@ var Content = /** @class */ (function (_super) {
         var /** @type {?} */ parentEle = ele.parentElement;
         var /** @type {?} */ children = parentEle.children;
         for (var /** @type {?} */ i = children.length - 1; i >= 0; i--) {
-            ele = /** @type {?} */ (children[i]);
+            ele = (children[i]);
             tagName = ele.tagName;
             if (tagName === 'ION-CONTENT') {
                 scrollEvent.contentElement = ele;
@@ -44237,7 +44249,7 @@ var Content = /** @class */ (function (_super) {
         var /** @type {?} */ tabbarEle;
         while (ele && ele.tagName !== 'ION-MODAL' && !ele.classList.contains('tab-subpage')) {
             if (ele.tagName === 'ION-TABS') {
-                tabbarEle = /** @type {?} */ (ele.firstElementChild);
+                tabbarEle = (ele.firstElementChild);
                 // ******** DOM READ ****************
                 this._tabbarHeight = tabbarEle.clientHeight;
                 if (this._tabsPlacement === null) {
@@ -44397,50 +44409,51 @@ var Content = /** @class */ (function (_super) {
         // to start new requests and render images
         return Math.abs(this._scroll.ev.velocityY) < this._imgVelMax;
     };
-    Content.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-content',
-                    template: '<div class="fixed-content" #fixedContent>' +
-                        '<ng-content select="[ion-fixed],ion-fab"></ng-content>' +
-                        '</div>' +
-                        '<div class="scroll-content" #scrollContent>' +
-                        '<ng-content></ng-content>' +
-                        '</div>' +
-                        '<ng-content select="ion-refresher"></ng-content>',
-                    host: {
-                        '[class.statusbar-padding]': 'statusbarPadding',
-                        '[class.has-refresher]': '_hasRefresher'
-                    },
-                    changeDetection: ChangeDetectionStrategy.OnPush,
-                    encapsulation: ViewEncapsulation.None
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Content.ctorParameters = function () { return [
-        { type: Config, },
-        { type: Platform, },
-        { type: DomController, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: App, },
-        { type: Keyboard, },
-        { type: NgZone, },
-        { type: ViewController, decorators: [{ type: Optional },] },
-        { type: NavController, decorators: [{ type: Optional },] },
-    ]; };
-    Content.propDecorators = {
-        '_fixedContent': [{ type: ViewChild, args: ['fixedContent', { read: ElementRef },] },],
-        '_scrollContent': [{ type: ViewChild, args: ['scrollContent', { read: ElementRef },] },],
-        'ionScrollStart': [{ type: Output },],
-        'ionScroll': [{ type: Output },],
-        'ionScrollEnd': [{ type: Output },],
-        'fullscreen': [{ type: Input },],
-        'scrollDownOnLoad': [{ type: Input },],
-    };
     return Content;
 }(Ion));
+Content.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-content',
+                template: '<div class="fixed-content" #fixedContent>' +
+                    '<ng-content select="[ion-fixed],ion-fab"></ng-content>' +
+                    '</div>' +
+                    '<div class="scroll-content" #scrollContent>' +
+                    '<ng-content></ng-content>' +
+                    '</div>' +
+                    '<ng-content select="ion-refresher"></ng-content>',
+                host: {
+                    '[class.statusbar-padding]': 'statusbarPadding',
+                    '[class.has-refresher]': '_hasRefresher'
+                },
+                changeDetection: ChangeDetectionStrategy.OnPush,
+                encapsulation: ViewEncapsulation.None
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Content.ctorParameters = function () { return [
+    { type: Config, },
+    { type: Platform, },
+    { type: DomController, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: App, },
+    { type: Keyboard, },
+    { type: NgZone, },
+    { type: ViewController, decorators: [{ type: Optional },] },
+    { type: NavController, decorators: [{ type: Optional },] },
+]; };
+Content.propDecorators = {
+    '_fixedContent': [{ type: ViewChild, args: ['fixedContent', { read: ElementRef },] },],
+    '_scrollContent': [{ type: ViewChild, args: ['scrollContent', { read: ElementRef },] },],
+    'ionScrollStart': [{ type: Output },],
+    'ionScroll': [{ type: Output },],
+    'ionScrollEnd': [{ type: Output },],
+    'fullscreen': [{ type: Input },],
+    'scrollDownOnLoad': [{ type: Input },],
+    'resize': [{ type: HostListener, args: ['window:resize',] },],
+};
 /**
  * @param {?} imgs
  * @param {?} viewableTop
@@ -44593,7 +44606,7 @@ function findReorderItem(node, listNode) {
 /**
  * @hidden
  */
-var ItemReorderGesture = /** @class */ (function () {
+var ItemReorderGesture = (function () {
     /**
      * @param {?} plt
      * @param {?} reorderList
@@ -44754,7 +44767,7 @@ var AUTO_SCROLL_MARGIN = 60;
 var SCROLL_JUMP = 10;
 var ITEM_REORDER_ACTIVE = 'reorder-active';
 
-var ReorderIndexes = /** @class */ (function () {
+var ReorderIndexes = (function () {
     /**
      * @param {?} from
      * @param {?} to
@@ -44894,7 +44907,7 @@ var ReorderIndexes = /** @class */ (function () {
  * @see {\@link ../../list/List List API Docs}
  * @see {\@link ../Item Item API Docs}
  */
-var ItemReorder = /** @class */ (function () {
+var ItemReorder = (function () {
     /**
      * @param {?} _plt
      * @param {?} _dom
@@ -45085,34 +45098,34 @@ var ItemReorder = /** @class */ (function () {
     ItemReorder.prototype.getNativeElement = function () {
         return this._element;
     };
-    ItemReorder.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-list[reorder],ion-item-group[reorder]',
-                    host: {
-                        '[class.reorder-enabled]': '_enableReorder',
-                        '[class.reorder-visible]': '_visibleReorder',
-                        '[class.reorder-side-start]': '_isStart'
-                    }
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    ItemReorder.ctorParameters = function () { return [
-        { type: Platform, },
-        { type: DomController, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: NgZone, },
-        { type: Content, decorators: [{ type: Optional },] },
-    ]; };
-    ItemReorder.propDecorators = {
-        'ionItemReorder': [{ type: Output },],
-        'side': [{ type: Input, args: ['side',] },],
-        'reorder': [{ type: Input },],
-    };
     return ItemReorder;
 }());
+ItemReorder.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-list[reorder],ion-item-group[reorder]',
+                host: {
+                    '[class.reorder-enabled]': '_enableReorder',
+                    '[class.reorder-visible]': '_visibleReorder',
+                    '[class.reorder-side-start]': '_isStart'
+                }
+            },] },
+];
+/**
+ * @nocollapse
+ */
+ItemReorder.ctorParameters = function () { return [
+    { type: Platform, },
+    { type: DomController, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: NgZone, },
+    { type: Content, decorators: [{ type: Optional },] },
+]; };
+ItemReorder.propDecorators = {
+    'ionItemReorder': [{ type: Output },],
+    'side': [{ type: Input, args: ['side',] },],
+    'reorder': [{ type: Input },],
+};
 
 var __extends$39 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -45386,7 +45399,7 @@ var __extends$39 = (undefined && undefined.__extends) || (function () {
  * @see {\@link ../../list/List List API Docs}
  * @see {\@link ../ItemSliding ItemSliding API Docs}
  */
-var Item = /** @class */ (function (_super) {
+var Item = (function (_super) {
     __extends$39(Item, _super);
     /**
      * @param {?} form
@@ -45534,47 +45547,47 @@ var Item = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Item.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-list-header,ion-item,[ion-item],ion-item-divider',
-                    template: '<ng-content select="[item-start],[item-left],ion-checkbox:not([item-end]):not([item-right])"></ng-content>' +
-                        '<div class="item-inner">' +
-                        '<div class="input-wrapper">' +
-                        '<ng-content select="ion-label"></ng-content>' +
-                        '<ion-label *ngIf="_viewLabel">' +
-                        '<ng-content></ng-content>' +
-                        '</ion-label>' +
-                        '<ng-content select="ion-select,ion-input,ion-textarea,ion-datetime,ion-range,[item-content]"></ng-content>' +
-                        '</div>' +
-                        '<ng-content select="[item-end],[item-right],ion-radio,ion-toggle"></ng-content>' +
-                        '<ion-reorder *ngIf="_hasReorder"></ion-reorder>' +
-                        '</div>' +
-                        '<div class="button-effect"></div>',
-                    host: {
-                        'class': 'item'
-                    },
-                    changeDetection: ChangeDetectionStrategy.OnPush,
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Item.ctorParameters = function () { return [
-        { type: Form, },
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: ItemReorder, decorators: [{ type: Optional },] },
-    ]; };
-    Item.propDecorators = {
-        'contentLabel': [{ type: ContentChild, args: [Label,] },],
-        'viewLabel': [{ type: ViewChild, args: [Label,] },],
-        '_buttons': [{ type: ContentChildren, args: [Button,] },],
-        '_icons': [{ type: ContentChildren, args: [Icon,] },],
-    };
     return Item;
 }(Ion));
+Item.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-list-header,ion-item,[ion-item],ion-item-divider',
+                template: '<ng-content select="[item-start],[item-left],ion-checkbox:not([item-end]):not([item-right])"></ng-content>' +
+                    '<div class="item-inner">' +
+                    '<div class="input-wrapper">' +
+                    '<ng-content select="ion-label"></ng-content>' +
+                    '<ion-label *ngIf="_viewLabel">' +
+                    '<ng-content></ng-content>' +
+                    '</ion-label>' +
+                    '<ng-content select="ion-select,ion-input,ion-textarea,ion-datetime,ion-range,[item-content]"></ng-content>' +
+                    '</div>' +
+                    '<ng-content select="[item-end],[item-right],ion-radio,ion-toggle"></ng-content>' +
+                    '<ion-reorder *ngIf="_hasReorder"></ion-reorder>' +
+                    '</div>' +
+                    '<div class="button-effect"></div>',
+                host: {
+                    'class': 'item'
+                },
+                changeDetection: ChangeDetectionStrategy.OnPush,
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Item.ctorParameters = function () { return [
+    { type: Form, },
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: ItemReorder, decorators: [{ type: Optional },] },
+]; };
+Item.propDecorators = {
+    'contentLabel': [{ type: ContentChild, args: [Label,] },],
+    'viewLabel': [{ type: ViewChild, args: [Label,] },],
+    '_buttons': [{ type: ContentChildren, args: [Button,] },],
+    '_icons': [{ type: ContentChildren, args: [Icon,] },],
+};
 
 var __extends$34 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -45652,7 +45665,7 @@ var __extends$34 = (undefined && undefined.__extends) || (function () {
  * \@demo /docs/demos/src/checkbox/
  * @see {\@link /docs/components#checkbox Checkbox Component Docs}
  */
-var Checkbox = /** @class */ (function (_super) {
+var Checkbox = (function (_super) {
     __extends$34(Checkbox, _super);
     /**
      * @param {?} config
@@ -45708,44 +45721,44 @@ var Checkbox = /** @class */ (function (_super) {
     Checkbox.prototype._inputUpdated = function () {
         this._item && this._item.setElementClass('item-checkbox-checked', this._value);
     };
-    Checkbox.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-checkbox',
-                    template: '<div class="checkbox-icon" [class.checkbox-checked]="_value">' +
-                        '<div class="checkbox-inner"></div>' +
-                        '</div>' +
-                        '<button role="checkbox" ' +
-                        'type="button" ' +
-                        'ion-button="item-cover" ' +
-                        '[id]="id" ' +
-                        '[attr.aria-checked]="_value" ' +
-                        '[attr.aria-labelledby]="_labelId" ' +
-                        '[attr.aria-disabled]="_disabled" ' +
-                        'class="item-cover"> ' +
-                        '</button>',
-                    host: {
-                        '[class.checkbox-disabled]': '_disabled'
-                    },
-                    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: Checkbox, multi: true }],
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Checkbox.ctorParameters = function () { return [
-        { type: Config, },
-        { type: Form, },
-        { type: Item, decorators: [{ type: Optional },] },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
-    Checkbox.propDecorators = {
-        'checked': [{ type: Input },],
-        '_click': [{ type: HostListener, args: ['click', ['$event'],] },],
-    };
     return Checkbox;
 }(BaseInput));
+Checkbox.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-checkbox',
+                template: '<div class="checkbox-icon" [class.checkbox-checked]="_value">' +
+                    '<div class="checkbox-inner"></div>' +
+                    '</div>' +
+                    '<button role="checkbox" ' +
+                    'type="button" ' +
+                    'ion-button="item-cover" ' +
+                    '[id]="id" ' +
+                    '[attr.aria-checked]="_value" ' +
+                    '[attr.aria-labelledby]="_labelId" ' +
+                    '[attr.aria-disabled]="_disabled" ' +
+                    'class="item-cover"> ' +
+                    '</button>',
+                host: {
+                    '[class.checkbox-disabled]': '_disabled'
+                },
+                providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: Checkbox, multi: true }],
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Checkbox.ctorParameters = function () { return [
+    { type: Config, },
+    { type: Form, },
+    { type: Item, decorators: [{ type: Optional },] },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
+Checkbox.propDecorators = {
+    'checked': [{ type: Input },],
+    '_click': [{ type: HostListener, args: ['click', ['$event'],] },],
+};
 
 var __extends$43 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -45845,7 +45858,7 @@ var __extends$43 = (undefined && undefined.__extends) || (function () {
  * \@demo /docs/demos/src/chip/
  *
  */
-var Chip = /** @class */ (function (_super) {
+var Chip = (function (_super) {
     __extends$43(Chip, _super);
     /**
      * @param {?} config
@@ -45855,21 +45868,21 @@ var Chip = /** @class */ (function (_super) {
     function Chip(config, elementRef, renderer) {
         return _super.call(this, config, elementRef, renderer, 'chip') || this;
     }
-    Chip.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-chip'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Chip.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
     return Chip;
 }(Ion));
+Chip.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-chip'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Chip.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
 
 /**
  * \@name Haptic
@@ -45882,15 +45895,16 @@ var Chip = /** @class */ (function (_super) {
  *
  * \@usage
  * ```ts
- * export class MyClass{
- *  constructor(haptic: Haptic){
+ * export class MyClass {
+ *
+ *  constructor(haptic: Haptic) {
  *    haptic.selection();
  *  }
  * }
  *
  * ```
  */
-var Haptic = /** @class */ (function () {
+var Haptic = (function () {
     /**
      * @param {?} plt
      */
@@ -45958,17 +45972,17 @@ var Haptic = /** @class */ (function () {
     Haptic.prototype.impact = function (options) {
         this._p && this._p.impact(options);
     };
-    Haptic.decorators = [
-        { type: Injectable },
-    ];
-    /**
-     * @nocollapse
-     */
-    Haptic.ctorParameters = function () { return [
-        { type: Platform, },
-    ]; };
     return Haptic;
 }());
+Haptic.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+Haptic.ctorParameters = function () { return [
+    { type: Platform, },
+]; };
 
 var PICKER_OPT_SELECTED = 'picker-opt-selected';
 var DECELERATION_FRICTION$1 = 0.97;
@@ -45978,7 +45992,7 @@ var MAX_PICKER_SPEED = 60;
 /**
  * @hidden
  */
-var PickerColumnCmp = /** @class */ (function () {
+var PickerColumnCmp = (function () {
     /**
      * @param {?} config
      * @param {?} _plt
@@ -46250,7 +46264,7 @@ var PickerColumnCmp = /** @class */ (function () {
         var /** @type {?} */ scaleStr = "scale(" + this.scaleFactor + ")";
         for (i = 0; i < length; i++) {
             button = children[i];
-            opt = /** @type {?} */ (this.col.options[i]);
+            opt = (this.col.options[i]);
             optOffset = (i * this.optHeight) + y;
             visible = true;
             transform = '';
@@ -46346,49 +46360,49 @@ var PickerColumnCmp = /** @class */ (function () {
             this.update(y, 150, true, false);
         }
     };
-    PickerColumnCmp.decorators = [
-        { type: Component, args: [{
-                    selector: '.picker-col',
-                    template: '<div *ngIf="col.prefix" class="picker-prefix" [style.width]="col.prefixWidth">{{col.prefix}}</div>' +
-                        '<div class="picker-opts" #colEle [style.max-width]="col.optionsWidth">' +
-                        '<button *ngFor="let o of col.options; let i=index"' +
-                        '[class.picker-opt-disabled]="o.disabled" ' +
-                        'class="picker-opt" disable-activated (click)="optClick($event, i)">' +
-                        '{{o.text}}' +
-                        '</button>' +
-                        '</div>' +
-                        '<div *ngIf="col.suffix" class="picker-suffix" [style.width]="col.suffixWidth">{{col.suffix}}</div>',
-                    host: {
-                        '[style.max-width]': 'col.columnWidth',
-                        '[class.picker-opts-left]': 'col.align=="left"',
-                        '[class.picker-opts-right]': 'col.align=="right"',
-                    }
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    PickerColumnCmp.ctorParameters = function () { return [
-        { type: Config, },
-        { type: Platform, },
-        { type: ElementRef, },
-        { type: NgZone, },
-        { type: Haptic, },
-        { type: Platform, },
-        { type: DomController, },
-    ]; };
-    PickerColumnCmp.propDecorators = {
-        'colEle': [{ type: ViewChild, args: ['colEle',] },],
-        'col': [{ type: Input },],
-        'ionChange': [{ type: Output },],
-    };
     return PickerColumnCmp;
 }());
+PickerColumnCmp.decorators = [
+    { type: Component, args: [{
+                selector: '.picker-col',
+                template: '<div *ngIf="col.prefix" class="picker-prefix" [style.width]="col.prefixWidth">{{col.prefix}}</div>' +
+                    '<div class="picker-opts" #colEle [style.max-width]="col.optionsWidth">' +
+                    '<button *ngFor="let o of col.options; let i=index"' +
+                    '[class.picker-opt-disabled]="o.disabled" ' +
+                    'class="picker-opt" disable-activated (click)="optClick($event, i)">' +
+                    '{{o.text}}' +
+                    '</button>' +
+                    '</div>' +
+                    '<div *ngIf="col.suffix" class="picker-suffix" [style.width]="col.suffixWidth">{{col.suffix}}</div>',
+                host: {
+                    '[style.max-width]': 'col.columnWidth',
+                    '[class.picker-opts-left]': 'col.align=="left"',
+                    '[class.picker-opts-right]': 'col.align=="right"',
+                }
+            },] },
+];
+/**
+ * @nocollapse
+ */
+PickerColumnCmp.ctorParameters = function () { return [
+    { type: Config, },
+    { type: Platform, },
+    { type: ElementRef, },
+    { type: NgZone, },
+    { type: Haptic, },
+    { type: Platform, },
+    { type: DomController, },
+]; };
+PickerColumnCmp.propDecorators = {
+    'colEle': [{ type: ViewChild, args: ['colEle',] },],
+    'col': [{ type: Input },],
+    'ionChange': [{ type: Output },],
+};
 
 /**
  * @hidden
  */
-var PickerCmp = /** @class */ (function () {
+var PickerCmp = (function () {
     /**
      * @param {?} _viewCtrl
      * @param {?} _elementRef
@@ -46585,33 +46599,33 @@ var PickerCmp = /** @class */ (function () {
         (void 0) /* assert */;
         this._gestureBlocker.destroy();
     };
-    PickerCmp.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-picker-cmp',
-                    template: "\n    <ion-backdrop (click)=\"bdClick()\"></ion-backdrop>\n    <div class=\"picker-wrapper\">\n      <div class=\"picker-toolbar\">\n        <div *ngFor=\"let b of d.buttons\" class=\"picker-toolbar-button\" [ngClass]=\"b.cssRole\">\n          <button ion-button (click)=\"btnClick(b)\" [ngClass]=\"b.cssClass\" class=\"picker-button\" clear>\n            {{b.text}}\n          </button>\n        </div>\n      </div>\n      <div class=\"picker-columns\">\n        <div class=\"picker-above-highlight\"></div>\n        <div *ngFor=\"let c of d.columns\" [col]=\"c\" class=\"picker-col\" (ionChange)=\"_colChange($event)\"></div>\n        <div class=\"picker-below-highlight\"></div>\n      </div>\n    </div>\n  ",
-                    host: {
-                        'role': 'dialog'
-                    },
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    PickerCmp.ctorParameters = function () { return [
-        { type: ViewController, },
-        { type: ElementRef, },
-        { type: Config, },
-        { type: GestureController, },
-        { type: NavParams, },
-        { type: Renderer, },
-    ]; };
-    PickerCmp.propDecorators = {
-        '_cols': [{ type: ViewChildren, args: [PickerColumnCmp,] },],
-        '_keyUp': [{ type: HostListener, args: ['body:keyup', ['$event'],] },],
-    };
     return PickerCmp;
 }());
+PickerCmp.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-picker-cmp',
+                template: "\n    <ion-backdrop (click)=\"bdClick()\"></ion-backdrop>\n    <div class=\"picker-wrapper\">\n      <div class=\"picker-toolbar\">\n        <div *ngFor=\"let b of d.buttons\" class=\"picker-toolbar-button\" [ngClass]=\"b.cssRole\">\n          <button ion-button (click)=\"btnClick(b)\" [ngClass]=\"b.cssClass\" class=\"picker-button\" clear>\n            {{b.text}}\n          </button>\n        </div>\n      </div>\n      <div class=\"picker-columns\">\n        <div class=\"picker-above-highlight\"></div>\n        <div *ngFor=\"let c of d.columns\" [col]=\"c\" class=\"picker-col\" (ionChange)=\"_colChange($event)\"></div>\n        <div class=\"picker-below-highlight\"></div>\n      </div>\n    </div>\n  ",
+                host: {
+                    'role': 'dialog'
+                },
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+PickerCmp.ctorParameters = function () { return [
+    { type: ViewController, },
+    { type: ElementRef, },
+    { type: Config, },
+    { type: GestureController, },
+    { type: NavParams, },
+    { type: Renderer, },
+]; };
+PickerCmp.propDecorators = {
+    '_cols': [{ type: ViewChildren, args: [PickerColumnCmp,] },],
+    '_keyUp': [{ type: HostListener, args: ['body:keyup', ['$event'],] },],
+};
 var pickerIds = -1;
 
 var __extends$46 = (undefined && undefined.__extends) || (function () {
@@ -46627,7 +46641,7 @@ var __extends$46 = (undefined && undefined.__extends) || (function () {
 /**
  * Animations for pickers
  */
-var PickerSlideIn = /** @class */ (function (_super) {
+var PickerSlideIn = (function (_super) {
     __extends$46(PickerSlideIn, _super);
     function PickerSlideIn() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -46645,7 +46659,7 @@ var PickerSlideIn = /** @class */ (function (_super) {
     };
     return PickerSlideIn;
 }(Transition));
-var PickerSlideOut = /** @class */ (function (_super) {
+var PickerSlideOut = (function (_super) {
     __extends$46(PickerSlideOut, _super);
     function PickerSlideOut() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -46677,7 +46691,7 @@ var __extends$45 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var Picker = /** @class */ (function (_super) {
+var Picker = (function (_super) {
     __extends$45(Picker, _super);
     /**
      * @param {?} app
@@ -46762,11 +46776,11 @@ var Picker = /** @class */ (function (_super) {
         if (navOptions === void 0) { navOptions = {}; }
         return this._app.present(this, navOptions);
     };
-    Picker.propDecorators = {
-        'ionChange': [{ type: Output },],
-    };
     return Picker;
 }(ViewController));
+Picker.propDecorators = {
+    'ionChange': [{ type: Output },],
+};
 
 /**
  * @hidden
@@ -46774,7 +46788,7 @@ var Picker = /** @class */ (function (_super) {
  * \@description
  *
  */
-var PickerController = /** @class */ (function () {
+var PickerController = (function () {
     /**
      * @param {?} _app
      * @param {?} config
@@ -46792,18 +46806,18 @@ var PickerController = /** @class */ (function () {
         if (opts === void 0) { opts = {}; }
         return new Picker(this._app, opts, this.config);
     };
-    PickerController.decorators = [
-        { type: Injectable },
-    ];
-    /**
-     * @nocollapse
-     */
-    PickerController.ctorParameters = function () { return [
-        { type: App, },
-        { type: Config, },
-    ]; };
     return PickerController;
 }());
+PickerController.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+PickerController.ctorParameters = function () { return [
+    { type: App, },
+    { type: Config, },
+]; };
 
 /**
  * @param {?} template
@@ -47557,7 +47571,7 @@ var __extends$44 = (undefined && undefined.__extends) || (function () {
  *
  * \@demo /docs/demos/src/datetime/
  */
-var DateTime = /** @class */ (function (_super) {
+var DateTime = (function (_super) {
     __extends$44(DateTime, _super);
     /**
      * @param {?} form
@@ -47956,61 +47970,61 @@ var DateTime = /** @class */ (function (_super) {
             }
         }
     };
-    DateTime.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-datetime',
-                    template: '<div *ngIf="!_text" class="datetime-text datetime-placeholder">{{placeholder}}</div>' +
-                        '<div *ngIf="_text" class="datetime-text">{{_text}}</div>' +
-                        '<button aria-haspopup="true" ' +
-                        'type="button" ' +
-                        '[id]="id" ' +
-                        'ion-button="item-cover" ' +
-                        '[attr.aria-labelledby]="_labelId" ' +
-                        '[attr.aria-disabled]="_disabled" ' +
-                        'class="item-cover">' +
-                        '</button>',
-                    host: {
-                        '[class.datetime-disabled]': '_disabled'
-                    },
-                    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: DateTime, multi: true }],
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    DateTime.ctorParameters = function () { return [
-        { type: Form, },
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: Item, decorators: [{ type: Optional },] },
-        { type: PickerController, decorators: [{ type: Optional },] },
-    ]; };
-    DateTime.propDecorators = {
-        'min': [{ type: Input },],
-        'max': [{ type: Input },],
-        'displayFormat': [{ type: Input },],
-        'pickerFormat': [{ type: Input },],
-        'cancelText': [{ type: Input },],
-        'doneText': [{ type: Input },],
-        'yearValues': [{ type: Input },],
-        'monthValues': [{ type: Input },],
-        'dayValues': [{ type: Input },],
-        'hourValues': [{ type: Input },],
-        'minuteValues': [{ type: Input },],
-        'monthNames': [{ type: Input },],
-        'monthShortNames': [{ type: Input },],
-        'dayNames': [{ type: Input },],
-        'dayShortNames': [{ type: Input },],
-        'pickerOptions': [{ type: Input },],
-        'placeholder': [{ type: Input },],
-        'ionCancel': [{ type: Output },],
-        '_click': [{ type: HostListener, args: ['click', ['$event'],] },],
-        '_keyup': [{ type: HostListener, args: ['keyup.space',] },],
-    };
     return DateTime;
 }(BaseInput));
+DateTime.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-datetime',
+                template: '<div *ngIf="!_text" class="datetime-text datetime-placeholder">{{placeholder}}</div>' +
+                    '<div *ngIf="_text" class="datetime-text">{{_text}}</div>' +
+                    '<button aria-haspopup="true" ' +
+                    'type="button" ' +
+                    '[id]="id" ' +
+                    'ion-button="item-cover" ' +
+                    '[attr.aria-labelledby]="_labelId" ' +
+                    '[attr.aria-disabled]="_disabled" ' +
+                    'class="item-cover">' +
+                    '</button>',
+                host: {
+                    '[class.datetime-disabled]': '_disabled'
+                },
+                providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: DateTime, multi: true }],
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+DateTime.ctorParameters = function () { return [
+    { type: Form, },
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: Item, decorators: [{ type: Optional },] },
+    { type: PickerController, decorators: [{ type: Optional },] },
+]; };
+DateTime.propDecorators = {
+    'min': [{ type: Input },],
+    'max': [{ type: Input },],
+    'displayFormat': [{ type: Input },],
+    'pickerFormat': [{ type: Input },],
+    'cancelText': [{ type: Input },],
+    'doneText': [{ type: Input },],
+    'yearValues': [{ type: Input },],
+    'monthValues': [{ type: Input },],
+    'dayValues': [{ type: Input },],
+    'hourValues': [{ type: Input },],
+    'minuteValues': [{ type: Input },],
+    'monthNames': [{ type: Input },],
+    'monthShortNames': [{ type: Input },],
+    'dayNames': [{ type: Input },],
+    'dayShortNames': [{ type: Input },],
+    'pickerOptions': [{ type: Input },],
+    'placeholder': [{ type: Input },],
+    'ionCancel': [{ type: Output },],
+    '_click': [{ type: HostListener, args: ['click', ['$event'],] },],
+    '_keyup': [{ type: HostListener, args: ['keyup.space',] },],
+};
 /**
  * @hidden
  * Use to convert a string of comma separated numbers or
@@ -48120,7 +48134,7 @@ var __extends$47 = (undefined && undefined.__extends) || (function () {
  * \@demo /docs/demos/src/fab/
  * @see {\@link /docs/components#fabs FAB Component Docs}
  */
-var FabButton = /** @class */ (function (_super) {
+var FabButton = (function (_super) {
     __extends$47(FabButton, _super);
     /**
      * @param {?} config
@@ -48138,28 +48152,28 @@ var FabButton = /** @class */ (function (_super) {
     FabButton.prototype.setActiveClose = function (closeVisible) {
         this.setElementClass('fab-close-active', closeVisible);
     };
-    FabButton.decorators = [
-        { type: Component, args: [{
-                    selector: '[ion-fab]',
-                    template: '<ion-icon name="close" class="fab-close-icon"></ion-icon>' +
-                        '<span class="button-inner">' +
-                        '<ng-content></ng-content>' +
-                        '</span>' +
-                        '<div class="button-effect"></div>',
-                    changeDetection: ChangeDetectionStrategy.OnPush,
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    FabButton.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
     return FabButton;
 }(Ion));
+FabButton.decorators = [
+    { type: Component, args: [{
+                selector: '[ion-fab]',
+                template: '<ion-icon name="close" class="fab-close-icon"></ion-icon>' +
+                    '<span class="button-inner">' +
+                    '<ng-content></ng-content>' +
+                    '</span>' +
+                    '<div class="button-effect"></div>',
+                changeDetection: ChangeDetectionStrategy.OnPush,
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+FabButton.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
 
 /**
  * \@name FabList
@@ -48185,7 +48199,7 @@ var FabButton = /** @class */ (function (_super) {
  * \@demo /docs/demos/src/fab/
  * @see {\@link /docs/components#fab Fab Component Docs}
  */
-var FabList = /** @class */ (function () {
+var FabList = (function () {
     /**
      * @param {?} _elementRef
      * @param {?} _renderer
@@ -48251,25 +48265,25 @@ var FabList = /** @class */ (function () {
     FabList.prototype.setElementClass = function (className, add) {
         this._renderer.setElementClass(this._elementRef.nativeElement, className, add);
     };
-    FabList.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-fab-list',
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    FabList.ctorParameters = function () { return [
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: Config, },
-        { type: Platform, },
-    ]; };
-    FabList.propDecorators = {
-        '_setbuttons': [{ type: ContentChildren, args: [FabButton,] },],
-    };
     return FabList;
 }());
+FabList.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-fab-list',
+            },] },
+];
+/**
+ * @nocollapse
+ */
+FabList.ctorParameters = function () { return [
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: Config, },
+    { type: Platform, },
+]; };
+FabList.propDecorators = {
+    '_setbuttons': [{ type: ContentChildren, args: [FabButton,] },],
+};
 
 /**
  * \@name FabContainer
@@ -48352,7 +48366,7 @@ var FabList = /** @class */ (function () {
  * \@demo /docs/demos/src/fab/
  * @see {\@link /docs/components#fabs FAB Component Docs}
  */
-var FabContainer = /** @class */ (function () {
+var FabContainer = (function () {
     /**
      * @param {?} plt
      */
@@ -48435,24 +48449,24 @@ var FabContainer = /** @class */ (function () {
     FabContainer.prototype.ngOnDestroy = function () {
         this._events.destroy();
     };
-    FabContainer.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-fab',
-                    template: '<ng-content></ng-content>'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    FabContainer.ctorParameters = function () { return [
-        { type: Platform, },
-    ]; };
-    FabContainer.propDecorators = {
-        '_mainButton': [{ type: ContentChild, args: [FabButton,] },],
-        '_fabLists': [{ type: ContentChildren, args: [FabList,] },],
-    };
     return FabContainer;
 }());
+FabContainer.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-fab',
+                template: '<ng-content></ng-content>'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+FabContainer.ctorParameters = function () { return [
+    { type: Platform, },
+]; };
+FabContainer.propDecorators = {
+    '_mainButton': [{ type: ContentChild, args: [FabButton,] },],
+    '_fabLists': [{ type: ContentChildren, args: [FabList,] },],
+};
 
 /**
  * \@name Col
@@ -48477,23 +48491,23 @@ var FabContainer = /** @class */ (function () {
  *
  *
  */
-var Col = /** @class */ (function () {
+var Col = (function () {
     function Col() {
     }
-    Col.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-col, [ion-col]',
-                    host: {
-                        'class': 'col'
-                    }
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Col.ctorParameters = function () { return []; };
     return Col;
 }());
+Col.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-col, [ion-col]',
+                host: {
+                    'class': 'col'
+                }
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Col.ctorParameters = function () { return []; };
 
 /**
  * \@name Grid
@@ -49029,23 +49043,23 @@ var Col = /** @class */ (function () {
  * ```
  *
  */
-var Grid = /** @class */ (function () {
+var Grid = (function () {
     function Grid() {
     }
-    Grid.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-grid, [ion-grid]',
-                    host: {
-                        'class': 'grid'
-                    }
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Grid.ctorParameters = function () { return []; };
     return Grid;
 }());
+Grid.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-grid, [ion-grid]',
+                host: {
+                    'class': 'grid'
+                }
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Grid.ctorParameters = function () { return []; };
 
 /**
  * \@name Row
@@ -49077,23 +49091,23 @@ var Grid = /** @class */ (function () {
  *
  *
  */
-var Row = /** @class */ (function () {
+var Row = (function () {
     function Row() {
     }
-    Row.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-row, [ion-row]',
-                    host: {
-                        'class': 'row'
-                    }
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Row.ctorParameters = function () { return []; };
     return Row;
 }());
+Row.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-row, [ion-row]',
+                host: {
+                    'class': 'row'
+                }
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Row.ctorParameters = function () { return []; };
 
 /**
  * \@name Img
@@ -49178,7 +49192,7 @@ var Row = /** @class */ (function () {
  * currently working on.
  *
  */
-var Img = /** @class */ (function () {
+var Img = (function () {
     /**
      * @param {?} _elementRef
      * @param {?} _renderer
@@ -49482,34 +49496,34 @@ var Img = /** @class */ (function () {
         this._unreg && this._unreg();
         this._content && this._content.removeImg(this);
     };
-    Img.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-img',
-                    template: '<img>',
-                    changeDetection: ChangeDetectionStrategy.OnPush,
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Img.ctorParameters = function () { return [
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: Platform, },
-        { type: Content, decorators: [{ type: Optional },] },
-        { type: DomController, },
-    ]; };
-    Img.propDecorators = {
-        'src': [{ type: Input },],
-        'bounds': [{ type: Input },],
-        'cache': [{ type: Input },],
-        'width': [{ type: Input },],
-        'height': [{ type: Input },],
-        'alt': [{ type: Input },],
-    };
     return Img;
 }());
+Img.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-img',
+                template: '<img>',
+                changeDetection: ChangeDetectionStrategy.OnPush,
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Img.ctorParameters = function () { return [
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: Platform, },
+    { type: Content, decorators: [{ type: Optional },] },
+    { type: DomController, },
+]; };
+Img.propDecorators = {
+    'src': [{ type: Input },],
+    'bounds': [{ type: Input },],
+    'cache': [{ type: Input },],
+    'width': [{ type: Input },],
+    'height': [{ type: Input },],
+    'alt': [{ type: Input },],
+};
 /**
  * @param {?} val
  * @return {?}
@@ -49665,7 +49679,7 @@ function getUnitValue(val) {
  * \@demo /docs/demos/src/infinite-scroll/
  *
  */
-var InfiniteScroll = /** @class */ (function () {
+var InfiniteScroll = (function () {
     /**
      * @param {?} _content
      * @param {?} _zone
@@ -49933,28 +49947,28 @@ var InfiniteScroll = /** @class */ (function () {
     InfiniteScroll.prototype.ngOnDestroy = function () {
         this._setListeners(false);
     };
-    InfiniteScroll.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-infinite-scroll'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    InfiniteScroll.ctorParameters = function () { return [
-        { type: Content, },
-        { type: NgZone, },
-        { type: ElementRef, },
-        { type: DomController, },
-    ]; };
-    InfiniteScroll.propDecorators = {
-        'threshold': [{ type: Input },],
-        'enabled': [{ type: Input },],
-        'position': [{ type: Input },],
-        'ionInfinite': [{ type: Output },],
-    };
     return InfiniteScroll;
 }());
+InfiniteScroll.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-infinite-scroll'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+InfiniteScroll.ctorParameters = function () { return [
+    { type: Content, },
+    { type: NgZone, },
+    { type: ElementRef, },
+    { type: DomController, },
+]; };
+InfiniteScroll.propDecorators = {
+    'threshold': [{ type: Input },],
+    'enabled': [{ type: Input },],
+    'position': [{ type: Input },],
+    'ionInfinite': [{ type: Output },],
+};
 var STATE_ENABLED = 'enabled';
 var STATE_DISABLED = 'disabled';
 var STATE_LOADING = 'loading';
@@ -49964,7 +49978,7 @@ var POSITION_BOTTOM = 'bottom';
 /**
  * @hidden
  */
-var InfiniteScrollContent = /** @class */ (function () {
+var InfiniteScrollContent = (function () {
     /**
      * @param {?} inf
      * @param {?} _config
@@ -49982,34 +49996,34 @@ var InfiniteScrollContent = /** @class */ (function () {
             this.loadingSpinner = this._config.get('infiniteLoadingSpinner', this._config.get('spinner', 'ios'));
         }
     };
-    InfiniteScrollContent.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-infinite-scroll-content',
-                    template: '<div class="infinite-loading">' +
-                        '<div class="infinite-loading-spinner" *ngIf="loadingSpinner">' +
-                        '<ion-spinner [name]="loadingSpinner"></ion-spinner>' +
-                        '</div>' +
-                        '<div class="infinite-loading-text" [innerHTML]="loadingText" *ngIf="loadingText"></div>' +
-                        '</div>',
-                    host: {
-                        '[attr.state]': 'inf.state'
-                    },
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    InfiniteScrollContent.ctorParameters = function () { return [
-        { type: InfiniteScroll, },
-        { type: Config, },
-    ]; };
-    InfiniteScrollContent.propDecorators = {
-        'loadingSpinner': [{ type: Input },],
-        'loadingText': [{ type: Input },],
-    };
     return InfiniteScrollContent;
 }());
+InfiniteScrollContent.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-infinite-scroll-content',
+                template: '<div class="infinite-loading">' +
+                    '<div class="infinite-loading-spinner" *ngIf="loadingSpinner">' +
+                    '<ion-spinner [name]="loadingSpinner"></ion-spinner>' +
+                    '</div>' +
+                    '<div class="infinite-loading-text" [innerHTML]="loadingText" *ngIf="loadingText"></div>' +
+                    '</div>',
+                host: {
+                    '[attr.state]': 'inf.state'
+                },
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+InfiniteScrollContent.ctorParameters = function () { return [
+    { type: InfiniteScroll, },
+    { type: Config, },
+]; };
+InfiniteScrollContent.propDecorators = {
+    'loadingSpinner': [{ type: Input },],
+    'loadingText': [{ type: Input },],
+};
 
 var __extends$49 = (commonjsGlobal && commonjsGlobal.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -50165,7 +50179,7 @@ var __extends$48 = (undefined && undefined.__extends) || (function () {
  *
  * \@demo /docs/demos/src/input/
  */
-var TextInput = /** @class */ (function (_super) {
+var TextInput = (function (_super) {
     __extends$48(TextInput, _super);
     /**
      * @param {?} config
@@ -50513,7 +50527,7 @@ var TextInput = /** @class */ (function (_super) {
             return this._scrollData;
         }
         var /** @type {?} */ ele = this._elementRef.nativeElement;
-        ele = /** @type {?} */ (ele.closest('ion-item,[ion-item]')) || ele;
+        ele = (ele.closest('ion-item,[ion-item]')) || ele;
         return this._scrollData = getScrollData(ele.offsetTop, ele.offsetHeight, this._content.getContentDimensions(), this._keyboardHeight, this._plt.height());
     };
     /**
@@ -50683,85 +50697,85 @@ var TextInput = /** @class */ (function (_super) {
             _this.setFocus();
         });
     };
-    TextInput.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-input,ion-textarea',
-                    template: '<input #textInput *ngIf="!_isTextarea" class="text-input" ' +
-                        '[ngClass]="\'text-input-\' + _mode"' +
-                        '(input)="onInput($event)" ' +
-                        '(blur)="onBlur($event)" ' +
-                        '(focus)="onFocus($event)" ' +
-                        '(keydown)="onKeydown($event)" ' +
-                        '[type]="_type" ' +
-                        '[attr.aria-labelledby]="_labelId" ' +
-                        '[attr.min]="min" ' +
-                        '[attr.max]="max" ' +
-                        '[attr.step]="step" ' +
-                        '[attr.autocomplete]="autocomplete" ' +
-                        '[attr.autocorrect]="autocorrect" ' +
-                        '[placeholder]="placeholder" ' +
-                        '[disabled]="_disabled" ' +
-                        '[readonly]="_readonly">' +
-                        '<textarea #textInput *ngIf="_isTextarea" class="text-input" ' +
-                        '[ngClass]="\'text-input-\' + _mode"' +
-                        '(input)="onInput($event)" ' +
-                        '(blur)="onBlur($event)" ' +
-                        '(focus)="onFocus($event)" ' +
-                        '(keydown)="onKeydown($event)" ' +
-                        '[attr.aria-labelledby]="_labelId" ' +
-                        '[attr.autocomplete]="autocomplete" ' +
-                        '[attr.autocorrect]="autocorrect" ' +
-                        '[placeholder]="placeholder" ' +
-                        '[disabled]="_disabled" ' +
-                        '[readonly]="_readonly"></textarea>' +
-                        '<button ion-button *ngIf="_clearInput" clear class="text-input-clear-icon" ' +
-                        'type="button" ' +
-                        '(click)="clearTextInput($event)" ' +
-                        '(mousedown)="clearTextInput($event)" ' +
-                        'tabindex="-1"></button>' +
-                        '<div class="input-cover" *ngIf="_useAssist" ' +
-                        '(touchstart)="_pointerStart($event)" ' +
-                        '(touchend)="_pointerEnd($event)" ' +
-                        '(mousedown)="_pointerStart($event)" ' +
-                        '(mouseup)="_pointerEnd($event)"></div>',
-                    encapsulation: ViewEncapsulation.None,
-                    changeDetection: ChangeDetectionStrategy.OnPush,
-                    inputs: ['value']
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    TextInput.ctorParameters = function () { return [
-        { type: Config, },
-        { type: Platform, },
-        { type: Form, },
-        { type: App, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: Content, decorators: [{ type: Optional },] },
-        { type: Item, decorators: [{ type: Optional },] },
-        { type: NgControl, decorators: [{ type: Optional },] },
-        { type: DomController, },
-    ]; };
-    TextInput.propDecorators = {
-        'clearInput': [{ type: Input },],
-        'type': [{ type: Input },],
-        'readonly': [{ type: Input },],
-        'clearOnEdit': [{ type: Input },],
-        '_native': [{ type: ViewChild, args: ['textInput', { read: ElementRef },] },],
-        'autocomplete': [{ type: Input },],
-        'autocorrect': [{ type: Input },],
-        'placeholder': [{ type: Input },],
-        'min': [{ type: Input },],
-        'max': [{ type: Input },],
-        'step': [{ type: Input },],
-        'input': [{ type: Output },],
-        'blur': [{ type: Output },],
-        'focus': [{ type: Output },],
-    };
     return TextInput;
 }(BaseInput));
+TextInput.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-input,ion-textarea',
+                template: '<input #textInput *ngIf="!_isTextarea" class="text-input" ' +
+                    '[ngClass]="\'text-input-\' + _mode"' +
+                    '(input)="onInput($event)" ' +
+                    '(blur)="onBlur($event)" ' +
+                    '(focus)="onFocus($event)" ' +
+                    '(keydown)="onKeydown($event)" ' +
+                    '[type]="_type" ' +
+                    '[attr.aria-labelledby]="_labelId" ' +
+                    '[attr.min]="min" ' +
+                    '[attr.max]="max" ' +
+                    '[attr.step]="step" ' +
+                    '[attr.autocomplete]="autocomplete" ' +
+                    '[attr.autocorrect]="autocorrect" ' +
+                    '[placeholder]="placeholder" ' +
+                    '[disabled]="_disabled" ' +
+                    '[readonly]="_readonly">' +
+                    '<textarea #textInput *ngIf="_isTextarea" class="text-input" ' +
+                    '[ngClass]="\'text-input-\' + _mode"' +
+                    '(input)="onInput($event)" ' +
+                    '(blur)="onBlur($event)" ' +
+                    '(focus)="onFocus($event)" ' +
+                    '(keydown)="onKeydown($event)" ' +
+                    '[attr.aria-labelledby]="_labelId" ' +
+                    '[attr.autocomplete]="autocomplete" ' +
+                    '[attr.autocorrect]="autocorrect" ' +
+                    '[placeholder]="placeholder" ' +
+                    '[disabled]="_disabled" ' +
+                    '[readonly]="_readonly"></textarea>' +
+                    '<button ion-button *ngIf="_clearInput" clear class="text-input-clear-icon" ' +
+                    'type="button" ' +
+                    '(click)="clearTextInput($event)" ' +
+                    '(mousedown)="clearTextInput($event)" ' +
+                    'tabindex="-1"></button>' +
+                    '<div class="input-cover" *ngIf="_useAssist" ' +
+                    '(touchstart)="_pointerStart($event)" ' +
+                    '(touchend)="_pointerEnd($event)" ' +
+                    '(mousedown)="_pointerStart($event)" ' +
+                    '(mouseup)="_pointerEnd($event)"></div>',
+                encapsulation: ViewEncapsulation.None,
+                changeDetection: ChangeDetectionStrategy.OnPush,
+                inputs: ['value']
+            },] },
+];
+/**
+ * @nocollapse
+ */
+TextInput.ctorParameters = function () { return [
+    { type: Config, },
+    { type: Platform, },
+    { type: Form, },
+    { type: App, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: Content, decorators: [{ type: Optional },] },
+    { type: Item, decorators: [{ type: Optional },] },
+    { type: NgControl, decorators: [{ type: Optional },] },
+    { type: DomController, },
+]; };
+TextInput.propDecorators = {
+    'clearInput': [{ type: Input },],
+    'type': [{ type: Input },],
+    'readonly': [{ type: Input },],
+    'clearOnEdit': [{ type: Input },],
+    '_native': [{ type: ViewChild, args: ['textInput', { read: ElementRef },] },],
+    'autocomplete': [{ type: Input },],
+    'autocorrect': [{ type: Input },],
+    'placeholder': [{ type: Input },],
+    'min': [{ type: Input },],
+    'max': [{ type: Input },],
+    'step': [{ type: Input },],
+    'input': [{ type: Output },],
+    'blur': [{ type: Output },],
+    'focus': [{ type: Output },],
+};
 /**
  * \@name TextArea
  * \@description
@@ -50957,23 +50971,23 @@ function removeClone(plt, srcComponentEle, srcNativeInputEle) {
 /**
  * @hidden
  */
-var ItemContent = /** @class */ (function () {
+var ItemContent = (function () {
     function ItemContent() {
     }
-    ItemContent.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-item,[ion-item]',
-                    host: {
-                        'class': 'item-block'
-                    }
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    ItemContent.ctorParameters = function () { return []; };
     return ItemContent;
 }());
+ItemContent.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-item,[ion-item]',
+                host: {
+                    'class': 'item-block'
+                }
+            },] },
+];
+/**
+ * @nocollapse
+ */
+ItemContent.ctorParameters = function () { return []; };
 
 var __extends$50 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -50988,7 +51002,7 @@ var __extends$50 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var ItemDivider = /** @class */ (function (_super) {
+var ItemDivider = (function (_super) {
     __extends$50(ItemDivider, _super);
     /**
      * @param {?} config
@@ -50998,42 +51012,42 @@ var ItemDivider = /** @class */ (function (_super) {
     function ItemDivider(config, elementRef, renderer) {
         return _super.call(this, config, elementRef, renderer, 'item-divider') || this;
     }
-    ItemDivider.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-item-divider',
-                    host: {
-                        'class': 'item-divider'
-                    }
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    ItemDivider.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
     return ItemDivider;
 }(Ion));
+ItemDivider.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-item-divider',
+                host: {
+                    'class': 'item-divider'
+                }
+            },] },
+];
+/**
+ * @nocollapse
+ */
+ItemDivider.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
 
 /**
  * @hidden
  */
-var ItemGroup = /** @class */ (function () {
+var ItemGroup = (function () {
     function ItemGroup() {
     }
-    ItemGroup.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-item-group'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    ItemGroup.ctorParameters = function () { return []; };
     return ItemGroup;
 }());
+ItemGroup.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-item-group'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+ItemGroup.ctorParameters = function () { return []; };
 
 /**
  * \@name ItemOptions
@@ -51056,7 +51070,7 @@ var ItemGroup = /** @class */ (function () {
  * </ion-item-sliding>
  * ```
  */
-var ItemOptions = /** @class */ (function () {
+var ItemOptions = (function () {
     /**
      * @param {?} _elementRef
      * @param {?} _plt
@@ -51083,24 +51097,24 @@ var ItemOptions = /** @class */ (function () {
     ItemOptions.prototype.width = function () {
         return this._elementRef.nativeElement.offsetWidth;
     };
-    ItemOptions.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-item-options',
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    ItemOptions.ctorParameters = function () { return [
-        { type: ElementRef, },
-        { type: Platform, },
-    ]; };
-    ItemOptions.propDecorators = {
-        'side': [{ type: Input },],
-        'ionSwipe': [{ type: Output },],
-    };
     return ItemOptions;
 }());
+ItemOptions.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-item-options',
+            },] },
+];
+/**
+ * @nocollapse
+ */
+ItemOptions.ctorParameters = function () { return [
+    { type: ElementRef, },
+    { type: Platform, },
+]; };
+ItemOptions.propDecorators = {
+    'side': [{ type: Input },],
+    'ionSwipe': [{ type: Output },],
+};
 
 var __extends$52 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -51115,7 +51129,7 @@ var __extends$52 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var ItemSlidingGesture = /** @class */ (function (_super) {
+var ItemSlidingGesture = (function (_super) {
     __extends$52(ItemSlidingGesture, _super);
     /**
      * @param {?} plt
@@ -51295,7 +51309,7 @@ var __extends$51 = (undefined && undefined.__extends) || (function () {
  * ```
  *
  */
-var List = /** @class */ (function (_super) {
+var List = (function (_super) {
     __extends$51(List, _super);
     /**
      * @param {?} config
@@ -51371,27 +51385,27 @@ var List = /** @class */ (function (_super) {
     List.prototype.destroy = function () {
         this._slidingGesture && this._slidingGesture.destroy();
     };
-    List.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-list',
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    List.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: Platform, },
-        { type: GestureController, },
-        { type: DomController, },
-    ]; };
-    List.propDecorators = {
-        'sliding': [{ type: Input },],
-    };
     return List;
 }(Ion));
+List.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-list',
+            },] },
+];
+/**
+ * @nocollapse
+ */
+List.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: Platform, },
+    { type: GestureController, },
+    { type: DomController, },
+]; };
+List.propDecorators = {
+    'sliding': [{ type: Input },],
+};
 
 var SWIPE_MARGIN = 30;
 var ELASTIC_FACTOR = 0.55;
@@ -51500,7 +51514,7 @@ var ITEM_SIDE_FLAG_BOTH = ITEM_SIDE_FLAG_LEFT | ITEM_SIDE_FLAG_RIGHT;
  * @see {\@link ../Item Item API Docs}
  * @see {\@link ../../list/List List API Docs}
  */
-var ItemSliding = /** @class */ (function () {
+var ItemSliding = (function () {
     /**
      * @param {?} list
      * @param {?} _plt
@@ -51806,36 +51820,36 @@ var ItemSliding = /** @class */ (function () {
     ItemSliding.prototype.setElementClass = function (cssClass, shouldAdd) {
         this._renderer.setElementClass(this._elementRef.nativeElement, cssClass, shouldAdd);
     };
-    ItemSliding.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-item-sliding',
-                    template: "\n    <ng-content select=\"ion-item,[ion-item]\"></ng-content>\n    <ng-content select=\"ion-item-options\"></ng-content>\n  ",
-                    changeDetection: ChangeDetectionStrategy.OnPush,
-                    encapsulation: ViewEncapsulation.None
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    ItemSliding.ctorParameters = function () { return [
-        { type: List, decorators: [{ type: Optional },] },
-        { type: Platform, },
-        { type: Renderer, },
-        { type: ElementRef, },
-        { type: NgZone, },
-    ]; };
-    ItemSliding.propDecorators = {
-        'item': [{ type: ContentChild, args: [Item,] },],
-        'ionDrag': [{ type: Output },],
-        '_itemOptions': [{ type: ContentChildren, args: [forwardRef(function () { return ItemOptions; }),] },],
-    };
     return ItemSliding;
 }());
+ItemSliding.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-item-sliding',
+                template: "\n    <ng-content select=\"ion-item,[ion-item]\"></ng-content>\n    <ng-content select=\"ion-item-options\"></ng-content>\n  ",
+                changeDetection: ChangeDetectionStrategy.OnPush,
+                encapsulation: ViewEncapsulation.None
+            },] },
+];
+/**
+ * @nocollapse
+ */
+ItemSliding.ctorParameters = function () { return [
+    { type: List, decorators: [{ type: Optional },] },
+    { type: Platform, },
+    { type: Renderer, },
+    { type: ElementRef, },
+    { type: NgZone, },
+]; };
+ItemSliding.propDecorators = {
+    'item': [{ type: ContentChild, args: [Item,] },],
+    'ionDrag': [{ type: Output },],
+    '_itemOptions': [{ type: ContentChildren, args: [forwardRef(function () { return ItemOptions; }),] },],
+};
 
 /**
  * @hidden
  */
-var Reorder = /** @class */ (function () {
+var Reorder = (function () {
     /**
      * @param {?} elementRef
      */
@@ -51858,23 +51872,23 @@ var Reorder = /** @class */ (function () {
         ev.preventDefault();
         ev.stopPropagation();
     };
-    Reorder.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-reorder',
-                    template: "<ion-icon name=\"reorder\"></ion-icon>"
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Reorder.ctorParameters = function () { return [
-        { type: ElementRef, },
-    ]; };
-    Reorder.propDecorators = {
-        'onClick': [{ type: HostListener, args: ['click', ['$event'],] },],
-    };
     return Reorder;
 }());
+Reorder.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-reorder',
+                template: "<ion-icon name=\"reorder\"></ion-icon>"
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Reorder.ctorParameters = function () { return [
+    { type: ElementRef, },
+]; };
+Reorder.propDecorators = {
+    'onClick': [{ type: HostListener, args: ['click', ['$event'],] },],
+};
 
 var __extends$53 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -51889,7 +51903,7 @@ var __extends$53 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var ListHeader = /** @class */ (function (_super) {
+var ListHeader = (function (_super) {
     __extends$53(ListHeader, _super);
     /**
      * @param {?} config
@@ -51920,27 +51934,27 @@ var ListHeader = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    ListHeader.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-list-header'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    ListHeader.ctorParameters = function () { return [
-        { type: Config, },
-        { type: Renderer, },
-        { type: ElementRef, },
-        { type: undefined, decorators: [{ type: Attribute, args: ['id',] },] },
-    ]; };
     return ListHeader;
 }(Ion));
+ListHeader.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-list-header'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+ListHeader.ctorParameters = function () { return [
+    { type: Config, },
+    { type: Renderer, },
+    { type: ElementRef, },
+    { type: undefined, decorators: [{ type: Attribute, args: ['id',] },] },
+]; };
 
 /**
  * @hidden
  */
-var LoadingCmp = /** @class */ (function () {
+var LoadingCmp = (function () {
     /**
      * @param {?} _viewCtrl
      * @param {?} _config
@@ -52033,38 +52047,38 @@ var LoadingCmp = /** @class */ (function () {
         (void 0) /* assert */;
         this.gestureBlocker.destroy();
     };
-    LoadingCmp.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-loading',
-                    template: '<ion-backdrop [hidden]="!d.showBackdrop" (click)="bdClick()" [class.backdrop-no-tappable]="!d.enableBackdropDismiss"></ion-backdrop>' +
-                        '<div class="loading-wrapper">' +
-                        '<div *ngIf="showSpinner" class="loading-spinner">' +
-                        '<ion-spinner [name]="d.spinner"></ion-spinner>' +
-                        '</div>' +
-                        '<div *ngIf="d.content" [innerHTML]="d.content" class="loading-content"></div>' +
-                        '</div>',
-                    host: {
-                        'role': 'dialog'
-                    },
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    LoadingCmp.ctorParameters = function () { return [
-        { type: ViewController, },
-        { type: Config, },
-        { type: ElementRef, },
-        { type: GestureController, },
-        { type: NavParams, },
-        { type: Renderer, },
-    ]; };
-    LoadingCmp.propDecorators = {
-        'keyUp': [{ type: HostListener, args: ['body:keyup', ['$event'],] },],
-    };
     return LoadingCmp;
 }());
+LoadingCmp.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-loading',
+                template: '<ion-backdrop [hidden]="!d.showBackdrop" (click)="bdClick()" [class.backdrop-no-tappable]="!d.enableBackdropDismiss"></ion-backdrop>' +
+                    '<div class="loading-wrapper">' +
+                    '<div *ngIf="showSpinner" class="loading-spinner">' +
+                    '<ion-spinner [name]="d.spinner"></ion-spinner>' +
+                    '</div>' +
+                    '<div *ngIf="d.content" [innerHTML]="d.content" class="loading-content"></div>' +
+                    '</div>',
+                host: {
+                    'role': 'dialog'
+                },
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+LoadingCmp.ctorParameters = function () { return [
+    { type: ViewController, },
+    { type: Config, },
+    { type: ElementRef, },
+    { type: GestureController, },
+    { type: NavParams, },
+    { type: Renderer, },
+]; };
+LoadingCmp.propDecorators = {
+    'keyUp': [{ type: HostListener, args: ['body:keyup', ['$event'],] },],
+};
 var loadingIds = -1;
 
 var __extends$55 = (undefined && undefined.__extends) || (function () {
@@ -52080,7 +52094,7 @@ var __extends$55 = (undefined && undefined.__extends) || (function () {
 /**
  * Animations for loading
  */
-var LoadingPopIn = /** @class */ (function (_super) {
+var LoadingPopIn = (function (_super) {
     __extends$55(LoadingPopIn, _super);
     function LoadingPopIn() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -52102,7 +52116,7 @@ var LoadingPopIn = /** @class */ (function (_super) {
     };
     return LoadingPopIn;
 }(Transition));
-var LoadingPopOut = /** @class */ (function (_super) {
+var LoadingPopOut = (function (_super) {
     __extends$55(LoadingPopOut, _super);
     function LoadingPopOut() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -52124,7 +52138,7 @@ var LoadingPopOut = /** @class */ (function (_super) {
     };
     return LoadingPopOut;
 }(Transition));
-var LoadingMdPopIn = /** @class */ (function (_super) {
+var LoadingMdPopIn = (function (_super) {
     __extends$55(LoadingMdPopIn, _super);
     function LoadingMdPopIn() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -52146,7 +52160,7 @@ var LoadingMdPopIn = /** @class */ (function (_super) {
     };
     return LoadingMdPopIn;
 }(Transition));
-var LoadingMdPopOut = /** @class */ (function (_super) {
+var LoadingMdPopOut = (function (_super) {
     __extends$55(LoadingMdPopOut, _super);
     function LoadingMdPopOut() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -52168,7 +52182,7 @@ var LoadingMdPopOut = /** @class */ (function (_super) {
     };
     return LoadingMdPopOut;
 }(Transition));
-var LoadingWpPopIn = /** @class */ (function (_super) {
+var LoadingWpPopIn = (function (_super) {
     __extends$55(LoadingWpPopIn, _super);
     function LoadingWpPopIn() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -52190,7 +52204,7 @@ var LoadingWpPopIn = /** @class */ (function (_super) {
     };
     return LoadingWpPopIn;
 }(Transition));
-var LoadingWpPopOut = /** @class */ (function (_super) {
+var LoadingWpPopOut = (function (_super) {
     __extends$55(LoadingWpPopOut, _super);
     function LoadingWpPopOut() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -52226,7 +52240,7 @@ var __extends$54 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var Loading = /** @class */ (function (_super) {
+var Loading = (function (_super) {
     __extends$54(Loading, _super);
     /**
      * @param {?} app
@@ -52363,12 +52377,10 @@ var Loading = /** @class */ (function (_super) {
  * ```ts
  * import { LoadingController } from 'ionic-angular';
  *
- * constructor(public loadingCtrl: LoadingController) {
- *
- * }
+ * constructor(public loadingCtrl: LoadingController) { }
  *
  * presentLoadingDefault() {
- *   let loading = this.loadingCtrl.create({
+ *   const loading = this.loadingCtrl.create({
  *     content: 'Please wait...'
  *   });
  *
@@ -52380,7 +52392,7 @@ var Loading = /** @class */ (function (_super) {
  * }
  *
  * presentLoadingCustom() {
- *   let loading = this.loadingCtrl.create({
+ *   const loading = this.loadingCtrl.create({
  *     spinner: 'hide',
  *     content: `
  *       <div class="custom-spinner-container">
@@ -52397,7 +52409,7 @@ var Loading = /** @class */ (function (_super) {
  * }
  *
  * presentLoadingText() {
- *   let loading = this.loadingCtrl.create({
+ *   const loading = this.loadingCtrl.create({
  *     spinner: 'hide',
  *     content: 'Loading Please Wait...'
  *   });
@@ -52430,7 +52442,7 @@ var Loading = /** @class */ (function (_super) {
  * \@demo /docs/demos/src/loading/
  * @see {\@link /docs/api/components/spinner/Spinner Spinner API Docs}
  */
-var LoadingController = /** @class */ (function () {
+var LoadingController = (function () {
     /**
      * @param {?} _app
      * @param {?} config
@@ -52448,18 +52460,18 @@ var LoadingController = /** @class */ (function () {
         if (opts === void 0) { opts = {}; }
         return new Loading(this._app, opts, this.config);
     };
-    LoadingController.decorators = [
-        { type: Injectable },
-    ];
-    /**
-     * @nocollapse
-     */
-    LoadingController.ctorParameters = function () { return [
-        { type: App, },
-        { type: Config, },
-    ]; };
     return LoadingController;
 }());
+LoadingController.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+LoadingController.ctorParameters = function () { return [
+    { type: App, },
+    { type: Config, },
+]; };
 
 var __extends$56 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -52474,7 +52486,7 @@ var __extends$56 = (undefined && undefined.__extends) || (function () {
 /**
  * Gesture attached to the content which the menu is assigned to
  */
-var MenuContentGesture = /** @class */ (function (_super) {
+var MenuContentGesture = (function (_super) {
     __extends$56(MenuContentGesture, _super);
     /**
      * @param {?} plt
@@ -52610,7 +52622,7 @@ var QUERY = {
  * @hidden
  * @abstract
  */
-var RootNode = /** @class */ (function () {
+var RootNode = (function () {
     function RootNode() {
     }
     /**
@@ -52745,7 +52757,7 @@ var RootNode = /** @class */ (function () {
  *  ```
  *
  */
-var SplitPane = /** @class */ (function (_super) {
+var SplitPane = (function (_super) {
     __extends$58(SplitPane, _super);
     /**
      * @param {?} _zone
@@ -52979,30 +52991,30 @@ var SplitPane = /** @class */ (function (_super) {
     SplitPane.prototype.initPane = function () {
         return true;
     };
-    SplitPane.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-split-pane',
-                    providers: [{ provide: RootNode, useExisting: forwardRef(function () { return SplitPane; }) }]
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    SplitPane.ctorParameters = function () { return [
-        { type: NgZone, },
-        { type: Platform, },
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
-    SplitPane.propDecorators = {
-        '_setchildren': [{ type: ContentChildren, args: [RootNode, { descendants: false },] },],
-        'when': [{ type: Input },],
-        'enabled': [{ type: Input },],
-        'ionChange': [{ type: Output },],
-    };
     return SplitPane;
 }(Ion));
+SplitPane.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-split-pane',
+                providers: [{ provide: RootNode, useExisting: forwardRef(function () { return SplitPane; }) }]
+            },] },
+];
+/**
+ * @nocollapse
+ */
+SplitPane.ctorParameters = function () { return [
+    { type: NgZone, },
+    { type: Platform, },
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
+SplitPane.propDecorators = {
+    '_setchildren': [{ type: ContentChildren, args: [RootNode, { descendants: false },] },],
+    'when': [{ type: Input },],
+    'enabled': [{ type: Input },],
+    'ionChange': [{ type: Output },],
+};
 
 var __extends$57 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -53046,7 +53058,7 @@ var __extends$57 = (undefined && undefined.__extends) || (function () {
  * \@demo /docs/demos/src/navigation/
  * @see {\@link /docs/components#navigation Navigation Component Docs}
  */
-var Nav = /** @class */ (function (_super) {
+var Nav = (function (_super) {
     __extends$57(Nav, _super);
     /**
      * @param {?} viewCtrl
@@ -53184,42 +53196,42 @@ var Nav = /** @class */ (function (_super) {
     Nav.prototype.getSecondaryIdentifier = function () {
         return null;
     };
-    Nav.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-nav',
-                    template: '<div #viewport nav-viewport></div>' +
-                        '<div class="nav-decor"></div>',
-                    encapsulation: ViewEncapsulation.None,
-                    providers: [{ provide: RootNode, useExisting: forwardRef(function () { return Nav; }) }]
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Nav.ctorParameters = function () { return [
-        { type: ViewController, decorators: [{ type: Optional },] },
-        { type: NavController, decorators: [{ type: Optional },] },
-        { type: App, },
-        { type: Config, },
-        { type: Platform, },
-        { type: ElementRef, },
-        { type: NgZone, },
-        { type: Renderer, },
-        { type: ComponentFactoryResolver, },
-        { type: GestureController, },
-        { type: TransitionController, },
-        { type: DeepLinker, decorators: [{ type: Optional },] },
-        { type: DomController, },
-        { type: ErrorHandler, },
-    ]; };
-    Nav.propDecorators = {
-        '_vp': [{ type: ViewChild, args: ['viewport', { read: ViewContainerRef },] },],
-        'root': [{ type: Input },],
-        'rootParams': [{ type: Input },],
-        'name': [{ type: Input },],
-    };
     return Nav;
 }(NavControllerBase));
+Nav.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-nav',
+                template: '<div #viewport nav-viewport></div>' +
+                    '<div class="nav-decor"></div>',
+                encapsulation: ViewEncapsulation.None,
+                providers: [{ provide: RootNode, useExisting: forwardRef(function () { return Nav; }) }]
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Nav.ctorParameters = function () { return [
+    { type: ViewController, decorators: [{ type: Optional },] },
+    { type: NavController, decorators: [{ type: Optional },] },
+    { type: App, },
+    { type: Config, },
+    { type: Platform, },
+    { type: ElementRef, },
+    { type: NgZone, },
+    { type: Renderer, },
+    { type: ComponentFactoryResolver, },
+    { type: GestureController, },
+    { type: TransitionController, },
+    { type: DeepLinker, decorators: [{ type: Optional },] },
+    { type: DomController, },
+    { type: ErrorHandler, },
+]; };
+Nav.propDecorators = {
+    '_vp': [{ type: ViewChild, args: ['viewport', { read: ViewContainerRef },] },],
+    'root': [{ type: Input },],
+    'rootParams': [{ type: Input },],
+    'name': [{ type: Input },],
+};
 
 /**
  * \@name Menu
@@ -53385,7 +53397,7 @@ var Nav = /** @class */ (function (_super) {
  * @see {\@link ../../nav/Nav Nav API Docs}
  * @see {\@link ../../nav/NavController NavController API Docs}
  */
-var Menu = /** @class */ (function () {
+var Menu = (function () {
     /**
      * @param {?} _menuCtrl
      * @param {?} _elementRef
@@ -53852,7 +53864,7 @@ var Menu = /** @class */ (function () {
      * @return {?}
      */
     Menu.prototype.getMenuElement = function () {
-        return /** @type {?} */ (this.getNativeElement().querySelector('.menu-inner'));
+        return (this.getNativeElement().querySelector('.menu-inner'));
     };
     /**
      * @hidden
@@ -53920,51 +53932,51 @@ var Menu = /** @class */ (function () {
         this._type = null;
         this._cntEle = null;
     };
-    Menu.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-menu',
-                    template: '<div class="menu-inner"><ng-content></ng-content></div>' +
-                        '<ion-backdrop></ion-backdrop>',
-                    host: {
-                        'role': 'navigation'
-                    },
-                    changeDetection: ChangeDetectionStrategy.OnPush,
-                    encapsulation: ViewEncapsulation.None,
-                    providers: [{ provide: RootNode, useExisting: forwardRef(function () { return Menu; }) }]
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Menu.ctorParameters = function () { return [
-        { type: MenuController, },
-        { type: ElementRef, },
-        { type: Config, },
-        { type: Platform, },
-        { type: Renderer, },
-        { type: Keyboard, },
-        { type: GestureController, },
-        { type: DomController, },
-        { type: App, },
-    ]; };
-    Menu.propDecorators = {
-        'backdrop': [{ type: ViewChild, args: [Backdrop,] },],
-        'menuContent': [{ type: ContentChild, args: [Content,] },],
-        'menuNav': [{ type: ContentChild, args: [Nav,] },],
-        'content': [{ type: Input },],
-        'id': [{ type: Input },],
-        'type': [{ type: Input },],
-        'enabled': [{ type: Input },],
-        'side': [{ type: Input },],
-        'swipeEnabled': [{ type: Input },],
-        'persistent': [{ type: Input },],
-        'maxEdgeStart': [{ type: Input },],
-        'ionDrag': [{ type: Output },],
-        'ionOpen': [{ type: Output },],
-        'ionClose': [{ type: Output },],
-    };
     return Menu;
 }());
+Menu.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-menu',
+                template: '<div class="menu-inner"><ng-content></ng-content></div>' +
+                    '<ion-backdrop></ion-backdrop>',
+                host: {
+                    'role': 'navigation'
+                },
+                changeDetection: ChangeDetectionStrategy.OnPush,
+                encapsulation: ViewEncapsulation.None,
+                providers: [{ provide: RootNode, useExisting: forwardRef(function () { return Menu; }) }]
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Menu.ctorParameters = function () { return [
+    { type: MenuController, },
+    { type: ElementRef, },
+    { type: Config, },
+    { type: Platform, },
+    { type: Renderer, },
+    { type: Keyboard, },
+    { type: GestureController, },
+    { type: DomController, },
+    { type: App, },
+]; };
+Menu.propDecorators = {
+    'backdrop': [{ type: ViewChild, args: [Backdrop,] },],
+    'menuContent': [{ type: ContentChild, args: [Content,] },],
+    'menuNav': [{ type: ContentChild, args: [Nav,] },],
+    'content': [{ type: Input },],
+    'id': [{ type: Input },],
+    'type': [{ type: Input },],
+    'enabled': [{ type: Input },],
+    'side': [{ type: Input },],
+    'swipeEnabled': [{ type: Input },],
+    'persistent': [{ type: Input },],
+    'maxEdgeStart': [{ type: Input },],
+    'ionDrag': [{ type: Output },],
+    'ionOpen': [{ type: Output },],
+    'ionClose': [{ type: Output },],
+};
 
 /**
  * \@name MenuClose
@@ -53990,7 +54002,7 @@ var Menu = /** @class */ (function () {
  * @see {\@link /docs/components#menus Menu Component Docs}
  * @see {\@link ../../menu/Menu Menu API Docs}
  */
-var MenuClose = /** @class */ (function () {
+var MenuClose = (function () {
     /**
      * @param {?} _menu
      */
@@ -54005,23 +54017,23 @@ var MenuClose = /** @class */ (function () {
         var /** @type {?} */ menu = this._menu.get(this.menuClose);
         menu && menu.close();
     };
-    MenuClose.decorators = [
-        { type: Directive, args: [{
-                    selector: '[menuClose]'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    MenuClose.ctorParameters = function () { return [
-        { type: MenuController, },
-    ]; };
-    MenuClose.propDecorators = {
-        'menuClose': [{ type: Input },],
-        'close': [{ type: HostListener, args: ['click',] },],
-    };
     return MenuClose;
 }());
+MenuClose.decorators = [
+    { type: Directive, args: [{
+                selector: '[menuClose]'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+MenuClose.ctorParameters = function () { return [
+    { type: MenuController, },
+]; };
+MenuClose.propDecorators = {
+    'menuClose': [{ type: Input },],
+    'close': [{ type: HostListener, args: ['click',] },],
+};
 
 var __extends$60 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -54036,7 +54048,7 @@ var __extends$60 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var ToolbarBase = /** @class */ (function (_super) {
+var ToolbarBase = (function (_super) {
     __extends$60(ToolbarBase, _super);
     /**
      * @param {?} config
@@ -54111,7 +54123,7 @@ var __extends$59 = (undefined && undefined.__extends) || (function () {
  * \@demo /docs/demos/src/navbar/
  * @see {\@link ../../toolbar/Toolbar/ Toolbar API Docs}
  */
-var Navbar = /** @class */ (function (_super) {
+var Navbar = (function (_super) {
     __extends$59(Navbar, _super);
     /**
      * @param {?} _app
@@ -54195,43 +54207,43 @@ var Navbar = /** @class */ (function (_super) {
         // used to display none/block the navbar
         this._hidden = isHidden;
     };
-    Navbar.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-navbar',
-                    template: '<div class="toolbar-background" [ngClass]="\'toolbar-background-\' + _mode"></div>' +
-                        '<button (click)="backButtonClick($event)" ion-button="bar-button" class="back-button" [ngClass]="\'back-button-\' + _mode" [hidden]="_hideBb">' +
-                        '<ion-icon class="back-button-icon" [ngClass]="\'back-button-icon-\' + _mode" [name]="_bbIcon"></ion-icon>' +
-                        '<span class="back-button-text" [ngClass]="\'back-button-text-\' + _mode">{{_backText}}</span>' +
-                        '</button>' +
-                        '<ng-content select="[menuToggle],ion-buttons[left]"></ng-content>' +
-                        '<ng-content select="ion-buttons[start]"></ng-content>' +
-                        '<ng-content select="ion-buttons[end],ion-buttons[right]"></ng-content>' +
-                        '<div class="toolbar-content" [ngClass]="\'toolbar-content-\' + _mode">' +
-                        '<ng-content></ng-content>' +
-                        '</div>',
-                    host: {
-                        '[hidden]': '_hidden',
-                        'class': 'toolbar',
-                        '[class.statusbar-padding]': '_sbPadding'
-                    }
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Navbar.ctorParameters = function () { return [
-        { type: App, },
-        { type: ViewController, decorators: [{ type: Optional },] },
-        { type: NavController, decorators: [{ type: Optional },] },
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
-    Navbar.propDecorators = {
-        'hideBackButton': [{ type: Input },],
-    };
     return Navbar;
 }(ToolbarBase));
+Navbar.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-navbar',
+                template: '<div class="toolbar-background" [ngClass]="\'toolbar-background-\' + _mode"></div>' +
+                    '<button (click)="backButtonClick($event)" ion-button="bar-button" class="back-button" [ngClass]="\'back-button-\' + _mode" [hidden]="_hideBb">' +
+                    '<ion-icon class="back-button-icon" [ngClass]="\'back-button-icon-\' + _mode" [name]="_bbIcon"></ion-icon>' +
+                    '<span class="back-button-text" [ngClass]="\'back-button-text-\' + _mode">{{_backText}}</span>' +
+                    '</button>' +
+                    '<ng-content select="[menuToggle],ion-buttons[left]"></ng-content>' +
+                    '<ng-content select="ion-buttons[start]"></ng-content>' +
+                    '<ng-content select="ion-buttons[end],ion-buttons[right]"></ng-content>' +
+                    '<div class="toolbar-content" [ngClass]="\'toolbar-content-\' + _mode">' +
+                    '<ng-content></ng-content>' +
+                    '</div>',
+                host: {
+                    '[hidden]': '_hidden',
+                    'class': 'toolbar',
+                    '[class.statusbar-padding]': '_sbPadding'
+                }
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Navbar.ctorParameters = function () { return [
+    { type: App, },
+    { type: ViewController, decorators: [{ type: Optional },] },
+    { type: NavController, decorators: [{ type: Optional },] },
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
+Navbar.propDecorators = {
+    'hideBackButton': [{ type: Input },],
+};
 
 /**
  * \@name MenuToggle
@@ -54312,7 +54324,7 @@ var Navbar = /** @class */ (function (_super) {
  * @see {\@link /docs/components#menus Menu Component Docs}
  * @see {\@link ../../menu/Menu Menu API Docs}
  */
-var MenuToggle = /** @class */ (function () {
+var MenuToggle = (function () {
     /**
      * @param {?} _menu
      * @param {?} _viewCtrl
@@ -54369,29 +54381,29 @@ var MenuToggle = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    MenuToggle.decorators = [
-        { type: Directive, args: [{
-                    selector: '[menuToggle]',
-                    host: {
-                        '[hidden]': 'isHidden'
-                    }
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    MenuToggle.ctorParameters = function () { return [
-        { type: MenuController, },
-        { type: ViewController, decorators: [{ type: Optional },] },
-        { type: Button, decorators: [{ type: Optional },] },
-        { type: Navbar, decorators: [{ type: Optional },] },
-    ]; };
-    MenuToggle.propDecorators = {
-        'menuToggle': [{ type: Input },],
-        'toggle': [{ type: HostListener, args: ['click',] },],
-    };
     return MenuToggle;
 }());
+MenuToggle.decorators = [
+    { type: Directive, args: [{
+                selector: '[menuToggle]',
+                host: {
+                    '[hidden]': 'isHidden'
+                }
+            },] },
+];
+/**
+ * @nocollapse
+ */
+MenuToggle.ctorParameters = function () { return [
+    { type: MenuController, },
+    { type: ViewController, decorators: [{ type: Optional },] },
+    { type: Button, decorators: [{ type: Optional },] },
+    { type: Navbar, decorators: [{ type: Optional },] },
+]; };
+MenuToggle.propDecorators = {
+    'menuToggle': [{ type: Input },],
+    'toggle': [{ type: HostListener, args: ['click',] },],
+};
 
 var __extends$61 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -54410,7 +54422,7 @@ var __extends$61 = (undefined && undefined.__extends) || (function () {
  * type will provide their own animations for open and close
  * and registers itself with Menu.
  */
-var MenuType = /** @class */ (function () {
+var MenuType = (function () {
     /**
      * @param {?} plt
      */
@@ -54494,7 +54506,7 @@ var MenuType = /** @class */ (function () {
  * The content slides over to reveal the menu underneath.
  * The menu itself, which is under the content, does not move.
  */
-var MenuRevealType = /** @class */ (function (_super) {
+var MenuRevealType = (function (_super) {
     __extends$61(MenuRevealType, _super);
     /**
      * @param {?} menu
@@ -54517,7 +54529,7 @@ MenuController.registerType('reveal', MenuRevealType);
  * The content slides over to reveal the menu underneath.
  * The menu itself also slides over to reveal its bad self.
  */
-var MenuPushType = /** @class */ (function (_super) {
+var MenuPushType = (function (_super) {
     __extends$61(MenuPushType, _super);
     /**
      * @param {?} menu
@@ -54555,7 +54567,7 @@ MenuController.registerType('push', MenuPushType);
  * The menu slides over the content. The content
  * itself, which is under the menu, does not move.
  */
-var MenuOverlayType = /** @class */ (function (_super) {
+var MenuOverlayType = (function (_super) {
     __extends$61(MenuOverlayType, _super);
     /**
      * @param {?} menu
@@ -54587,7 +54599,7 @@ var MenuOverlayType = /** @class */ (function (_super) {
 }(MenuType));
 MenuController.registerType('overlay', MenuOverlayType);
 
-var OverlayProxy = /** @class */ (function () {
+var OverlayProxy = (function () {
     /**
      * @param {?} _app
      * @param {?} _component
@@ -54676,7 +54688,7 @@ var OverlayProxy = /** @class */ (function () {
 /**
  * NgModuleFactoryLoader that uses SystemJS to load NgModuleFactory
  */
-var NgModuleLoader = /** @class */ (function () {
+var NgModuleLoader = (function () {
     /**
      * @param {?} _compiler
      */
@@ -54692,17 +54704,17 @@ var NgModuleLoader = /** @class */ (function () {
         var /** @type {?} */ offlineMode = this._compiler instanceof Compiler;
         return offlineMode ? loadPrecompiledFactory(modulePath, ngModuleExport) : loadAndCompile(this._compiler, modulePath, ngModuleExport);
     };
-    NgModuleLoader.decorators = [
-        { type: Injectable },
-    ];
-    /**
-     * @nocollapse
-     */
-    NgModuleLoader.ctorParameters = function () { return [
-        { type: Compiler, },
-    ]; };
     return NgModuleLoader;
 }());
+NgModuleLoader.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+NgModuleLoader.ctorParameters = function () { return [
+    { type: Compiler, },
+]; };
 /**
  * @param {?} compiler
  * @param {?} modulePath
@@ -54742,7 +54754,7 @@ var LAZY_LOADED_TOKEN = new OpaqueToken('LZYCMP');
 /**
  * @hidden
  */
-var ModuleLoader = /** @class */ (function () {
+var ModuleLoader = (function () {
     /**
      * @param {?} _ngModuleLoader
      * @param {?} _injector
@@ -54787,18 +54799,18 @@ var ModuleLoader = /** @class */ (function () {
     ModuleLoader.prototype.getComponentFactoryResolver = function (component) {
         return this._cfrMap.get(component);
     };
-    ModuleLoader.decorators = [
-        { type: Injectable },
-    ];
-    /**
-     * @nocollapse
-     */
-    ModuleLoader.ctorParameters = function () { return [
-        { type: NgModuleLoader, },
-        { type: Injector, },
-    ]; };
     return ModuleLoader;
 }());
+ModuleLoader.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+ModuleLoader.ctorParameters = function () { return [
+    { type: NgModuleLoader, },
+    { type: Injector, },
+]; };
 var SPLITTER = '#';
 /**
  * @hidden
@@ -54856,7 +54868,7 @@ function setupPreloading(config, deepLinkConfig, moduleLoader, ngZone) {
 /**
  * @hidden
  */
-var ModalCmp = /** @class */ (function () {
+var ModalCmp = (function () {
     /**
      * @param {?} _cfr
      * @param {?} _renderer
@@ -54960,33 +54972,33 @@ var ModalCmp = /** @class */ (function () {
         (void 0) /* assert */;
         this._gestureBlocker.destroy();
     };
-    ModalCmp.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-modal',
-                    template: '<ion-backdrop (click)="_bdClick()" [class.backdrop-no-tappable]="!_bdDismiss"></ion-backdrop>' +
-                        '<div class="modal-wrapper">' +
-                        '<div #viewport nav-viewport></div>' +
-                        '</div>'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    ModalCmp.ctorParameters = function () { return [
-        { type: ComponentFactoryResolver, },
-        { type: Renderer, },
-        { type: ElementRef, },
-        { type: NavParams, },
-        { type: ViewController, },
-        { type: GestureController, },
-        { type: ModuleLoader, },
-    ]; };
-    ModalCmp.propDecorators = {
-        '_viewport': [{ type: ViewChild, args: ['viewport', { read: ViewContainerRef },] },],
-        '_keyUp': [{ type: HostListener, args: ['body:keyup', ['$event'],] },],
-    };
     return ModalCmp;
 }());
+ModalCmp.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-modal',
+                template: '<ion-backdrop (click)="_bdClick()" [class.backdrop-no-tappable]="!_bdDismiss"></ion-backdrop>' +
+                    '<div class="modal-wrapper">' +
+                    '<div #viewport nav-viewport></div>' +
+                    '</div>'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+ModalCmp.ctorParameters = function () { return [
+    { type: ComponentFactoryResolver, },
+    { type: Renderer, },
+    { type: ElementRef, },
+    { type: NavParams, },
+    { type: ViewController, },
+    { type: GestureController, },
+    { type: ModuleLoader, },
+]; };
+ModalCmp.propDecorators = {
+    '_viewport': [{ type: ViewChild, args: ['viewport', { read: ViewContainerRef },] },],
+    '_keyUp': [{ type: HostListener, args: ['body:keyup', ['$event'],] },],
+};
 
 var __extends$64 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -55001,7 +55013,7 @@ var __extends$64 = (undefined && undefined.__extends) || (function () {
 /**
  * Animations for modals
  */
-var ModalSlideIn = /** @class */ (function (_super) {
+var ModalSlideIn = (function (_super) {
     __extends$64(ModalSlideIn, _super);
     function ModalSlideIn() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -55027,7 +55039,7 @@ var ModalSlideIn = /** @class */ (function (_super) {
     };
     return ModalSlideIn;
 }(PageTransition));
-var ModalSlideOut = /** @class */ (function (_super) {
+var ModalSlideOut = (function (_super) {
     __extends$64(ModalSlideOut, _super);
     function ModalSlideOut() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -55055,7 +55067,7 @@ var ModalSlideOut = /** @class */ (function (_super) {
     };
     return ModalSlideOut;
 }(PageTransition));
-var ModalMDSlideIn = /** @class */ (function (_super) {
+var ModalMDSlideIn = (function (_super) {
     __extends$64(ModalMDSlideIn, _super);
     function ModalMDSlideIn() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -55079,7 +55091,7 @@ var ModalMDSlideIn = /** @class */ (function (_super) {
     };
     return ModalMDSlideIn;
 }(PageTransition));
-var ModalMDSlideOut = /** @class */ (function (_super) {
+var ModalMDSlideOut = (function (_super) {
     __extends$64(ModalMDSlideOut, _super);
     function ModalMDSlideOut() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -55118,7 +55130,7 @@ var __extends$63 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var ModalImpl = /** @class */ (function (_super) {
+var ModalImpl = (function (_super) {
     __extends$63(ModalImpl, _super);
     /**
      * @param {?} app
@@ -55194,7 +55206,7 @@ var __extends$62 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var Modal = /** @class */ (function (_super) {
+var Modal = (function (_super) {
     __extends$62(Modal, _super);
     /**
      * @param {?} app
@@ -55253,12 +55265,10 @@ var Modal = /** @class */ (function (_super) {
  * \@Component(...)
  * class HomePage {
  *
- *  constructor(public modalCtrl: ModalController) {
- *
- *  }
+ *  constructor(public modalCtrl: ModalController) { }
  *
  *  presentProfileModal() {
- *    let profileModal = this.modalCtrl.create(Profile, { userId: 8675309 });
+ *    const profileModal = this.modalCtrl.create(Profile, { userId: 8675309 });
  *    profileModal.present();
  *  }
  *
@@ -55349,7 +55359,7 @@ var Modal = /** @class */ (function (_super) {
  * \@demo /docs/demos/src/modal/
  * @see {\@link /docs/components#modals Modal Component Docs}
  */
-var ModalController = /** @class */ (function () {
+var ModalController = (function () {
     /**
      * @param {?} _app
      * @param {?} config
@@ -55373,19 +55383,19 @@ var ModalController = /** @class */ (function () {
         if (opts === void 0) { opts = {}; }
         return new Modal(this._app, component, data, opts, this.config, this.deepLinker);
     };
-    ModalController.decorators = [
-        { type: Injectable },
-    ];
-    /**
-     * @nocollapse
-     */
-    ModalController.ctorParameters = function () { return [
-        { type: App, },
-        { type: Config, },
-        { type: DeepLinker, },
-    ]; };
     return ModalController;
 }());
+ModalController.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+ModalController.ctorParameters = function () { return [
+    { type: App, },
+    { type: Config, },
+    { type: DeepLinker, },
+]; };
 
 /**
  * \@name NavPop
@@ -55407,7 +55417,7 @@ var ModalController = /** @class */ (function () {
  * @see {\@link /docs/components#navigation Navigation Component Docs}
  * @see {\@link ../NavPush NavPush API Docs}
  */
-var NavPop = /** @class */ (function () {
+var NavPop = (function () {
     /**
      * @param {?} _nav
      */
@@ -55431,27 +55441,27 @@ var NavPop = /** @class */ (function () {
         }
         return true;
     };
-    NavPop.decorators = [
-        { type: Directive, args: [{
-                    selector: '[navPop]'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    NavPop.ctorParameters = function () { return [
-        { type: NavController, decorators: [{ type: Optional },] },
-    ]; };
-    NavPop.propDecorators = {
-        'onClick': [{ type: HostListener, args: ['click',] },],
-    };
     return NavPop;
 }());
+NavPop.decorators = [
+    { type: Directive, args: [{
+                selector: '[navPop]'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+NavPop.ctorParameters = function () { return [
+    { type: NavController, decorators: [{ type: Optional },] },
+]; };
+NavPop.propDecorators = {
+    'onClick': [{ type: HostListener, args: ['click',] },],
+};
 
 /**
  * @hidden
  */
-var NavPopAnchor = /** @class */ (function () {
+var NavPopAnchor = (function () {
     /**
      * @param {?} host
      * @param {?} linker
@@ -55480,24 +55490,24 @@ var NavPopAnchor = /** @class */ (function () {
     NavPopAnchor.prototype.ngAfterContentInit = function () {
         this.updateHref();
     };
-    NavPopAnchor.decorators = [
-        { type: Directive, args: [{
-                    selector: 'a[navPop]',
-                    host: {
-                        '[attr.href]': '_href'
-                    }
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    NavPopAnchor.ctorParameters = function () { return [
-        { type: NavPop, decorators: [{ type: Optional },] },
-        { type: DeepLinker, },
-        { type: ViewController, decorators: [{ type: Optional },] },
-    ]; };
     return NavPopAnchor;
 }());
+NavPopAnchor.decorators = [
+    { type: Directive, args: [{
+                selector: 'a[navPop]',
+                host: {
+                    '[attr.href]': '_href'
+                }
+            },] },
+];
+/**
+ * @nocollapse
+ */
+NavPopAnchor.ctorParameters = function () { return [
+    { type: NavPop, decorators: [{ type: Optional },] },
+    { type: DeepLinker, },
+    { type: ViewController, decorators: [{ type: Optional },] },
+]; };
 
 /**
  * \@name NavPush
@@ -55542,7 +55552,7 @@ var NavPopAnchor = /** @class */ (function () {
  * @see {\@link ../NavPop NavPop API Docs}
  *
  */
-var NavPush = /** @class */ (function () {
+var NavPush = (function () {
     /**
      * @param {?} _nav
      */
@@ -55563,29 +55573,29 @@ var NavPush = /** @class */ (function () {
         }
         return true;
     };
-    NavPush.decorators = [
-        { type: Directive, args: [{
-                    selector: '[navPush]'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    NavPush.ctorParameters = function () { return [
-        { type: NavController, decorators: [{ type: Optional },] },
-    ]; };
-    NavPush.propDecorators = {
-        'navPush': [{ type: Input },],
-        'navParams': [{ type: Input },],
-        'onClick': [{ type: HostListener, args: ['click',] },],
-    };
     return NavPush;
 }());
+NavPush.decorators = [
+    { type: Directive, args: [{
+                selector: '[navPush]'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+NavPush.ctorParameters = function () { return [
+    { type: NavController, decorators: [{ type: Optional },] },
+]; };
+NavPush.propDecorators = {
+    'navPush': [{ type: Input },],
+    'navParams': [{ type: Input },],
+    'onClick': [{ type: HostListener, args: ['click',] },],
+};
 
 /**
  * @hidden
  */
-var NavPushAnchor = /** @class */ (function () {
+var NavPushAnchor = (function () {
     /**
      * @param {?} host
      * @param {?} linker
@@ -55611,23 +55621,23 @@ var NavPushAnchor = /** @class */ (function () {
     NavPushAnchor.prototype.ngAfterContentInit = function () {
         this.updateHref();
     };
-    NavPushAnchor.decorators = [
-        { type: Directive, args: [{
-                    selector: 'a[navPush]',
-                    host: {
-                        '[attr.href]': '_href'
-                    }
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    NavPushAnchor.ctorParameters = function () { return [
-        { type: NavPush, decorators: [{ type: Host },] },
-        { type: DeepLinker, decorators: [{ type: Optional },] },
-    ]; };
     return NavPushAnchor;
 }());
+NavPushAnchor.decorators = [
+    { type: Directive, args: [{
+                selector: 'a[navPush]',
+                host: {
+                    '[attr.href]': '_href'
+                }
+            },] },
+];
+/**
+ * @nocollapse
+ */
+NavPushAnchor.ctorParameters = function () { return [
+    { type: NavPush, decorators: [{ type: Host },] },
+    { type: DeepLinker, decorators: [{ type: Optional },] },
+]; };
 
 var __extends$65 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -55663,7 +55673,7 @@ var __extends$65 = (undefined && undefined.__extends) || (function () {
  * ```
  * {\@link /docs/api/components/api/components/item/item ion-item}
  */
-var Note = /** @class */ (function (_super) {
+var Note = (function (_super) {
     __extends$65(Note, _super);
     /**
      * @param {?} config
@@ -55673,21 +55683,21 @@ var Note = /** @class */ (function (_super) {
     function Note(config, elementRef, renderer) {
         return _super.call(this, config, elementRef, renderer, 'note') || this;
     }
-    Note.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-note'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Note.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
     return Note;
 }(Ion));
+Note.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-note'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Note.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
 
 /**
  * \@name Option
@@ -55696,7 +55706,7 @@ var Note = /** @class */ (function (_super) {
  *
  * \@demo /docs/demos/src/select/
  */
-var Option = /** @class */ (function () {
+var Option = (function () {
     /**
      * @param {?} _elementRef
      */
@@ -55777,30 +55787,30 @@ var Option = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    Option.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-option'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Option.ctorParameters = function () { return [
-        { type: ElementRef, },
-    ]; };
-    Option.propDecorators = {
-        'disabled': [{ type: Input },],
-        'selected': [{ type: Input },],
-        'value': [{ type: Input },],
-        'ionSelect': [{ type: Output },],
-    };
     return Option;
 }());
+Option.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-option'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Option.ctorParameters = function () { return [
+    { type: ElementRef, },
+]; };
+Option.propDecorators = {
+    'disabled': [{ type: Input },],
+    'selected': [{ type: Input },],
+    'value': [{ type: Input },],
+    'ionSelect': [{ type: Output },],
+};
 
 /**
  * @hidden
  */
-var PopoverCmp = /** @class */ (function () {
+var PopoverCmp = (function () {
     /**
      * @param {?} _cfr
      * @param {?} _elementRef
@@ -55902,39 +55912,39 @@ var PopoverCmp = /** @class */ (function () {
         (void 0) /* assert */;
         this._gestureBlocker.destroy();
     };
-    PopoverCmp.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-popover',
-                    template: '<ion-backdrop (click)="_bdClick()" [hidden]="!d.showBackdrop"></ion-backdrop>' +
-                        '<div class="popover-wrapper">' +
-                        '<div class="popover-arrow"></div>' +
-                        '<div class="popover-content">' +
-                        '<div class="popover-viewport">' +
-                        '<div #viewport nav-viewport></div>' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    PopoverCmp.ctorParameters = function () { return [
-        { type: ComponentFactoryResolver, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: Config, },
-        { type: NavParams, },
-        { type: ViewController, },
-        { type: GestureController, },
-        { type: ModuleLoader, },
-    ]; };
-    PopoverCmp.propDecorators = {
-        '_viewport': [{ type: ViewChild, args: ['viewport', { read: ViewContainerRef },] },],
-        '_keyUp': [{ type: HostListener, args: ['body:keyup', ['$event'],] },],
-    };
     return PopoverCmp;
 }());
+PopoverCmp.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-popover',
+                template: '<ion-backdrop (click)="_bdClick()" [hidden]="!d.showBackdrop"></ion-backdrop>' +
+                    '<div class="popover-wrapper">' +
+                    '<div class="popover-arrow"></div>' +
+                    '<div class="popover-content">' +
+                    '<div class="popover-viewport">' +
+                    '<div #viewport nav-viewport></div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+PopoverCmp.ctorParameters = function () { return [
+    { type: ComponentFactoryResolver, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: Config, },
+    { type: NavParams, },
+    { type: ViewController, },
+    { type: GestureController, },
+    { type: ModuleLoader, },
+]; };
+PopoverCmp.propDecorators = {
+    '_viewport': [{ type: ViewChild, args: ['viewport', { read: ViewContainerRef },] },],
+    '_keyUp': [{ type: HostListener, args: ['body:keyup', ['$event'],] },],
+};
 var popoverIds = -1;
 
 var __extends$68 = (undefined && undefined.__extends) || (function () {
@@ -55950,7 +55960,7 @@ var __extends$68 = (undefined && undefined.__extends) || (function () {
 /**
  * Animations for popover
  */
-var PopoverTransition = /** @class */ (function (_super) {
+var PopoverTransition = (function (_super) {
     __extends$68(PopoverTransition, _super);
     function PopoverTransition() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -56082,7 +56092,7 @@ var PopoverTransition = /** @class */ (function (_super) {
     };
     return PopoverTransition;
 }(PageTransition));
-var PopoverPopIn = /** @class */ (function (_super) {
+var PopoverPopIn = (function (_super) {
     __extends$68(PopoverPopIn, _super);
     function PopoverPopIn() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -56114,7 +56124,7 @@ var PopoverPopIn = /** @class */ (function (_super) {
     };
     return PopoverPopIn;
 }(PopoverTransition));
-var PopoverPopOut = /** @class */ (function (_super) {
+var PopoverPopOut = (function (_super) {
     __extends$68(PopoverPopOut, _super);
     function PopoverPopOut() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -56136,7 +56146,7 @@ var PopoverPopOut = /** @class */ (function (_super) {
     };
     return PopoverPopOut;
 }(PopoverTransition));
-var PopoverMdPopIn = /** @class */ (function (_super) {
+var PopoverMdPopIn = (function (_super) {
     __extends$68(PopoverMdPopIn, _super);
     function PopoverMdPopIn() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -56168,7 +56178,7 @@ var PopoverMdPopIn = /** @class */ (function (_super) {
     };
     return PopoverMdPopIn;
 }(PopoverTransition));
-var PopoverMdPopOut = /** @class */ (function (_super) {
+var PopoverMdPopOut = (function (_super) {
     __extends$68(PopoverMdPopOut, _super);
     function PopoverMdPopOut() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -56204,7 +56214,7 @@ var __extends$67 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var PopoverImpl = /** @class */ (function (_super) {
+var PopoverImpl = (function (_super) {
     __extends$67(PopoverImpl, _super);
     /**
      * @param {?} app
@@ -56265,7 +56275,7 @@ var __extends$66 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var Popover = /** @class */ (function (_super) {
+var Popover = (function (_super) {
     __extends$66(Popover, _super);
     /**
      * @param {?} app
@@ -56393,7 +56403,7 @@ var Popover = /** @class */ (function (_super) {
  *
  * \@demo /docs/demos/src/popover/
  */
-var PopoverController = /** @class */ (function () {
+var PopoverController = (function () {
     /**
      * @param {?} _app
      * @param {?} config
@@ -56416,19 +56426,19 @@ var PopoverController = /** @class */ (function () {
         if (opts === void 0) { opts = {}; }
         return new Popover(this._app, component, data, opts, this.config, this._deepLinker);
     };
-    PopoverController.decorators = [
-        { type: Injectable },
-    ];
-    /**
-     * @nocollapse
-     */
-    PopoverController.ctorParameters = function () { return [
-        { type: App, },
-        { type: Config, },
-        { type: DeepLinker, },
-    ]; };
     return PopoverController;
 }());
+PopoverController.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+PopoverController.ctorParameters = function () { return [
+    { type: App, },
+    { type: Config, },
+    { type: DeepLinker, },
+]; };
 
 /**
  * \@name RadioGroup
@@ -56481,7 +56491,7 @@ var PopoverController = /** @class */ (function () {
  * @see {\@link /docs/components#radio Radio Component Docs}
  * @see {\@link ../RadioButton RadioButton API Docs}
  */
-var RadioGroup = /** @class */ (function () {
+var RadioGroup = (function () {
     /**
      * @param {?} _renderer
      * @param {?} _elementRef
@@ -56681,30 +56691,30 @@ var RadioGroup = /** @class */ (function () {
     RadioGroup.prototype.setDisabledState = function (isDisabled) {
         this.disabled = isDisabled;
     };
-    RadioGroup.decorators = [
-        { type: Directive, args: [{
-                    selector: '[radio-group]',
-                    host: {
-                        'role': 'radiogroup'
-                    },
-                    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: RadioGroup, multi: true }],
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    RadioGroup.ctorParameters = function () { return [
-        { type: Renderer, },
-        { type: ElementRef, },
-        { type: ChangeDetectorRef, },
-    ]; };
-    RadioGroup.propDecorators = {
-        'disabled': [{ type: Input },],
-        'ionChange': [{ type: Output },],
-        '_header': [{ type: ContentChild, args: [ListHeader,] },],
-    };
     return RadioGroup;
 }());
+RadioGroup.decorators = [
+    { type: Directive, args: [{
+                selector: '[radio-group]',
+                host: {
+                    'role': 'radiogroup'
+                },
+                providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: RadioGroup, multi: true }],
+            },] },
+];
+/**
+ * @nocollapse
+ */
+RadioGroup.ctorParameters = function () { return [
+    { type: Renderer, },
+    { type: ElementRef, },
+    { type: ChangeDetectorRef, },
+]; };
+RadioGroup.propDecorators = {
+    'disabled': [{ type: Input },],
+    'ionChange': [{ type: Output },],
+    '_header': [{ type: ContentChild, args: [ListHeader,] },],
+};
 var radioGroupIds = -1;
 
 var __extends$69 = (undefined && undefined.__extends) || (function () {
@@ -56752,7 +56762,7 @@ var __extends$69 = (undefined && undefined.__extends) || (function () {
  * @see {\@link /docs/components#radio Radio Component Docs}
  * @see {\@link ../RadioGroup RadioGroup API Docs}
  */
-var RadioButton = /** @class */ (function (_super) {
+var RadioButton = (function (_super) {
     __extends$69(RadioButton, _super);
     /**
      * @param {?} _form
@@ -56912,48 +56922,48 @@ var RadioButton = /** @class */ (function (_super) {
         this._form.deregister(this);
         this._group && this._group.remove(this);
     };
-    RadioButton.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-radio',
-                    template: '<div class="radio-icon" [class.radio-checked]="_checked"> ' +
-                        '<div class="radio-inner"></div> ' +
-                        '</div> ' +
-                        '<button role="radio" ' +
-                        'type="button" ' +
-                        'ion-button="item-cover" ' +
-                        '[id]="id" ' +
-                        '[attr.aria-checked]="_checked" ' +
-                        '[attr.aria-labelledby]="_labelId" ' +
-                        '[attr.aria-disabled]="_disabled" ' +
-                        'class="item-cover"> ' +
-                        '</button>',
-                    host: {
-                        '[class.radio-disabled]': '_disabled'
-                    },
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    RadioButton.ctorParameters = function () { return [
-        { type: Form, },
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: Item, decorators: [{ type: Optional },] },
-        { type: RadioGroup, decorators: [{ type: Optional },] },
-    ]; };
-    RadioButton.propDecorators = {
-        'color': [{ type: Input },],
-        'ionSelect': [{ type: Output },],
-        'value': [{ type: Input },],
-        'checked': [{ type: Input },],
-        'disabled': [{ type: Input },],
-        '_click': [{ type: HostListener, args: ['click', ['$event'],] },],
-    };
     return RadioButton;
 }(Ion));
+RadioButton.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-radio',
+                template: '<div class="radio-icon" [class.radio-checked]="_checked"> ' +
+                    '<div class="radio-inner"></div> ' +
+                    '</div> ' +
+                    '<button role="radio" ' +
+                    'type="button" ' +
+                    'ion-button="item-cover" ' +
+                    '[id]="id" ' +
+                    '[attr.aria-checked]="_checked" ' +
+                    '[attr.aria-labelledby]="_labelId" ' +
+                    '[attr.aria-disabled]="_disabled" ' +
+                    'class="item-cover"> ' +
+                    '</button>',
+                host: {
+                    '[class.radio-disabled]': '_disabled'
+                },
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+RadioButton.ctorParameters = function () { return [
+    { type: Form, },
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: Item, decorators: [{ type: Optional },] },
+    { type: RadioGroup, decorators: [{ type: Optional },] },
+]; };
+RadioButton.propDecorators = {
+    'color': [{ type: Input },],
+    'ionSelect': [{ type: Output },],
+    'value': [{ type: Input },],
+    'checked': [{ type: Input },],
+    'disabled': [{ type: Input },],
+    '_click': [{ type: HostListener, args: ['click', ['$event'],] },],
+};
 
 var __extends$70 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -57036,7 +57046,7 @@ var __extends$70 = (undefined && undefined.__extends) || (function () {
  *
  * \@demo /docs/demos/src/range/
  */
-var Range = /** @class */ (function (_super) {
+var Range = (function (_super) {
     __extends$70(Range, _super);
     /**
      * @param {?} form
@@ -57533,58 +57543,58 @@ var Range = /** @class */ (function (_super) {
         _super.prototype.ngOnDestroy.call(this);
         this._events.destroy();
     };
-    Range.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-range',
-                    template: '<ng-content select="[range-left]"></ng-content>' +
-                        '<div class="range-slider" #slider>' +
-                        '<div class="range-tick" *ngFor="let t of _ticks" [style.left]="t.left" [class.range-tick-active]="t.active" role="presentation"></div>' +
-                        '<div class="range-bar" role="presentation"></div>' +
-                        '<div class="range-bar range-bar-active" [style.left]="_barL" [style.right]="_barR" #bar role="presentation"></div>' +
-                        '<div class="range-knob-handle" (ionIncrease)="_keyChg(true, false)" (ionDecrease)="_keyChg(false, false)" [ratio]="_ratioA" [val]="_valA" [pin]="_pin" [pressed]="_pressedA" [min]="_min" [max]="_max" [disabled]="_disabled" [labelId]="_labelId"></div>' +
-                        '<div class="range-knob-handle" (ionIncrease)="_keyChg(true, true)" (ionDecrease)="_keyChg(false, true)" [ratio]="_ratioB" [val]="_valB" [pin]="_pin" [pressed]="_pressedB" [min]="_min" [max]="_max" [disabled]="_disabled" [labelId]="_labelId" *ngIf="_dual"></div>' +
-                        '</div>' +
-                        '<ng-content select="[range-right]"></ng-content>',
-                    host: {
-                        '[class.range-disabled]': '_disabled',
-                        '[class.range-pressed]': '_pressed',
-                        '[class.range-has-pin]': '_pin'
-                    },
-                    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: Range, multi: true }],
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Range.ctorParameters = function () { return [
-        { type: Form, },
-        { type: Haptic, },
-        { type: Item, decorators: [{ type: Optional },] },
-        { type: Config, },
-        { type: Platform, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: DomController, },
-        { type: ChangeDetectorRef, },
-    ]; };
-    Range.propDecorators = {
-        '_slider': [{ type: ViewChild, args: ['slider',] },],
-        'min': [{ type: Input },],
-        'max': [{ type: Input },],
-        'step': [{ type: Input },],
-        'snaps': [{ type: Input },],
-        'pin': [{ type: Input },],
-        'debounce': [{ type: Input },],
-        'dualKnobs': [{ type: Input },],
-    };
     return Range;
 }(BaseInput));
+Range.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-range',
+                template: '<ng-content select="[range-left]"></ng-content>' +
+                    '<div class="range-slider" #slider>' +
+                    '<div class="range-tick" *ngFor="let t of _ticks" [style.left]="t.left" [class.range-tick-active]="t.active" role="presentation"></div>' +
+                    '<div class="range-bar" role="presentation"></div>' +
+                    '<div class="range-bar range-bar-active" [style.left]="_barL" [style.right]="_barR" #bar role="presentation"></div>' +
+                    '<div class="range-knob-handle" (ionIncrease)="_keyChg(true, false)" (ionDecrease)="_keyChg(false, false)" [ratio]="_ratioA" [val]="_valA" [pin]="_pin" [pressed]="_pressedA" [min]="_min" [max]="_max" [disabled]="_disabled" [labelId]="_labelId"></div>' +
+                    '<div class="range-knob-handle" (ionIncrease)="_keyChg(true, true)" (ionDecrease)="_keyChg(false, true)" [ratio]="_ratioB" [val]="_valB" [pin]="_pin" [pressed]="_pressedB" [min]="_min" [max]="_max" [disabled]="_disabled" [labelId]="_labelId" *ngIf="_dual"></div>' +
+                    '</div>' +
+                    '<ng-content select="[range-right]"></ng-content>',
+                host: {
+                    '[class.range-disabled]': '_disabled',
+                    '[class.range-pressed]': '_pressed',
+                    '[class.range-has-pin]': '_pin'
+                },
+                providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: Range, multi: true }],
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Range.ctorParameters = function () { return [
+    { type: Form, },
+    { type: Haptic, },
+    { type: Item, decorators: [{ type: Optional },] },
+    { type: Config, },
+    { type: Platform, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: DomController, },
+    { type: ChangeDetectorRef, },
+]; };
+Range.propDecorators = {
+    '_slider': [{ type: ViewChild, args: ['slider',] },],
+    'min': [{ type: Input },],
+    'max': [{ type: Input },],
+    'step': [{ type: Input },],
+    'snaps': [{ type: Input },],
+    'pin': [{ type: Input },],
+    'debounce': [{ type: Input },],
+    'dualKnobs': [{ type: Input },],
+};
 
 /**
  * @hidden
  */
-var RangeKnob = /** @class */ (function () {
+var RangeKnob = (function () {
     function RangeKnob() {
         this.ionIncrease = new EventEmitter();
         this.ionDecrease = new EventEmitter();
@@ -57619,45 +57629,45 @@ var RangeKnob = /** @class */ (function () {
             ev.stopPropagation();
         }
     };
-    RangeKnob.decorators = [
-        { type: Component, args: [{
-                    selector: '.range-knob-handle',
-                    template: '<div class="range-pin" *ngIf="pin" role="presentation">{{val}}</div>' +
-                        '<div class="range-knob" role="presentation"></div>',
-                    host: {
-                        '[class.range-knob-pressed]': 'pressed',
-                        '[class.range-knob-min]': 'val===min||val===undefined',
-                        '[class.range-knob-max]': 'val===max',
-                        '[style.left]': '_x',
-                        '[attr.aria-valuenow]': 'val',
-                        '[attr.aria-valuemin]': 'min',
-                        '[attr.aria-valuemax]': 'max',
-                        '[attr.aria-disabled]': 'disabled',
-                        '[attr.aria-labelledby]': 'labelId',
-                        '[tabindex]': 'disabled?-1:0',
-                        'role': 'slider'
-                    }
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    RangeKnob.ctorParameters = function () { return []; };
-    RangeKnob.propDecorators = {
-        'ratio': [{ type: Input },],
-        'pressed': [{ type: Input },],
-        'pin': [{ type: Input },],
-        'min': [{ type: Input },],
-        'max': [{ type: Input },],
-        'val': [{ type: Input },],
-        'disabled': [{ type: Input },],
-        'labelId': [{ type: Input },],
-        'ionIncrease': [{ type: Output },],
-        'ionDecrease': [{ type: Output },],
-        '_keyup': [{ type: HostListener, args: ['keydown', ['$event'],] },],
-    };
     return RangeKnob;
 }());
+RangeKnob.decorators = [
+    { type: Component, args: [{
+                selector: '.range-knob-handle',
+                template: '<div class="range-pin" *ngIf="pin" role="presentation">{{val}}</div>' +
+                    '<div class="range-knob" role="presentation"></div>',
+                host: {
+                    '[class.range-knob-pressed]': 'pressed',
+                    '[class.range-knob-min]': 'val===min||val===undefined',
+                    '[class.range-knob-max]': 'val===max',
+                    '[style.left]': '_x',
+                    '[attr.aria-valuenow]': 'val',
+                    '[attr.aria-valuemin]': 'min',
+                    '[attr.aria-valuemax]': 'max',
+                    '[attr.aria-disabled]': 'disabled',
+                    '[attr.aria-labelledby]': 'labelId',
+                    '[tabindex]': 'disabled?-1:0',
+                    'role': 'slider'
+                }
+            },] },
+];
+/**
+ * @nocollapse
+ */
+RangeKnob.ctorParameters = function () { return []; };
+RangeKnob.propDecorators = {
+    'ratio': [{ type: Input },],
+    'pressed': [{ type: Input },],
+    'pin': [{ type: Input },],
+    'min': [{ type: Input },],
+    'max': [{ type: Input },],
+    'val': [{ type: Input },],
+    'disabled': [{ type: Input },],
+    'labelId': [{ type: Input },],
+    'ionIncrease': [{ type: Output },],
+    'ionDecrease': [{ type: Output },],
+    '_keyup': [{ type: HostListener, args: ['keydown', ['$event'],] },],
+};
 
 /**
  * \@name Refresher
@@ -57739,7 +57749,7 @@ var RangeKnob = /** @class */ (function () {
  * \@demo /docs/demos/src/refresher/
  *
  */
-var Refresher = /** @class */ (function () {
+var Refresher = (function () {
     /**
      * @param {?} _plt
      * @param {?} _content
@@ -58136,36 +58146,36 @@ var Refresher = /** @class */ (function () {
         this._events.destroy();
         this._gesture.destroy();
     };
-    Refresher.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-refresher',
-                    host: {
-                        '[class.refresher-active]': 'state !== "inactive"',
-                        '[style.top]': '_top'
-                    }
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Refresher.ctorParameters = function () { return [
-        { type: Platform, },
-        { type: Content, decorators: [{ type: Host },] },
-        { type: NgZone, },
-        { type: GestureController, },
-    ]; };
-    Refresher.propDecorators = {
-        'pullMin': [{ type: Input },],
-        'pullMax': [{ type: Input },],
-        'closeDuration': [{ type: Input },],
-        'snapbackDuration': [{ type: Input },],
-        'enabled': [{ type: Input },],
-        'ionRefresh': [{ type: Output },],
-        'ionPull': [{ type: Output },],
-        'ionStart': [{ type: Output },],
-    };
     return Refresher;
 }());
+Refresher.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-refresher',
+                host: {
+                    '[class.refresher-active]': 'state !== "inactive"',
+                    '[style.top]': '_top'
+                }
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Refresher.ctorParameters = function () { return [
+    { type: Platform, },
+    { type: Content, decorators: [{ type: Host },] },
+    { type: NgZone, },
+    { type: GestureController, },
+]; };
+Refresher.propDecorators = {
+    'pullMin': [{ type: Input },],
+    'pullMax': [{ type: Input },],
+    'closeDuration': [{ type: Input },],
+    'snapbackDuration': [{ type: Input },],
+    'enabled': [{ type: Input },],
+    'ionRefresh': [{ type: Output },],
+    'ionPull': [{ type: Output },],
+    'ionStart': [{ type: Output },],
+};
 var STATE_INACTIVE = 'inactive';
 var STATE_PULLING = 'pulling';
 var STATE_READY = 'ready';
@@ -58176,7 +58186,7 @@ var STATE_COMPLETING = 'completing';
 /**
  * @hidden
  */
-var RefresherContent = /** @class */ (function () {
+var RefresherContent = (function () {
     /**
      * @param {?} r
      * @param {?} _config
@@ -58197,42 +58207,42 @@ var RefresherContent = /** @class */ (function () {
             this.refreshingSpinner = this._config.get('ionRefreshingSpinner', this._config.get('spinner', 'ios'));
         }
     };
-    RefresherContent.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-refresher-content',
-                    template: '<div class="refresher-pulling">' +
-                        '<div class="refresher-pulling-icon" *ngIf="pullingIcon">' +
-                        '<ion-icon [name]="pullingIcon"></ion-icon>' +
-                        '</div>' +
-                        '<div class="refresher-pulling-text" [innerHTML]="pullingText" *ngIf="pullingText"></div>' +
-                        '</div>' +
-                        '<div class="refresher-refreshing">' +
-                        '<div class="refresher-refreshing-icon">' +
-                        '<ion-spinner [name]="refreshingSpinner"></ion-spinner>' +
-                        '</div>' +
-                        '<div class="refresher-refreshing-text" [innerHTML]="refreshingText" *ngIf="refreshingText"></div>' +
-                        '</div>',
-                    host: {
-                        '[attr.state]': 'r.state'
-                    },
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    RefresherContent.ctorParameters = function () { return [
-        { type: Refresher, },
-        { type: Config, },
-    ]; };
-    RefresherContent.propDecorators = {
-        'pullingIcon': [{ type: Input },],
-        'pullingText': [{ type: Input },],
-        'refreshingSpinner': [{ type: Input },],
-        'refreshingText': [{ type: Input },],
-    };
     return RefresherContent;
 }());
+RefresherContent.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-refresher-content',
+                template: '<div class="refresher-pulling">' +
+                    '<div class="refresher-pulling-icon" *ngIf="pullingIcon">' +
+                    '<ion-icon [name]="pullingIcon"></ion-icon>' +
+                    '</div>' +
+                    '<div class="refresher-pulling-text" [innerHTML]="pullingText" *ngIf="pullingText"></div>' +
+                    '</div>' +
+                    '<div class="refresher-refreshing">' +
+                    '<div class="refresher-refreshing-icon">' +
+                    '<ion-spinner [name]="refreshingSpinner"></ion-spinner>' +
+                    '</div>' +
+                    '<div class="refresher-refreshing-text" [innerHTML]="refreshingText" *ngIf="refreshingText"></div>' +
+                    '</div>',
+                host: {
+                    '[attr.state]': 'r.state'
+                },
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+RefresherContent.ctorParameters = function () { return [
+    { type: Refresher, },
+    { type: Config, },
+]; };
+RefresherContent.propDecorators = {
+    'pullingIcon': [{ type: Input },],
+    'pullingText': [{ type: Input },],
+    'refreshingSpinner': [{ type: Input },],
+    'refreshingText': [{ type: Input },],
+};
 
 /**
  * \@name Scroll
@@ -58251,7 +58261,7 @@ var RefresherContent = /** @class */ (function () {
  * ```
  * \@demo /docs/demos/src/scroll/
  */
-var Scroll = /** @class */ (function () {
+var Scroll = (function () {
     function Scroll() {
         this._scrollX = false;
         this._scrollY = false;
@@ -58353,35 +58363,35 @@ var Scroll = /** @class */ (function () {
             ele.removeEventListener('scroll', handler);
         };
     };
-    Scroll.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-scroll',
-                    template: '<div class="scroll-content" #scrollContent>' +
-                        '<div class="scroll-zoom-wrapper">' +
-                        '<ng-content></ng-content>' +
-                        '</div>' +
-                        '</div>',
-                    host: {
-                        '[class.scroll-x]': 'scrollX',
-                        '[class.scroll-y]': 'scrollY'
-                    },
-                    changeDetection: ChangeDetectionStrategy.OnPush,
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Scroll.ctorParameters = function () { return []; };
-    Scroll.propDecorators = {
-        'scrollX': [{ type: Input },],
-        'scrollY': [{ type: Input },],
-        'zoom': [{ type: Input },],
-        'maxZoom': [{ type: Input },],
-        '_scrollContent': [{ type: ViewChild, args: ['scrollContent', { read: ElementRef },] },],
-    };
     return Scroll;
 }());
+Scroll.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-scroll',
+                template: '<div class="scroll-content" #scrollContent>' +
+                    '<div class="scroll-zoom-wrapper">' +
+                    '<ng-content></ng-content>' +
+                    '</div>' +
+                    '</div>',
+                host: {
+                    '[class.scroll-x]': 'scrollX',
+                    '[class.scroll-y]': 'scrollY'
+                },
+                changeDetection: ChangeDetectionStrategy.OnPush,
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Scroll.ctorParameters = function () { return []; };
+Scroll.propDecorators = {
+    'scrollX': [{ type: Input },],
+    'scrollY': [{ type: Input },],
+    'zoom': [{ type: Input },],
+    'maxZoom': [{ type: Input },],
+    '_scrollContent': [{ type: ViewChild, args: ['scrollContent', { read: ElementRef },] },],
+};
 
 var __extends$71 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -58412,7 +58422,7 @@ var __extends$71 = (undefined && undefined.__extends) || (function () {
  * \@demo /docs/demos/src/searchbar/
  * @see {\@link /docs/components#searchbar Searchbar Component Docs}
  */
-var Searchbar = /** @class */ (function (_super) {
+var Searchbar = (function (_super) {
     __extends$71(Searchbar, _super);
     /**
      * @param {?} config
@@ -58747,63 +58757,63 @@ var Searchbar = /** @class */ (function (_super) {
     Searchbar.prototype.setFocus = function () {
         this._renderer.invokeElementMethod(this._searchbarInput.nativeElement, 'focus');
     };
-    Searchbar.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-searchbar',
-                    template: '<div class="searchbar-input-container">' +
-                        '<button ion-button mode="md" (click)="cancelSearchbar($event)" (mousedown)="cancelSearchbar($event)" clear color="dark" class="searchbar-md-cancel" type="button">' +
-                        '<ion-icon name="md-arrow-back"></ion-icon>' +
-                        '</button>' +
-                        '<div #searchbarIcon class="searchbar-search-icon"></div>' +
-                        '<input #searchbarInput class="searchbar-input" (input)="inputChanged($event)" (blur)="inputBlurred()" (focus)="inputFocused()" ' +
-                        '[attr.placeholder]="placeholder" ' +
-                        '[attr.type]="type" ' +
-                        '[attr.autocomplete]="_autocomplete" ' +
-                        '[attr.autocorrect]="_autocorrect" ' +
-                        '[attr.spellcheck]="_spellcheck">' +
-                        '<button ion-button clear class="searchbar-clear-icon" [mode]="_mode" (click)="clearInput($event)" (mousedown)="clearInput($event)" type="button"></button>' +
-                        '</div>' +
-                        '<button ion-button #cancelButton mode="ios" [tabindex]="_isActive ? 1 : -1" clear (click)="cancelSearchbar($event)" (mousedown)="cancelSearchbar($event)" class="searchbar-ios-cancel" type="button">{{cancelButtonText}}</button>',
-                    host: {
-                        '[class.searchbar-animated]': '_animated',
-                        '[class.searchbar-has-value]': '_value',
-                        '[class.searchbar-active]': '_isActive',
-                        '[class.searchbar-show-cancel]': '_showCancelButton',
-                        '[class.searchbar-left-aligned]': '_shouldAlignLeft',
-                        '[class.searchbar-has-focus]': '_isFocus'
-                    },
-                    encapsulation: ViewEncapsulation.None
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Searchbar.ctorParameters = function () { return [
-        { type: Config, },
-        { type: Platform, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: NgControl, decorators: [{ type: Optional },] },
-    ]; };
-    Searchbar.propDecorators = {
-        'cancelButtonText': [{ type: Input },],
-        'showCancelButton': [{ type: Input },],
-        'debounce': [{ type: Input },],
-        'placeholder': [{ type: Input },],
-        'autocomplete': [{ type: Input },],
-        'autocorrect': [{ type: Input },],
-        'spellcheck': [{ type: Input },],
-        'type': [{ type: Input },],
-        'animated': [{ type: Input },],
-        'ionInput': [{ type: Output },],
-        'ionCancel': [{ type: Output },],
-        'ionClear': [{ type: Output },],
-        '_searchbarInput': [{ type: ViewChild, args: ['searchbarInput',] },],
-        '_searchbarIcon': [{ type: ViewChild, args: ['searchbarIcon',] },],
-        '_cancelButton': [{ type: ViewChild, args: ['cancelButton', { read: ElementRef },] },],
-    };
     return Searchbar;
 }(BaseInput));
+Searchbar.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-searchbar',
+                template: '<div class="searchbar-input-container">' +
+                    '<button ion-button mode="md" (click)="cancelSearchbar($event)" (mousedown)="cancelSearchbar($event)" clear color="dark" class="searchbar-md-cancel" type="button">' +
+                    '<ion-icon name="md-arrow-back"></ion-icon>' +
+                    '</button>' +
+                    '<div #searchbarIcon class="searchbar-search-icon"></div>' +
+                    '<input #searchbarInput class="searchbar-input" (input)="inputChanged($event)" (blur)="inputBlurred()" (focus)="inputFocused()" ' +
+                    '[attr.placeholder]="placeholder" ' +
+                    '[attr.type]="type" ' +
+                    '[attr.autocomplete]="_autocomplete" ' +
+                    '[attr.autocorrect]="_autocorrect" ' +
+                    '[attr.spellcheck]="_spellcheck">' +
+                    '<button ion-button clear class="searchbar-clear-icon" [mode]="_mode" (click)="clearInput($event)" (mousedown)="clearInput($event)" type="button"></button>' +
+                    '</div>' +
+                    '<button ion-button #cancelButton mode="ios" [tabindex]="_isActive ? 1 : -1" clear (click)="cancelSearchbar($event)" (mousedown)="cancelSearchbar($event)" class="searchbar-ios-cancel" type="button">{{cancelButtonText}}</button>',
+                host: {
+                    '[class.searchbar-animated]': '_animated',
+                    '[class.searchbar-has-value]': '_value',
+                    '[class.searchbar-active]': '_isActive',
+                    '[class.searchbar-show-cancel]': '_showCancelButton',
+                    '[class.searchbar-left-aligned]': '_shouldAlignLeft',
+                    '[class.searchbar-has-focus]': '_isFocus'
+                },
+                encapsulation: ViewEncapsulation.None
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Searchbar.ctorParameters = function () { return [
+    { type: Config, },
+    { type: Platform, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: NgControl, decorators: [{ type: Optional },] },
+]; };
+Searchbar.propDecorators = {
+    'cancelButtonText': [{ type: Input },],
+    'showCancelButton': [{ type: Input },],
+    'debounce': [{ type: Input },],
+    'placeholder': [{ type: Input },],
+    'autocomplete': [{ type: Input },],
+    'autocorrect': [{ type: Input },],
+    'spellcheck': [{ type: Input },],
+    'type': [{ type: Input },],
+    'animated': [{ type: Input },],
+    'ionInput': [{ type: Output },],
+    'ionCancel': [{ type: Output },],
+    'ionClear': [{ type: Output },],
+    '_searchbarInput': [{ type: ViewChild, args: ['searchbarInput',] },],
+    '_searchbarIcon': [{ type: ViewChild, args: ['searchbarIcon',] },],
+    '_cancelButton': [{ type: ViewChild, args: ['cancelButton', { read: ElementRef },] },],
+};
 
 /**
  * \@name SegmentButton
@@ -58841,7 +58851,7 @@ var Searchbar = /** @class */ (function (_super) {
  * @see {\@link /docs/components#segment Segment Component Docs}
  * @see {\@link /docs/api/components/segment/Segment/ Segment API Docs}
  */
-var SegmentButton = /** @class */ (function () {
+var SegmentButton = (function () {
     function SegmentButton() {
         this.isActive = false;
         this._disabled = false;
@@ -58886,34 +58896,34 @@ var SegmentButton = /** @class */ (function () {
             console.warn('<ion-segment-button> requires a "value" attribute');
         }
     };
-    SegmentButton.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-segment-button',
-                    template: '<ng-content></ng-content>' +
-                        '<div class="button-effect"></div>',
-                    host: {
-                        'tappable': '',
-                        'class': 'segment-button',
-                        'role': 'button',
-                        '[class.segment-button-disabled]': '_disabled',
-                        '[class.segment-activated]': 'isActive',
-                        '[attr.aria-pressed]': 'isActive'
-                    },
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    SegmentButton.ctorParameters = function () { return []; };
-    SegmentButton.propDecorators = {
-        'value': [{ type: Input },],
-        'ionSelect': [{ type: Output },],
-        'disabled': [{ type: Input },],
-        'onClick': [{ type: HostListener, args: ['click',] },],
-    };
     return SegmentButton;
 }());
+SegmentButton.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-segment-button',
+                template: '<ng-content></ng-content>' +
+                    '<div class="button-effect"></div>',
+                host: {
+                    'tappable': '',
+                    'class': 'segment-button',
+                    'role': 'button',
+                    '[class.segment-button-disabled]': '_disabled',
+                    '[class.segment-activated]': 'isActive',
+                    '[attr.aria-pressed]': 'isActive'
+                },
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+SegmentButton.ctorParameters = function () { return []; };
+SegmentButton.propDecorators = {
+    'value': [{ type: Input },],
+    'ionSelect': [{ type: Output },],
+    'disabled': [{ type: Input },],
+    'onClick': [{ type: HostListener, args: ['click',] },],
+};
 
 var __extends$72 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -58981,7 +58991,7 @@ var __extends$72 = (undefined && undefined.__extends) || (function () {
  * @see {\@link /docs/components#segment Segment Component Docs}
  * @see [Angular Forms](http://learnangular2.com/forms/)
  */
-var Segment = /** @class */ (function (_super) {
+var Segment = (function (_super) {
     __extends$72(Segment, _super);
     /**
      * @param {?} config
@@ -59023,33 +59033,33 @@ var Segment = /** @class */ (function (_super) {
             button.isActive = (button.value === value);
         }
     };
-    Segment.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-segment',
-                    host: {
-                        '[class.segment-disabled]': '_disabled'
-                    }
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Segment.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: NgControl, decorators: [{ type: Optional },] },
-    ]; };
-    Segment.propDecorators = {
-        '_buttons': [{ type: ContentChildren, args: [SegmentButton,] },],
-    };
     return Segment;
 }(BaseInput));
+Segment.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-segment',
+                host: {
+                    '[class.segment-disabled]': '_disabled'
+                }
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Segment.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: NgControl, decorators: [{ type: Optional },] },
+]; };
+Segment.propDecorators = {
+    '_buttons': [{ type: ContentChildren, args: [SegmentButton,] },],
+};
 
 /**
  * @hidden
  */
-var SelectPopover = /** @class */ (function () {
+var SelectPopover = (function () {
     /**
      * @param {?} navParams
      * @param {?} viewController
@@ -59086,20 +59096,20 @@ var SelectPopover = /** @class */ (function () {
     SelectPopover.prototype.ngOnInit = function () {
         this.options = this.navParams.data.options;
     };
-    SelectPopover.decorators = [
-        { type: Component, args: [{
-                    template: "\n    <ion-list radio-group [(ngModel)]=\"value\">\n      <ion-item *ngFor=\"let option of options\">\n        <ion-label>{{option.text}}</ion-label>\n        <ion-radio [checked]=\"option.checked\" [value]=\"option.value\" [disabled]=\"option.disabled\"></ion-radio>\n      </ion-item>\n    </ion-list>\n  "
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    SelectPopover.ctorParameters = function () { return [
-        { type: NavParams, },
-        { type: ViewController, },
-    ]; };
     return SelectPopover;
 }());
+SelectPopover.decorators = [
+    { type: Component, args: [{
+                template: "\n    <ion-list radio-group [(ngModel)]=\"value\">\n      <ion-item *ngFor=\"let option of options\">\n        <ion-label>{{option.text}}</ion-label>\n        <ion-radio [checked]=\"option.checked\" [value]=\"option.value\" [disabled]=\"option.disabled\"></ion-radio>\n      </ion-item>\n    </ion-list>\n  "
+            },] },
+];
+/**
+ * @nocollapse
+ */
+SelectPopover.ctorParameters = function () { return [
+    { type: NavParams, },
+    { type: ViewController, },
+]; };
 
 var __extends$73 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -59247,7 +59257,7 @@ var __extends$73 = (undefined && undefined.__extends) || (function () {
  *
  * \@demo /docs/demos/src/select/
  */
-var Select = /** @class */ (function (_super) {
+var Select = (function (_super) {
     __extends$73(Select, _super);
     /**
      * @param {?} _app
@@ -59567,62 +59577,62 @@ var Select = /** @class */ (function (_super) {
         this._updateText();
         _super.prototype._inputUpdated.call(this);
     };
-    Select.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-select',
-                    template: '<div *ngIf="!_text" class="select-placeholder select-text">{{placeholder}}</div>' +
-                        '<div *ngIf="_text" class="select-text">{{selectedText || _text}}</div>' +
-                        '<div class="select-icon">' +
-                        '<div class="select-icon-inner"></div>' +
-                        '</div>' +
-                        '<button aria-haspopup="true" ' +
-                        'type="button" ' +
-                        '[id]="id" ' +
-                        'ion-button="item-cover" ' +
-                        '[attr.aria-labelledby]="_labelId" ' +
-                        '[attr.aria-disabled]="_disabled" ' +
-                        'class="item-cover">' +
-                        '</button>',
-                    host: {
-                        '[class.select-disabled]': '_disabled'
-                    },
-                    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: Select, multi: true }],
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Select.ctorParameters = function () { return [
-        { type: App, },
-        { type: Form, },
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: Item, decorators: [{ type: Optional },] },
-        { type: DeepLinker, },
-    ]; };
-    Select.propDecorators = {
-        'cancelText': [{ type: Input },],
-        'okText': [{ type: Input },],
-        'placeholder': [{ type: Input },],
-        'selectOptions': [{ type: Input },],
-        'interface': [{ type: Input },],
-        'selectedText': [{ type: Input },],
-        'compareWith': [{ type: Input },],
-        'ionCancel': [{ type: Output },],
-        '_click': [{ type: HostListener, args: ['click', ['$event'],] },],
-        '_keyup': [{ type: HostListener, args: ['keyup.space',] },],
-        'multiple': [{ type: Input },],
-        'options': [{ type: ContentChildren, args: [Option,] },],
-    };
     return Select;
 }(BaseInput));
+Select.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-select',
+                template: '<div *ngIf="!_text" class="select-placeholder select-text">{{placeholder}}</div>' +
+                    '<div *ngIf="_text" class="select-text">{{selectedText || _text}}</div>' +
+                    '<div class="select-icon">' +
+                    '<div class="select-icon-inner"></div>' +
+                    '</div>' +
+                    '<button aria-haspopup="true" ' +
+                    'type="button" ' +
+                    '[id]="id" ' +
+                    'ion-button="item-cover" ' +
+                    '[attr.aria-labelledby]="_labelId" ' +
+                    '[attr.aria-disabled]="_disabled" ' +
+                    'class="item-cover">' +
+                    '</button>',
+                host: {
+                    '[class.select-disabled]': '_disabled'
+                },
+                providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: Select, multi: true }],
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Select.ctorParameters = function () { return [
+    { type: App, },
+    { type: Form, },
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: Item, decorators: [{ type: Optional },] },
+    { type: DeepLinker, },
+]; };
+Select.propDecorators = {
+    'cancelText': [{ type: Input },],
+    'okText': [{ type: Input },],
+    'placeholder': [{ type: Input },],
+    'selectOptions': [{ type: Input },],
+    'interface': [{ type: Input },],
+    'selectedText': [{ type: Input },],
+    'compareWith': [{ type: Input },],
+    'ionCancel': [{ type: Output },],
+    '_click': [{ type: HostListener, args: ['click', ['$event'],] },],
+    '_keyup': [{ type: HostListener, args: ['keyup.space',] },],
+    'multiple': [{ type: Input },],
+    'options': [{ type: ContentChildren, args: [Option,] },],
+};
 
 /**
  * @hidden
  */
-var DisplayWhen = /** @class */ (function () {
+var DisplayWhen = (function () {
     /**
      * @param {?} conditions
      * @param {?} _plt
@@ -59725,7 +59735,7 @@ var __extends$74 = (undefined && undefined.__extends) || (function () {
  * @see {\@link ../HideWhen HideWhen API Docs}
  * @see {\@link ../../../platform/Platform Platform API Docs}
  */
-var ShowWhen = /** @class */ (function (_super) {
+var ShowWhen = (function (_super) {
     __extends$74(ShowWhen, _super);
     /**
      * @param {?} showWhen
@@ -59735,25 +59745,25 @@ var ShowWhen = /** @class */ (function (_super) {
     function ShowWhen(showWhen, plt, zone) {
         return _super.call(this, showWhen, plt, zone) || this;
     }
-    // ngOnDestroy is implemented in DisplayWhen
-    ShowWhen.decorators = [
-        { type: Directive, args: [{
-                    selector: '[showWhen]',
-                    host: {
-                        '[class.hidden-show-when]': '!isMatch'
-                    }
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    ShowWhen.ctorParameters = function () { return [
-        { type: undefined, decorators: [{ type: Attribute, args: ['showWhen',] },] },
-        { type: Platform, },
-        { type: NgZone, },
-    ]; };
     return ShowWhen;
 }(DisplayWhen));
+// ngOnDestroy is implemented in DisplayWhen
+ShowWhen.decorators = [
+    { type: Directive, args: [{
+                selector: '[showWhen]',
+                host: {
+                    '[class.hidden-show-when]': '!isMatch'
+                }
+            },] },
+];
+/**
+ * @nocollapse
+ */
+ShowWhen.ctorParameters = function () { return [
+    { type: undefined, decorators: [{ type: Attribute, args: ['showWhen',] },] },
+    { type: Platform, },
+    { type: NgZone, },
+]; };
 
 var __extends$75 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -59806,7 +59816,7 @@ var __extends$75 = (undefined && undefined.__extends) || (function () {
  * @see {\@link ../ShowWhen ShowWhen API Docs}
  * @see {\@link ../../../platform/Platform Platform API Docs}
  */
-var HideWhen = /** @class */ (function (_super) {
+var HideWhen = (function (_super) {
     __extends$75(HideWhen, _super);
     /**
      * @param {?} hideWhen
@@ -59816,24 +59826,24 @@ var HideWhen = /** @class */ (function (_super) {
     function HideWhen(hideWhen, plt, zone) {
         return _super.call(this, hideWhen, plt, zone) || this;
     }
-    HideWhen.decorators = [
-        { type: Directive, args: [{
-                    selector: '[hideWhen]',
-                    host: {
-                        '[class.hidden-hide-when]': 'isMatch'
-                    }
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    HideWhen.ctorParameters = function () { return [
-        { type: undefined, decorators: [{ type: Attribute, args: ['hideWhen',] },] },
-        { type: Platform, },
-        { type: NgZone, },
-    ]; };
     return HideWhen;
 }(DisplayWhen));
+HideWhen.decorators = [
+    { type: Directive, args: [{
+                selector: '[hideWhen]',
+                host: {
+                    '[class.hidden-hide-when]': 'isMatch'
+                }
+            },] },
+];
+/**
+ * @nocollapse
+ */
+HideWhen.ctorParameters = function () { return [
+    { type: undefined, decorators: [{ type: Attribute, args: ['hideWhen',] },] },
+    { type: Platform, },
+    { type: NgZone, },
+]; };
 
 /**
  * @param {?} a
@@ -59931,7 +59941,7 @@ function getElementIndex(ele) {
  */
 function queryChildren(parentEle, query) {
     if (parentEle) {
-        return /** @type {?} */ (parentEle.querySelectorAll(query));
+        return (parentEle.querySelectorAll(query));
     }
     return [];
 }
@@ -60110,13 +60120,13 @@ function setParallaxTransform(s, el, progress) {
         pX = parseInt(pX, 10) * progress * rtlFactor + '%';
     }
     else {
-        pX = /** @type {?} */ (pX) * progress * rtlFactor + 'px';
+        pX = (pX) * progress * rtlFactor + 'px';
     }
     if ((pY).indexOf('%') >= 0) {
         pY = parseInt(pY, 10) * progress + '%';
     }
     else {
-        pY = /** @type {?} */ (pY) * progress + 'px';
+        pY = (pY) * progress + 'px';
     }
     transform(el, 'translate3d(' + pX + ', ' + pY + ',0px)');
 }
@@ -60335,7 +60345,7 @@ function updatePagination(s) {
         paginationHTML = '<span class="' + CLS.paginationProgressbar + '"></span>';
     }
     s._paginationContainer.innerHTML = paginationHTML;
-    s._bullets = /** @type {?} */ (s._paginationContainer.querySelectorAll('.' + CLS.bullet));
+    s._bullets = (s._paginationContainer.querySelectorAll('.' + CLS.bullet));
 }
 /**
  * @param {?} s
@@ -60379,7 +60389,7 @@ function updatePaginationClasses(s) {
     }
     if (s.paginationType === 'fraction') {
         eachChild(s._paginationContainer, '.' + CLS.paginationCurrent, function (ele) {
-            ele.textContent = /** @type {?} */ ((current + 1));
+            ele.textContent = ((current + 1));
         });
         eachChild(s._paginationContainer, '.' + CLS.paginationTotal, function (ele) {
             ele.textContent = total;
@@ -60719,7 +60729,7 @@ var SWIPER_EFFECTS = {
                 var /** @type {?} */ slideOpacity = s.fade.crossFade ?
                     Math.max(1 - Math.abs(slide.progress), 0) :
                     1 + Math.min(Math.max(slide.progress, -1), 0);
-                slide.style.opacity = /** @type {?} */ (slideOpacity);
+                slide.style.opacity = (slideOpacity);
                 transform(slide, 'translate3d(' + tx + 'px, ' + ty + 'px, 0px)');
             }
         },
@@ -60761,7 +60771,7 @@ var SWIPER_EFFECTS = {
                 else if (s._rtl) {
                     rotateY = -rotateY;
                 }
-                slide.style.zIndex = /** @type {?} */ (-Math.abs(Math.round(progress))) + s._slides.length;
+                slide.style.zIndex = (-Math.abs(Math.round(progress))) + s._slides.length;
                 if (s.flip.slideShadows) {
                     // Set shadows
                     var /** @type {?} */ shadowBefore = ((isHorizontal(s) ? slide.querySelector('.swiper-slide-shadow-left') : slide.querySelector('.swiper-slide-shadow-top')));
@@ -60777,10 +60787,10 @@ var SWIPER_EFFECTS = {
                         slide.appendChild(shadowAfter);
                     }
                     if (shadowBefore) {
-                        shadowBefore.style.opacity = /** @type {?} */ (Math.max(-progress, 0));
+                        shadowBefore.style.opacity = (Math.max(-progress, 0));
                     }
                     if (shadowAfter) {
-                        shadowAfter.style.opacity = /** @type {?} */ (Math.max(progress, 0));
+                        shadowAfter.style.opacity = (Math.max(progress, 0));
                     }
                 }
                 transform(slide, 'translate3d(' + tx + 'px, ' + ty + 'px, 0px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg)');
@@ -60815,7 +60825,7 @@ var SWIPER_EFFECTS = {
             var /** @type {?} */ cubeShadow;
             if (s.cube.shadow) {
                 if (isHorizontal(s)) {
-                    cubeShadow = /** @type {?} */ (s._wrapper.querySelector('.swiper-cube-shadow'));
+                    cubeShadow = (s._wrapper.querySelector('.swiper-cube-shadow'));
                     if (!cubeShadow) {
                         cubeShadow = plt.doc().createElement('div');
                         cubeShadow.className = 'swiper-cube-shadow';
@@ -60824,7 +60834,7 @@ var SWIPER_EFFECTS = {
                     cubeShadow.style.height = s.renderedWidth + 'px';
                 }
                 else {
-                    cubeShadow = /** @type {?} */ (s.container.querySelector('.swiper-cube-shadow'));
+                    cubeShadow = (s.container.querySelector('.swiper-cube-shadow'));
                     if (!cubeShadow) {
                         cubeShadow = plt.doc().createElement('div');
                         cubeShadow.className = 'swiper-cube-shadow';
@@ -60887,9 +60897,9 @@ var SWIPER_EFFECTS = {
                         slide.appendChild(shadowAfter);
                     }
                     if (shadowBefore)
-                        shadowBefore.style.opacity = /** @type {?} */ (Math.max(-progress, 0));
+                        shadowBefore.style.opacity = (Math.max(-progress, 0));
                     if (shadowAfter)
-                        shadowAfter.style.opacity = /** @type {?} */ (Math.max(progress, 0));
+                        shadowAfter.style.opacity = (Math.max(progress, 0));
                 }
             }
             s._wrapper.style.transformOrigin = s._wrapper.style.webkitTransformOrigin = '50% 50% -' + (s._renderedSize / 2) + 'px';
@@ -60955,7 +60965,7 @@ var SWIPER_EFFECTS = {
                     rotateX = 0;
                 var /** @type {?} */ slideTransform = 'translate3d(' + translateX + 'px,' + translateY + 'px,' + translateZ + 'px)  rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg)';
                 transform(slide, slideTransform);
-                slide.style.zIndex = /** @type {?} */ (-Math.abs(Math.round(offsetMultiplier))) + 1;
+                slide.style.zIndex = (-Math.abs(Math.round(offsetMultiplier))) + 1;
                 if (s.coverflow.slideShadows) {
                     // Set shadows
                     var /** @type {?} */ shadowBefore = ((isHorizontal(s) ? slide.querySelector('.swiper-slide-shadow-left') : slide.querySelector('.swiper-slide-shadow-top')));
@@ -60971,10 +60981,10 @@ var SWIPER_EFFECTS = {
                         slide.appendChild(shadowAfter);
                     }
                     if (shadowBefore) {
-                        shadowBefore.style.opacity = /** @type {?} */ ((offsetMultiplier > 0 ? offsetMultiplier : 0));
+                        shadowBefore.style.opacity = ((offsetMultiplier > 0 ? offsetMultiplier : 0));
                     }
                     if (shadowAfter) {
-                        shadowAfter.style.opacity = /** @type {?} */ (((-offsetMultiplier) > 0 ? -offsetMultiplier : 0));
+                        shadowAfter.style.opacity = (((-offsetMultiplier) > 0 ? -offsetMultiplier : 0));
                     }
                 }
             }
@@ -61079,7 +61089,7 @@ function getTranslate(s, plt, el, axis) {
     if (axis === 'x') {
         if (win.WebKitCSSMatrix) {
             // Latest Chrome and webkits Fix
-            curTransform = /** @type {?} */ (transformMatrix.m41);
+            curTransform = (transformMatrix.m41);
         }
         else if (matrix.length === 16) {
             // Crazy IE10 Matrix
@@ -61218,18 +61228,18 @@ function onGestureStart(s, _plt, ev) {
     }
     if (!z.gesture.slide) {
         if (ev.currentTarget && ((ev.currentTarget)).classList.contains(CLS.slide)) {
-            z.gesture.slide = /** @type {?} */ (ev.currentTarget);
+            z.gesture.slide = (ev.currentTarget);
         }
         if (!z.gesture.slide) {
             z.gesture.slide = s._slides[s._activeIndex];
         }
-        z.gesture.image = /** @type {?} */ (z.gesture.slide.querySelector('img, svg, canvas, ion-img'));
-        z.gesture.imageWrap = /** @type {?} */ (z.gesture.image.closest('.' + CLS.zoomContainer));
+        z.gesture.image = (z.gesture.slide.querySelector('img, svg, canvas, ion-img'));
+        z.gesture.imageWrap = (z.gesture.image.closest('.' + CLS.zoomContainer));
         if (!z.gesture.imageWrap) {
             z.gesture.image = undefined;
             return;
         }
-        z.gesture.zoomMax = parseInt(z.gesture.imageWrap.getAttribute('data-swiper-zoom') || /** @type {?} */ (s.zoomMax), 10);
+        z.gesture.zoomMax = parseInt(z.gesture.imageWrap.getAttribute('data-swiper-zoom') || (s.zoomMax), 10);
     }
     transition(z.gesture.image, 0);
     z.isScaling = true;
@@ -61460,8 +61470,8 @@ function toggleZoom(s, plt) {
     var /** @type {?} */ ev = s.originalEvent;
     if (!z.gesture.slide) {
         z.gesture.slide = s.clickedSlide ? s.clickedSlide : s._slides[s._activeIndex];
-        z.gesture.image = /** @type {?} */ (z.gesture.slide.querySelector('img, svg, canvas, ion-img'));
-        z.gesture.imageWrap = /** @type {?} */ (z.gesture.image.closest('.' + CLS.zoomContainer));
+        z.gesture.image = (z.gesture.slide.querySelector('img, svg, canvas, ion-img'));
+        z.gesture.imageWrap = (z.gesture.image.closest('.' + CLS.zoomContainer));
     }
     if (!z.gesture.image)
         return;
@@ -61502,7 +61512,7 @@ function toggleZoom(s, plt) {
     }
     else {
         // Zoom In
-        z.scale = z.currentScale = parseInt(z.gesture.imageWrap.getAttribute('data-swiper-zoom') || /** @type {?} */ (s.zoomMax), 10);
+        z.scale = z.currentScale = parseInt(z.gesture.imageWrap.getAttribute('data-swiper-zoom') || (s.zoomMax), 10);
         if (ev) {
             slideWidth = z.gesture.slide.offsetWidth;
             slideHeight = z.gesture.slide.offsetHeight;
@@ -61704,10 +61714,10 @@ function initSwiper(s, plt) {
         s.virtualTranslate = true;
     }
     // Wrapper
-    s._wrapper = /** @type {?} */ (s.container.querySelector('.' + CLS.wrapper));
+    s._wrapper = (s.container.querySelector('.' + CLS.wrapper));
     // Pagination
     if (s.paginationType) {
-        s._paginationContainer = /** @type {?} */ (s.container.querySelector('.swiper-pagination'));
+        s._paginationContainer = (s.container.querySelector('.swiper-pagination'));
         if (s.paginationType === 'bullets') {
             s._paginationContainer.classList.add(CLS.paginationModifier + 'clickable');
         }
@@ -61796,7 +61806,7 @@ function autoplay(s, plt) {
     var /** @type {?} */ autoplayDelay = s.autoplay;
     var /** @type {?} */ activeSlide = s._slides[s._activeIndex];
     if (activeSlide.hasAttribute('data-swiper-autoplay')) {
-        autoplayDelay = /** @type {?} */ ((activeSlide.getAttribute('data-swiper-autoplay') || s.autoplay));
+        autoplayDelay = ((activeSlide.getAttribute('data-swiper-autoplay') || s.autoplay));
     }
     s._autoplayTimeoutId = plt.timeout(function () {
         s._zone.run(function () {
@@ -62054,7 +62064,7 @@ function updateSlidesSize(s, plt) {
                 slideSize = round(slideSize);
         }
         else {
-            slideSize = (s._renderedSize - ((s.slidesPerView) - 1) * spaceBetween) / /** @type {?} */ (s.slidesPerView);
+            slideSize = (s._renderedSize - ((s.slidesPerView) - 1) * spaceBetween) / (s.slidesPerView);
             if (s.roundLengths)
                 slideSize = round(slideSize);
             if (isHorizontal(s)) {
@@ -62306,7 +62316,7 @@ function fixLoop(s, plt) {
         newIndex = newIndex + s.loopedSlides;
         slideTo(s, plt, newIndex, 0, false, true);
     }
-    else if ((s.slidesPerView === 'auto' && s._activeIndex >= s.loopedSlides * 2) || (s._activeIndex > s._slides.length - /** @type {?} */ (s.slidesPerView) * 2)) {
+    else if ((s.slidesPerView === 'auto' && s._activeIndex >= s.loopedSlides * 2) || (s._activeIndex > s._slides.length - (s.slidesPerView) * 2)) {
         // Fix For Positive Oversliding
         newIndex = -s._slides.length + s._activeIndex + s.loopedSlides;
         newIndex = newIndex + s.loopedSlides;
@@ -62820,7 +62830,7 @@ function findElementInEvent(e, selector) {
     var /** @type {?} */ el = (e.target);
     if (!el.matches(selector)) {
         if (typeof selector === 'string') {
-            el = /** @type {?} */ (el.closest(selector));
+            el = (el.closest(selector));
         }
         else if (selector.nodeType) {
             var /** @type {?} */ parentEl = el.parentElement;
@@ -63556,6 +63566,34 @@ var __extends$76 = (undefined && undefined.__extends) || (function () {
  * }
  * ```
  *
+ * ### Zooming
+ * If your slides contain images, you can enable zooming on them by setting `zoom="true" and
+ * wrapping each image in a `div` with the class `swiper-zoom-container`. Zoom supports
+ * `img`, `svg`, `canvas`, and `ion-img`.
+ *
+ * ```html
+ * <ion-slidesj zoom="true">
+ *   <ion-slide>
+ *     <div class="swiper-zoom-container">
+ *       <img src="assets/img/dog.jpg">
+ *     </div>
+ *     <ion-label>Woof</ion-label>
+ *   </ion-slide>
+ *   <ion-slide>
+ *     <div class="swiper-zoom-container">
+ *       <img src="assets/img/cat.jpg">
+ *     </div>
+ *     <ion-label>Meow</ion-label>
+ *   </ion-slide>
+ *   <ion-slide>
+ *     <div class="swiper-zoom-container">
+ *       <img src="assets/img/fish.jpg">
+ *     </div>
+ *     <ion-label>Just keep swimming</ion-label>
+ *   </ion-slide>
+ * </ion-slides>
+ * ```
+ *
  * \@advanced
  *
  * There are several options available to create customized slides. Ionic exposes
@@ -63594,7 +63632,7 @@ var __extends$76 = (undefined && undefined.__extends) || (function () {
  *
  * Licensed under MIT
  */
-var Slides = /** @class */ (function (_super) {
+var Slides = (function (_super) {
     __extends$76(Slides, _super);
     /**
      * @param {?} config
@@ -64462,63 +64500,63 @@ var Slides = /** @class */ (function (_super) {
         destroySwiper(this);
         this.enableKeyboardControl(false);
     };
-    Slides.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-slides',
-                    template: '<div class="swiper-container" [attr.dir]="_rtl? \'rtl\' : null">' +
-                        '<div class="swiper-wrapper">' +
-                        '<ng-content></ng-content>' +
-                        '</div>' +
-                        '<div [class.hide]="!pager" class="swiper-pagination"></div>' +
-                        '</div>',
-                    changeDetection: ChangeDetectionStrategy.OnPush,
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Slides.ctorParameters = function () { return [
-        { type: Config, },
-        { type: Platform, },
-        { type: NgZone, },
-        { type: ViewController, decorators: [{ type: Optional },] },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
-    Slides.propDecorators = {
-        'autoplay': [{ type: Input },],
-        'control': [{ type: Input },],
-        'effect': [{ type: Input },],
-        'direction': [{ type: Input },],
-        'initialSlide': [{ type: Input },],
-        'loop': [{ type: Input },],
-        'pager': [{ type: Input },],
-        'dir': [{ type: Input },],
-        'paginationType': [{ type: Input },],
-        'parallax': [{ type: Input },],
-        'speed': [{ type: Input },],
-        'zoom': [{ type: Input },],
-        'spaceBetween': [{ type: Input },],
-        'slidesPerView': [{ type: Input },],
-        'centeredSlides': [{ type: Input },],
-        'ionSlideWillChange': [{ type: Output },],
-        'ionSlideDidChange': [{ type: Output },],
-        'ionSlideDrag': [{ type: Output },],
-        'ionSlideReachStart': [{ type: Output },],
-        'ionSlideReachEnd': [{ type: Output },],
-        'ionSlideAutoplay': [{ type: Output },],
-        'ionSlideAutoplayStart': [{ type: Output },],
-        'ionSlideAutoplayStop': [{ type: Output },],
-        'ionSlideNextStart': [{ type: Output },],
-        'ionSlidePrevStart': [{ type: Output },],
-        'ionSlideNextEnd': [{ type: Output },],
-        'ionSlidePrevEnd': [{ type: Output },],
-        'ionSlideTap': [{ type: Output },],
-        'ionSlideDoubleTap': [{ type: Output },],
-    };
     return Slides;
 }(Ion));
+Slides.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-slides',
+                template: '<div class="swiper-container" [attr.dir]="_rtl? \'rtl\' : null">' +
+                    '<div class="swiper-wrapper">' +
+                    '<ng-content></ng-content>' +
+                    '</div>' +
+                    '<div [class.hide]="!pager" class="swiper-pagination"></div>' +
+                    '</div>',
+                changeDetection: ChangeDetectionStrategy.OnPush,
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Slides.ctorParameters = function () { return [
+    { type: Config, },
+    { type: Platform, },
+    { type: NgZone, },
+    { type: ViewController, decorators: [{ type: Optional },] },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
+Slides.propDecorators = {
+    'autoplay': [{ type: Input },],
+    'control': [{ type: Input },],
+    'effect': [{ type: Input },],
+    'direction': [{ type: Input },],
+    'initialSlide': [{ type: Input },],
+    'loop': [{ type: Input },],
+    'pager': [{ type: Input },],
+    'dir': [{ type: Input },],
+    'paginationType': [{ type: Input },],
+    'parallax': [{ type: Input },],
+    'speed': [{ type: Input },],
+    'zoom': [{ type: Input },],
+    'spaceBetween': [{ type: Input },],
+    'slidesPerView': [{ type: Input },],
+    'centeredSlides': [{ type: Input },],
+    'ionSlideWillChange': [{ type: Output },],
+    'ionSlideDidChange': [{ type: Output },],
+    'ionSlideDrag': [{ type: Output },],
+    'ionSlideReachStart': [{ type: Output },],
+    'ionSlideReachEnd': [{ type: Output },],
+    'ionSlideAutoplay': [{ type: Output },],
+    'ionSlideAutoplayStart': [{ type: Output },],
+    'ionSlideAutoplayStop': [{ type: Output },],
+    'ionSlideNextStart': [{ type: Output },],
+    'ionSlidePrevStart': [{ type: Output },],
+    'ionSlideNextEnd': [{ type: Output },],
+    'ionSlidePrevEnd': [{ type: Output },],
+    'ionSlideTap': [{ type: Output },],
+    'ionSlideDoubleTap': [{ type: Output },],
+};
 var slidesId = -1;
 
 /**
@@ -64533,7 +64571,7 @@ var slidesId = -1;
  * \@demo /docs/demos/src/slides/
  * @see {\@link /docs/api/components/slides/Slides/ Slides API Docs}
  */
-var Slide = /** @class */ (function () {
+var Slide = (function () {
     /**
      * @param {?} elementRef
      * @param {?} renderer
@@ -64551,26 +64589,26 @@ var Slide = /** @class */ (function () {
     Slide.prototype.ngOnDestroy = function () {
         this._slides.update(10);
     };
-    Slide.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-slide',
-                    template: '<div class="slide-zoom">' +
-                        '<ng-content></ng-content>' +
-                        '</div>',
-                    changeDetection: ChangeDetectionStrategy.OnPush,
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Slide.ctorParameters = function () { return [
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: Slides, },
-    ]; };
     return Slide;
 }());
+Slide.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-slide',
+                template: '<div class="slide-zoom">' +
+                    '<ng-content></ng-content>' +
+                    '</div>',
+                changeDetection: ChangeDetectionStrategy.OnPush,
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Slide.ctorParameters = function () { return [
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: Slides, },
+]; };
 
 var __extends$77 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -64675,7 +64713,7 @@ var __extends$77 = (undefined && undefined.__extends) || (function () {
  * }
  * ```
  */
-var Spinner = /** @class */ (function (_super) {
+var Spinner = (function (_super) {
     __extends$77(Spinner, _super);
     /**
      * @param {?} config
@@ -64790,37 +64828,37 @@ var Spinner = /** @class */ (function (_super) {
         data.style.animationDuration = duration + 'ms';
         return data;
     };
-    Spinner.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-spinner',
-                    template: '<svg viewBox="0 0 64 64" *ngFor="let i of _c" [ngStyle]="i.style">' +
-                        '<circle [attr.r]="i.r" transform="translate(32,32)"></circle>' +
-                        '</svg>' +
-                        '<svg viewBox="0 0 64 64" *ngFor="let i of _l" [ngStyle]="i.style">' +
-                        '<line [attr.y1]="i.y1" [attr.y2]="i.y2" transform="translate(32,32)"></line>' +
-                        '</svg>',
-                    host: {
-                        '[class.spinner-paused]': '_paused'
-                    },
-                    changeDetection: ChangeDetectionStrategy.OnPush,
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Spinner.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
-    Spinner.propDecorators = {
-        'name': [{ type: Input },],
-        'duration': [{ type: Input },],
-        'paused': [{ type: Input },],
-    };
     return Spinner;
 }(Ion));
+Spinner.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-spinner',
+                template: '<svg viewBox="0 0 64 64" *ngFor="let i of _c" [ngStyle]="i.style">' +
+                    '<circle [attr.r]="i.r" transform="translate(32,32)"></circle>' +
+                    '</svg>' +
+                    '<svg viewBox="0 0 64 64" *ngFor="let i of _l" [ngStyle]="i.style">' +
+                    '<line [attr.y1]="i.y1" [attr.y2]="i.y2" transform="translate(32,32)"></line>' +
+                    '</svg>',
+                host: {
+                    '[class.spinner-paused]': '_paused'
+                },
+                changeDetection: ChangeDetectionStrategy.OnPush,
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Spinner.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
+Spinner.propDecorators = {
+    'name': [{ type: Input },],
+    'duration': [{ type: Input },],
+    'paused': [{ type: Input },],
+};
 var SPINNERS = {
     ios: {
         dur: 1000,
@@ -64920,7 +64958,7 @@ var SPINNERS = {
 /**
  * @hidden
  */
-var TabHighlight = /** @class */ (function () {
+var TabHighlight = (function () {
     /**
      * @param {?} _elementRef
      * @param {?} _dom
@@ -64954,20 +64992,20 @@ var TabHighlight = /** @class */ (function () {
             });
         }, 32);
     };
-    TabHighlight.decorators = [
-        { type: Directive, args: [{
-                    selector: '.tab-highlight'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    TabHighlight.ctorParameters = function () { return [
-        { type: ElementRef, },
-        { type: DomController, },
-    ]; };
     return TabHighlight;
 }());
+TabHighlight.decorators = [
+    { type: Directive, args: [{
+                selector: '.tab-highlight'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+TabHighlight.ctorParameters = function () { return [
+    { type: ElementRef, },
+    { type: DomController, },
+]; };
 
 var __extends$79 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -65111,7 +65149,7 @@ var __extends$79 = (undefined && undefined.__extends) || (function () {
  * @see {\@link ../../config/Config Config API Docs}
  *
  */
-var Tabs = /** @class */ (function (_super) {
+var Tabs = (function (_super) {
     __extends$79(Tabs, _super);
     /**
      * @param {?} parent
@@ -65570,46 +65608,46 @@ var Tabs = /** @class */ (function (_super) {
         });
         return isPresent(tab) ? tab.index : fallbackIndex;
     };
-    Tabs.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-tabs',
-                    template: '<div class="tabbar" role="tablist" #tabbar>' +
-                        '<a *ngFor="let t of _tabs" [tab]="t" class="tab-button" role="tab" href="#" (ionSelect)="select(t)"></a>' +
-                        '<div class="tab-highlight"></div>' +
-                        '</div>' +
-                        '<ng-content></ng-content>' +
-                        '<div #portal tab-portal></div>',
-                    encapsulation: ViewEncapsulation.None,
-                    providers: [{ provide: RootNode, useExisting: forwardRef(function () { return Tabs; }) }]
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Tabs.ctorParameters = function () { return [
-        { type: NavController, decorators: [{ type: Optional },] },
-        { type: ViewController, decorators: [{ type: Optional },] },
-        { type: App, },
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Platform, },
-        { type: Renderer, },
-        { type: DeepLinker, },
-        { type: Keyboard, },
-    ]; };
-    Tabs.propDecorators = {
-        'name': [{ type: Input },],
-        'selectedIndex': [{ type: Input },],
-        'tabsLayout': [{ type: Input },],
-        'tabsPlacement': [{ type: Input },],
-        'tabsHighlight': [{ type: Input },],
-        'ionChange': [{ type: Output },],
-        '_highlight': [{ type: ViewChild, args: [TabHighlight,] },],
-        '_tabbar': [{ type: ViewChild, args: ['tabbar',] },],
-        'portal': [{ type: ViewChild, args: ['portal', { read: ViewContainerRef },] },],
-    };
     return Tabs;
 }(Ion));
+Tabs.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-tabs',
+                template: '<div class="tabbar" role="tablist" #tabbar>' +
+                    '<a *ngFor="let t of _tabs" [tab]="t" class="tab-button" role="tab" href="#" (ionSelect)="select(t)"></a>' +
+                    '<div class="tab-highlight"></div>' +
+                    '</div>' +
+                    '<ng-content></ng-content>' +
+                    '<div #portal tab-portal></div>',
+                encapsulation: ViewEncapsulation.None,
+                providers: [{ provide: RootNode, useExisting: forwardRef(function () { return Tabs; }) }]
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Tabs.ctorParameters = function () { return [
+    { type: NavController, decorators: [{ type: Optional },] },
+    { type: ViewController, decorators: [{ type: Optional },] },
+    { type: App, },
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Platform, },
+    { type: Renderer, },
+    { type: DeepLinker, },
+    { type: Keyboard, },
+]; };
+Tabs.propDecorators = {
+    'name': [{ type: Input },],
+    'selectedIndex': [{ type: Input },],
+    'tabsLayout': [{ type: Input },],
+    'tabsPlacement': [{ type: Input },],
+    'tabsHighlight': [{ type: Input },],
+    'ionChange': [{ type: Output },],
+    '_highlight': [{ type: ViewChild, args: [TabHighlight,] },],
+    '_tabbar': [{ type: ViewChild, args: ['tabbar',] },],
+    'portal': [{ type: ViewChild, args: ['portal', { read: ViewContainerRef },] },],
+};
 var tabIds = -1;
 
 var __extends$78 = (undefined && undefined.__extends) || (function () {
@@ -65728,7 +65766,7 @@ var __extends$78 = (undefined && undefined.__extends) || (function () {
  * @see {\@link ../../nav/Nav Nav API Docs}
  * @see {\@link ../../nav/NavController NavController API Docs}
  */
-var Tab = /** @class */ (function (_super) {
+var Tab = (function (_super) {
     __extends$78(Tab, _super);
     /**
      * @param {?} parent
@@ -65995,53 +66033,53 @@ var Tab = /** @class */ (function (_super) {
     Tab.prototype.goToRoot = function (opts) {
         return this.setRoot(this.root, this.rootParams, opts, null);
     };
-    Tab.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-tab',
-                    template: '<div #viewport></div><div class="nav-decor"></div>',
-                    host: {
-                        '[attr.id]': '_tabId',
-                        '[attr.aria-labelledby]': '_btnId',
-                        'role': 'tabpanel'
-                    },
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Tab.ctorParameters = function () { return [
-        { type: Tabs, },
-        { type: App, },
-        { type: Config, },
-        { type: Platform, },
-        { type: ElementRef, },
-        { type: NgZone, },
-        { type: Renderer, },
-        { type: ComponentFactoryResolver, },
-        { type: ChangeDetectorRef, },
-        { type: GestureController, },
-        { type: TransitionController, },
-        { type: DeepLinker, decorators: [{ type: Optional },] },
-        { type: DomController, },
-        { type: ErrorHandler, },
-    ]; };
-    Tab.propDecorators = {
-        'root': [{ type: Input },],
-        'rootParams': [{ type: Input },],
-        'tabUrlPath': [{ type: Input },],
-        'tabTitle': [{ type: Input },],
-        'tabIcon': [{ type: Input },],
-        'tabBadge': [{ type: Input },],
-        'tabBadgeStyle': [{ type: Input },],
-        'enabled': [{ type: Input },],
-        'show': [{ type: Input },],
-        'tabsHideOnSubPages': [{ type: Input },],
-        'ionSelect': [{ type: Output },],
-        '_vp': [{ type: ViewChild, args: ['viewport', { read: ViewContainerRef },] },],
-    };
     return Tab;
 }(NavControllerBase));
+Tab.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-tab',
+                template: '<div #viewport></div><div class="nav-decor"></div>',
+                host: {
+                    '[attr.id]': '_tabId',
+                    '[attr.aria-labelledby]': '_btnId',
+                    'role': 'tabpanel'
+                },
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Tab.ctorParameters = function () { return [
+    { type: Tabs, },
+    { type: App, },
+    { type: Config, },
+    { type: Platform, },
+    { type: ElementRef, },
+    { type: NgZone, },
+    { type: Renderer, },
+    { type: ComponentFactoryResolver, },
+    { type: ChangeDetectorRef, },
+    { type: GestureController, },
+    { type: TransitionController, },
+    { type: DeepLinker, decorators: [{ type: Optional },] },
+    { type: DomController, },
+    { type: ErrorHandler, },
+]; };
+Tab.propDecorators = {
+    'root': [{ type: Input },],
+    'rootParams': [{ type: Input },],
+    'tabUrlPath': [{ type: Input },],
+    'tabTitle': [{ type: Input },],
+    'tabIcon': [{ type: Input },],
+    'tabBadge': [{ type: Input },],
+    'tabBadgeStyle': [{ type: Input },],
+    'enabled': [{ type: Input },],
+    'show': [{ type: Input },],
+    'tabsHideOnSubPages': [{ type: Input },],
+    'ionSelect': [{ type: Output },],
+    '_vp': [{ type: ViewChild, args: ['viewport', { read: ViewContainerRef },] },],
+};
 
 var __extends$80 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -66056,7 +66094,7 @@ var __extends$80 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var TabButton = /** @class */ (function (_super) {
+var TabButton = (function (_super) {
     __extends$80(TabButton, _super);
     /**
      * @param {?} config
@@ -66096,48 +66134,48 @@ var TabButton = /** @class */ (function (_super) {
     TabButton.prototype.updateHref = function (href) {
         this.setElementAttribute('href', href);
     };
-    TabButton.decorators = [
-        { type: Component, args: [{
-                    selector: '.tab-button',
-                    template: '<ion-icon *ngIf="tab.tabIcon" [name]="tab.tabIcon" [isActive]="tab.isSelected" class="tab-button-icon"></ion-icon>' +
-                        '<span *ngIf="tab.tabTitle" class="tab-button-text">{{tab.tabTitle}}</span>' +
-                        '<ion-badge *ngIf="tab.tabBadge" class="tab-badge" [color]="tab.tabBadgeStyle">{{tab.tabBadge}}</ion-badge>' +
-                        '<div class="button-effect"></div>',
-                    host: {
-                        '[attr.id]': 'tab._btnId',
-                        '[attr.aria-controls]': 'tab._tabId',
-                        '[attr.aria-selected]': 'tab.isSelected',
-                        '[class.has-title]': 'hasTitle',
-                        '[class.has-icon]': 'hasIcon',
-                        '[class.has-title-only]': 'hasTitleOnly',
-                        '[class.icon-only]': 'hasIconOnly',
-                        '[class.has-badge]': 'hasBadge',
-                        '[class.disable-hover]': 'disHover',
-                        '[class.tab-disabled]': '!tab.enabled',
-                        '[class.tab-hidden]': '!tab.show',
-                    }
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    TabButton.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
-    TabButton.propDecorators = {
-        'tab': [{ type: Input },],
-        'ionSelect': [{ type: Output },],
-        'onClick': [{ type: HostListener, args: ['click',] },],
-    };
     return TabButton;
 }(Ion));
+TabButton.decorators = [
+    { type: Component, args: [{
+                selector: '.tab-button',
+                template: '<ion-icon *ngIf="tab.tabIcon" [name]="tab.tabIcon" [isActive]="tab.isSelected" class="tab-button-icon"></ion-icon>' +
+                    '<span *ngIf="tab.tabTitle" class="tab-button-text">{{tab.tabTitle}}</span>' +
+                    '<ion-badge *ngIf="tab.tabBadge" class="tab-badge" [color]="tab.tabBadgeStyle">{{tab.tabBadge}}</ion-badge>' +
+                    '<div class="button-effect"></div>',
+                host: {
+                    '[attr.id]': 'tab._btnId',
+                    '[attr.aria-controls]': 'tab._tabId',
+                    '[attr.aria-selected]': 'tab.isSelected',
+                    '[class.has-title]': 'hasTitle',
+                    '[class.has-icon]': 'hasIcon',
+                    '[class.has-title-only]': 'hasTitleOnly',
+                    '[class.icon-only]': 'hasIconOnly',
+                    '[class.has-badge]': 'hasBadge',
+                    '[class.disable-hover]': 'disHover',
+                    '[class.tab-disabled]': '!tab.enabled',
+                    '[class.tab-hidden]': '!tab.show',
+                }
+            },] },
+];
+/**
+ * @nocollapse
+ */
+TabButton.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
+TabButton.propDecorators = {
+    'tab': [{ type: Input },],
+    'ionSelect': [{ type: Output },],
+    'onClick': [{ type: HostListener, args: ['click',] },],
+};
 
 /**
  * @hidden
  */
-var ToastCmp = /** @class */ (function () {
+var ToastCmp = (function () {
     /**
      * @param {?} _viewCtrl
      * @param {?} _config
@@ -66207,39 +66245,39 @@ var ToastCmp = /** @class */ (function () {
         this.dismissTimeout = undefined;
         return this._viewCtrl.dismiss(null, role, { disableApp: false });
     };
-    ToastCmp.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-toast',
-                    template: '<div class="toast-wrapper" ' +
-                        '[class.toast-bottom]="d.position === \'bottom\'" ' +
-                        '[class.toast-middle]="d.position === \'middle\'" ' +
-                        '[class.toast-top]="d.position === \'top\'"> ' +
-                        '<div class="toast-container"> ' +
-                        '<div class="toast-message" id="{{hdrId}}" *ngIf="d.message">{{d.message}}</div> ' +
-                        '<button ion-button clear class="toast-button" *ngIf="d.showCloseButton" (click)="cbClick()"> ' +
-                        '{{ d.closeButtonText || \'Close\' }} ' +
-                        '</button> ' +
-                        '</div> ' +
-                        '</div>',
-                    host: {
-                        'role': 'dialog',
-                        '[attr.aria-labelledby]': 'hdrId',
-                        '[attr.aria-describedby]': 'descId',
-                    },
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    ToastCmp.ctorParameters = function () { return [
-        { type: ViewController, },
-        { type: Config, },
-        { type: ElementRef, },
-        { type: NavParams, },
-        { type: Renderer, },
-    ]; };
     return ToastCmp;
 }());
+ToastCmp.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-toast',
+                template: '<div class="toast-wrapper" ' +
+                    '[class.toast-bottom]="d.position === \'bottom\'" ' +
+                    '[class.toast-middle]="d.position === \'middle\'" ' +
+                    '[class.toast-top]="d.position === \'top\'"> ' +
+                    '<div class="toast-container"> ' +
+                    '<div class="toast-message" id="{{hdrId}}" *ngIf="d.message">{{d.message}}</div> ' +
+                    '<button ion-button clear class="toast-button" *ngIf="d.showCloseButton" (click)="cbClick()"> ' +
+                    '{{ d.closeButtonText || \'Close\' }} ' +
+                    '</button> ' +
+                    '</div> ' +
+                    '</div>',
+                host: {
+                    'role': 'dialog',
+                    '[attr.aria-labelledby]': 'hdrId',
+                    '[attr.aria-describedby]': 'descId',
+                },
+            },] },
+];
+/**
+ * @nocollapse
+ */
+ToastCmp.ctorParameters = function () { return [
+    { type: ViewController, },
+    { type: Config, },
+    { type: ElementRef, },
+    { type: NavParams, },
+    { type: Renderer, },
+]; };
 var toastIds = -1;
 
 var __extends$82 = (undefined && undefined.__extends) || (function () {
@@ -66252,7 +66290,7 @@ var __extends$82 = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var ToastSlideIn = /** @class */ (function (_super) {
+var ToastSlideIn = (function (_super) {
     __extends$82(ToastSlideIn, _super);
     function ToastSlideIn() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -66289,7 +66327,7 @@ var ToastSlideIn = /** @class */ (function (_super) {
     };
     return ToastSlideIn;
 }(Transition));
-var ToastSlideOut = /** @class */ (function (_super) {
+var ToastSlideOut = (function (_super) {
     __extends$82(ToastSlideOut, _super);
     function ToastSlideOut() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -66320,7 +66358,7 @@ var ToastSlideOut = /** @class */ (function (_super) {
     };
     return ToastSlideOut;
 }(Transition));
-var ToastMdSlideIn = /** @class */ (function (_super) {
+var ToastMdSlideIn = (function (_super) {
     __extends$82(ToastMdSlideIn, _super);
     function ToastMdSlideIn() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -66357,7 +66395,7 @@ var ToastMdSlideIn = /** @class */ (function (_super) {
     };
     return ToastMdSlideIn;
 }(Transition));
-var ToastMdSlideOut = /** @class */ (function (_super) {
+var ToastMdSlideOut = (function (_super) {
     __extends$82(ToastMdSlideOut, _super);
     function ToastMdSlideOut() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -66388,7 +66426,7 @@ var ToastMdSlideOut = /** @class */ (function (_super) {
     };
     return ToastMdSlideOut;
 }(Transition));
-var ToastWpPopIn = /** @class */ (function (_super) {
+var ToastWpPopIn = (function (_super) {
     __extends$82(ToastWpPopIn, _super);
     function ToastWpPopIn() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -66423,7 +66461,7 @@ var ToastWpPopIn = /** @class */ (function (_super) {
     };
     return ToastWpPopIn;
 }(Transition));
-var ToastWpPopOut = /** @class */ (function (_super) {
+var ToastWpPopOut = (function (_super) {
     __extends$82(ToastWpPopOut, _super);
     function ToastWpPopOut() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -66477,7 +66515,7 @@ var __extends$81 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var Toast = /** @class */ (function (_super) {
+var Toast = (function (_super) {
     __extends$81(Toast, _super);
     /**
      * @param {?} app
@@ -66619,12 +66657,10 @@ var TOAST_POSITION_BOTTOM = 'bottom';
  * ```ts
  * import { ToastController } from 'ionic-angular';
  *
- * constructor(private toastCtrl: ToastController) {
- *
- * }
+ * constructor(public toastCtrl: ToastController) { }
  *
  * presentToast() {
- *   let toast = this.toastCtrl.create({
+ *   const toast = this.toastCtrl.create({
  *     message: 'User was added successfully',
  *     duration: 3000,
  *     position: 'top'
@@ -66650,7 +66686,7 @@ var TOAST_POSITION_BOTTOM = 'bottom';
  *
  * \@demo /docs/demos/src/toast/
  */
-var ToastController = /** @class */ (function () {
+var ToastController = (function () {
     /**
      * @param {?} _app
      * @param {?} config
@@ -66668,18 +66704,18 @@ var ToastController = /** @class */ (function () {
         if (opts === void 0) { opts = {}; }
         return new Toast(this._app, opts, this.config);
     };
-    ToastController.decorators = [
-        { type: Injectable },
-    ];
-    /**
-     * @nocollapse
-     */
-    ToastController.ctorParameters = function () { return [
-        { type: App, },
-        { type: Config, },
-    ]; };
     return ToastController;
 }());
+ToastController.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+ToastController.ctorParameters = function () { return [
+    { type: App, },
+    { type: Config, },
+]; };
 
 var __extends$84 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -66694,7 +66730,7 @@ var __extends$84 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var ToggleGesture = /** @class */ (function (_super) {
+var ToggleGesture = (function (_super) {
     __extends$84(ToggleGesture, _super);
     /**
      * @param {?} plt
@@ -66795,7 +66831,7 @@ var __extends$83 = (undefined && undefined.__extends) || (function () {
  * \@demo /docs/demos/src/toggle/
  * @see {\@link /docs/components#toggle Toggle Component Docs}
  */
-var Toggle = /** @class */ (function (_super) {
+var Toggle = (function (_super) {
     __extends$83(Toggle, _super);
     /**
      * @param {?} form
@@ -66954,51 +66990,51 @@ var Toggle = /** @class */ (function (_super) {
         _super.prototype.ngOnDestroy.call(this);
         this._gesture && this._gesture.destroy();
     };
-    Toggle.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-toggle',
-                    template: '<div class="toggle-icon">' +
-                        '<div class="toggle-inner"></div>' +
-                        '</div>' +
-                        '<button role="checkbox" ' +
-                        'type="button" ' +
-                        'ion-button="item-cover" ' +
-                        '[id]="id" ' +
-                        '[attr.aria-checked]="_value" ' +
-                        '[attr.aria-labelledby]="_labelId" ' +
-                        '[attr.aria-disabled]="_disabled" ' +
-                        'class="item-cover" disable-activated>' +
-                        '</button>',
-                    host: {
-                        '[class.toggle-disabled]': '_disabled',
-                        '[class.toggle-checked]': '_value',
-                        '[class.toggle-activated]': '_activated',
-                    },
-                    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: Toggle, multi: true }],
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Toggle.ctorParameters = function () { return [
-        { type: Form, },
-        { type: Config, },
-        { type: Platform, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: Haptic, },
-        { type: Item, decorators: [{ type: Optional },] },
-        { type: GestureController, },
-        { type: DomController, },
-        { type: NgZone, },
-    ]; };
-    Toggle.propDecorators = {
-        'checked': [{ type: Input },],
-        '_keyup': [{ type: HostListener, args: ['keyup', ['$event'],] },],
-    };
     return Toggle;
 }(BaseInput));
+Toggle.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-toggle',
+                template: '<div class="toggle-icon">' +
+                    '<div class="toggle-inner"></div>' +
+                    '</div>' +
+                    '<button role="checkbox" ' +
+                    'type="button" ' +
+                    'ion-button="item-cover" ' +
+                    '[id]="id" ' +
+                    '[attr.aria-checked]="_value" ' +
+                    '[attr.aria-labelledby]="_labelId" ' +
+                    '[attr.aria-disabled]="_disabled" ' +
+                    'class="item-cover" disable-activated>' +
+                    '</button>',
+                host: {
+                    '[class.toggle-disabled]': '_disabled',
+                    '[class.toggle-checked]': '_value',
+                    '[class.toggle-activated]': '_activated',
+                },
+                providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: Toggle, multi: true }],
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Toggle.ctorParameters = function () { return [
+    { type: Form, },
+    { type: Config, },
+    { type: Platform, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: Haptic, },
+    { type: Item, decorators: [{ type: Optional },] },
+    { type: GestureController, },
+    { type: DomController, },
+    { type: NgZone, },
+]; };
+Toggle.propDecorators = {
+    'checked': [{ type: Input },],
+    '_keyup': [{ type: HostListener, args: ['keyup', ['$event'],] },],
+};
 
 var __extends$85 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -67029,7 +67065,7 @@ var __extends$85 = (undefined && undefined.__extends) || (function () {
  * ```
  *
  */
-var Footer = /** @class */ (function (_super) {
+var Footer = (function (_super) {
     __extends$85(Footer, _super);
     /**
      * @param {?} config
@@ -67042,22 +67078,22 @@ var Footer = /** @class */ (function (_super) {
         viewCtrl && viewCtrl._setFooter(_this);
         return _this;
     }
-    Footer.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-footer'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Footer.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: ViewController, decorators: [{ type: Optional },] },
-    ]; };
     return Footer;
 }(Ion));
+Footer.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-footer'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Footer.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: ViewController, decorators: [{ type: Optional },] },
+]; };
 
 var __extends$86 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -67092,7 +67128,7 @@ var __extends$86 = (undefined && undefined.__extends) || (function () {
  * ```
  *
  */
-var Header = /** @class */ (function (_super) {
+var Header = (function (_super) {
     __extends$86(Header, _super);
     /**
      * @param {?} config
@@ -67105,22 +67141,22 @@ var Header = /** @class */ (function (_super) {
         viewCtrl && viewCtrl._setHeader(_this);
         return _this;
     }
-    Header.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-header'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Header.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: ViewController, decorators: [{ type: Optional },] },
-    ]; };
     return Header;
 }(Ion));
+Header.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-header'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Header.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: ViewController, decorators: [{ type: Optional },] },
+]; };
 
 var __extends$87 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -67220,7 +67256,7 @@ var __extends$87 = (undefined && undefined.__extends) || (function () {
  * \@demo /docs/demos/src/toolbar/
  * @see {\@link ../Navbar/ Navbar API Docs}
  */
-var Toolbar = /** @class */ (function (_super) {
+var Toolbar = (function (_super) {
     __extends$87(Toolbar, _super);
     /**
      * @param {?} config
@@ -67232,33 +67268,33 @@ var Toolbar = /** @class */ (function (_super) {
         _this._sbPadding = config.getBoolean('statusbarPadding');
         return _this;
     }
-    Toolbar.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-toolbar',
-                    template: '<div class="toolbar-background" [ngClass]="\'toolbar-background-\' + _mode"></div>' +
-                        '<ng-content select="[menuToggle],ion-buttons[left]"></ng-content>' +
-                        '<ng-content select="ion-buttons[start]"></ng-content>' +
-                        '<ng-content select="ion-buttons[end],ion-buttons[right]"></ng-content>' +
-                        '<div class="toolbar-content" [ngClass]="\'toolbar-content-\' + _mode">' +
-                        '<ng-content></ng-content>' +
-                        '</div>',
-                    host: {
-                        'class': 'toolbar',
-                        '[class.statusbar-padding]': '_sbPadding'
-                    },
-                    changeDetection: ChangeDetectionStrategy.OnPush,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Toolbar.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
     return Toolbar;
 }(ToolbarBase));
+Toolbar.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-toolbar',
+                template: '<div class="toolbar-background" [ngClass]="\'toolbar-background-\' + _mode"></div>' +
+                    '<ng-content select="[menuToggle],ion-buttons[left]"></ng-content>' +
+                    '<ng-content select="ion-buttons[start]"></ng-content>' +
+                    '<ng-content select="ion-buttons[end],ion-buttons[right]"></ng-content>' +
+                    '<div class="toolbar-content" [ngClass]="\'toolbar-content-\' + _mode">' +
+                    '<ng-content></ng-content>' +
+                    '</div>',
+                host: {
+                    'class': 'toolbar',
+                    '[class.statusbar-padding]': '_sbPadding'
+                },
+                changeDetection: ChangeDetectionStrategy.OnPush,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Toolbar.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
 
 var __extends$88 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -67273,7 +67309,7 @@ var __extends$88 = (undefined && undefined.__extends) || (function () {
 /**
  * @hidden
  */
-var ToolbarItem = /** @class */ (function (_super) {
+var ToolbarItem = (function (_super) {
     __extends$88(ToolbarItem, _super);
     /**
      * @param {?} config
@@ -67302,26 +67338,26 @@ var ToolbarItem = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    ToolbarItem.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-buttons,[menuToggle]'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    ToolbarItem.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: Toolbar, decorators: [{ type: Optional },] },
-        { type: Navbar, decorators: [{ type: Optional }, { type: Inject, args: [forwardRef(function () { return Navbar; }),] },] },
-    ]; };
-    ToolbarItem.propDecorators = {
-        '_buttons': [{ type: ContentChildren, args: [Button,] },],
-    };
     return ToolbarItem;
 }(Ion));
+ToolbarItem.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-buttons,[menuToggle]'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+ToolbarItem.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: Toolbar, decorators: [{ type: Optional },] },
+    { type: Navbar, decorators: [{ type: Optional }, { type: Inject, args: [forwardRef(function () { return Navbar; }),] },] },
+]; };
+ToolbarItem.propDecorators = {
+    '_buttons': [{ type: ContentChildren, args: [Button,] },],
+};
 
 var __extends$89 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -67368,7 +67404,7 @@ var __extends$89 = (undefined && undefined.__extends) || (function () {
  *
  * \@demo /docs/demos/src/title/
  */
-var ToolbarTitle = /** @class */ (function (_super) {
+var ToolbarTitle = (function (_super) {
     __extends$89(ToolbarTitle, _super);
     /**
      * @param {?} config
@@ -67390,28 +67426,28 @@ var ToolbarTitle = /** @class */ (function (_super) {
     ToolbarTitle.prototype.getTitleText = function () {
         return this._elementRef.nativeElement.textContent;
     };
-    ToolbarTitle.decorators = [
-        { type: Component, args: [{
-                    selector: 'ion-title',
-                    template: '<div class="toolbar-title" [ngClass]="\'toolbar-title-\' + _mode">' +
-                        '<ng-content></ng-content>' +
-                        '</div>',
-                    changeDetection: ChangeDetectionStrategy.OnPush,
-                    encapsulation: ViewEncapsulation.None,
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    ToolbarTitle.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: Toolbar, decorators: [{ type: Optional },] },
-        { type: Navbar, decorators: [{ type: Optional }, { type: Inject, args: [forwardRef(function () { return Navbar; }),] },] },
-    ]; };
     return ToolbarTitle;
 }(Ion));
+ToolbarTitle.decorators = [
+    { type: Component, args: [{
+                selector: 'ion-title',
+                template: '<div class="toolbar-title" [ngClass]="\'toolbar-title-\' + _mode">' +
+                    '<ng-content></ng-content>' +
+                    '</div>',
+                changeDetection: ChangeDetectionStrategy.OnPush,
+                encapsulation: ViewEncapsulation.None,
+            },] },
+];
+/**
+ * @nocollapse
+ */
+ToolbarTitle.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: Toolbar, decorators: [{ type: Optional },] },
+    { type: Navbar, decorators: [{ type: Optional }, { type: Inject, args: [forwardRef(function () { return Navbar; }),] },] },
+]; };
 
 /**
  * \@name Thumbnail
@@ -67421,20 +67457,20 @@ var ToolbarTitle = /** @class */ (function (_super) {
  * Thumbnails can be place on the left or right side of an item with the `item-start` or `item-end` directive.
  * @see {\@link /docs/components/#thumbnail-list Thumbnail Component Docs}
  */
-var Thumbnail = /** @class */ (function () {
+var Thumbnail = (function () {
     function Thumbnail() {
     }
-    Thumbnail.decorators = [
-        { type: Directive, args: [{
-                    selector: 'ion-thumbnail'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Thumbnail.ctorParameters = function () { return []; };
     return Thumbnail;
 }());
+Thumbnail.decorators = [
+    { type: Directive, args: [{
+                selector: 'ion-thumbnail'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Thumbnail.ctorParameters = function () { return []; };
 
 var __extends$90 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -67487,7 +67523,7 @@ var __extends$90 = (undefined && undefined.__extends) || (function () {
  * ```
  *
  */
-var Typography = /** @class */ (function (_super) {
+var Typography = (function (_super) {
     __extends$90(Typography, _super);
     /**
      * @param {?} config
@@ -67497,70 +67533,70 @@ var Typography = /** @class */ (function (_super) {
     function Typography(config, elementRef, renderer) {
         return _super.call(this, config, elementRef, renderer, 'text') || this;
     }
-    Typography.decorators = [
-        { type: Directive, args: [{
-                    selector: '[ion-text]'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    Typography.ctorParameters = function () { return [
-        { type: Config, },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
     return Typography;
 }(Ion));
+Typography.decorators = [
+    { type: Directive, args: [{
+                selector: '[ion-text]'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+Typography.ctorParameters = function () { return [
+    { type: Config, },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
 
 /**
  * @hidden
  */
-var VirtualFooter = /** @class */ (function () {
+var VirtualFooter = (function () {
     /**
      * @param {?} templateRef
      */
     function VirtualFooter(templateRef) {
         this.templateRef = templateRef;
     }
-    VirtualFooter.decorators = [
-        { type: Directive, args: [{ selector: '[virtualFooter]' },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    VirtualFooter.ctorParameters = function () { return [
-        { type: TemplateRef, },
-    ]; };
     return VirtualFooter;
 }());
+VirtualFooter.decorators = [
+    { type: Directive, args: [{ selector: '[virtualFooter]' },] },
+];
+/**
+ * @nocollapse
+ */
+VirtualFooter.ctorParameters = function () { return [
+    { type: TemplateRef, },
+]; };
 
 /**
  * @hidden
  */
-var VirtualHeader = /** @class */ (function () {
+var VirtualHeader = (function () {
     /**
      * @param {?} templateRef
      */
     function VirtualHeader(templateRef) {
         this.templateRef = templateRef;
     }
-    VirtualHeader.decorators = [
-        { type: Directive, args: [{ selector: '[virtualHeader]' },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    VirtualHeader.ctorParameters = function () { return [
-        { type: TemplateRef, },
-    ]; };
     return VirtualHeader;
 }());
+VirtualHeader.decorators = [
+    { type: Directive, args: [{ selector: '[virtualHeader]' },] },
+];
+/**
+ * @nocollapse
+ */
+VirtualHeader.ctorParameters = function () { return [
+    { type: TemplateRef, },
+]; };
 
 /**
  * @hidden
  */
-var VirtualItem = /** @class */ (function () {
+var VirtualItem = (function () {
     /**
      * @param {?} templateRef
      * @param {?} viewContainer
@@ -67569,18 +67605,18 @@ var VirtualItem = /** @class */ (function () {
         this.templateRef = templateRef;
         this.viewContainer = viewContainer;
     }
-    VirtualItem.decorators = [
-        { type: Directive, args: [{ selector: '[virtualItem]' },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    VirtualItem.ctorParameters = function () { return [
-        { type: TemplateRef, },
-        { type: ViewContainerRef, },
-    ]; };
     return VirtualItem;
 }());
+VirtualItem.decorators = [
+    { type: Directive, args: [{ selector: '[virtualItem]' },] },
+];
+/**
+ * @nocollapse
+ */
+VirtualItem.ctorParameters = function () { return [
+    { type: TemplateRef, },
+    { type: ViewContainerRef, },
+]; };
 
 var PREVIOUS_CELL = {
     row: 0,
@@ -68153,7 +68189,7 @@ function getElement(node) {
     }
     return null;
 }
-var VirtualContext = /** @class */ (function () {
+var VirtualContext = (function () {
     /**
      * @param {?} $implicit
      * @param {?} index
@@ -68403,7 +68439,7 @@ var REQUIRED_DOM_READS = 2;
  * dataset, so please make sure they're performant.
  *
  */
-var VirtualScroll = /** @class */ (function () {
+var VirtualScroll = (function () {
     /**
      * @param {?} _iterableDiffers
      * @param {?} _elementRef
@@ -68952,44 +68988,44 @@ var VirtualScroll = /** @class */ (function () {
         this._resizeSub = this._scrollEndSub = this._scrollSub = null;
         this._hdrFn = this._ftrFn = this._records = this._cells = this._nodes = this._data = null;
     };
-    VirtualScroll.decorators = [
-        { type: Directive, args: [{
-                    selector: '[virtualScroll]'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    VirtualScroll.ctorParameters = function () { return [
-        { type: IterableDiffers, },
-        { type: ElementRef, },
-        { type: Renderer, },
-        { type: NgZone, },
-        { type: ChangeDetectorRef, },
-        { type: Content, },
-        { type: Platform, },
-        { type: ViewController, },
-        { type: Config, },
-        { type: DomController, },
-    ]; };
-    VirtualScroll.propDecorators = {
-        '_itmTmp': [{ type: ContentChild, args: [VirtualItem,] },],
-        '_hdrTmp': [{ type: ContentChild, args: [VirtualHeader,] },],
-        '_ftrTmp': [{ type: ContentChild, args: [VirtualFooter,] },],
-        'virtualScroll': [{ type: Input },],
-        'bufferRatio': [{ type: Input },],
-        'approxItemWidth': [{ type: Input },],
-        'approxItemHeight': [{ type: Input },],
-        'approxHeaderWidth': [{ type: Input },],
-        'approxHeaderHeight': [{ type: Input },],
-        'approxFooterWidth': [{ type: Input },],
-        'approxFooterHeight': [{ type: Input },],
-        'headerFn': [{ type: Input },],
-        'footerFn': [{ type: Input },],
-        'virtualTrackBy': [{ type: Input },],
-    };
     return VirtualScroll;
 }());
+VirtualScroll.decorators = [
+    { type: Directive, args: [{
+                selector: '[virtualScroll]'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+VirtualScroll.ctorParameters = function () { return [
+    { type: IterableDiffers, },
+    { type: ElementRef, },
+    { type: Renderer, },
+    { type: NgZone, },
+    { type: ChangeDetectorRef, },
+    { type: Content, },
+    { type: Platform, },
+    { type: ViewController, },
+    { type: Config, },
+    { type: DomController, },
+]; };
+VirtualScroll.propDecorators = {
+    '_itmTmp': [{ type: ContentChild, args: [VirtualItem,] },],
+    '_hdrTmp': [{ type: ContentChild, args: [VirtualHeader,] },],
+    '_ftrTmp': [{ type: ContentChild, args: [VirtualFooter,] },],
+    'virtualScroll': [{ type: Input },],
+    'bufferRatio': [{ type: Input },],
+    'approxItemWidth': [{ type: Input },],
+    'approxItemHeight': [{ type: Input },],
+    'approxHeaderWidth': [{ type: Input },],
+    'approxHeaderHeight': [{ type: Input },],
+    'approxFooterWidth': [{ type: Input },],
+    'approxFooterHeight': [{ type: Input },],
+    'headerFn': [{ type: Input },],
+    'footerFn': [{ type: Input },],
+    'virtualTrackBy': [{ type: Input },],
+};
 var SCROLL_DIFFERENCE_MINIMUM = 40;
 var SCROLL_QUEUE_NO_CHANGES = 1;
 var SCROLL_QUEUE_CHANGE_DETECTION = 2;
@@ -69288,7 +69324,7 @@ function isActivatedDisabled(ev, activatableEle) {
     return false;
 }
 
-var Activator = /** @class */ (function () {
+var Activator = (function () {
     /**
      * @param {?} app
      * @param {?} config
@@ -69436,7 +69472,7 @@ var CLEAR_STATE_DEFERS = 80;
 /**
  * @hidden
  */
-var RippleActivator = /** @class */ (function () {
+var RippleActivator = (function () {
     /**
      * @param {?} app
      * @param {?} config
@@ -69594,7 +69630,7 @@ var TOUCH_DOWN_ACCEL = 300;
 /**
  * @hidden
  */
-var TapClick = /** @class */ (function () {
+var TapClick = (function () {
     /**
      * @param {?} config
      * @param {?} plt
@@ -69805,21 +69841,21 @@ var TapClick = /** @class */ (function () {
     TapClick.prototype.isDisabledNativeClick = function () {
         return this.disableClick > Date.now();
     };
-    TapClick.decorators = [
-        { type: Injectable },
-    ];
-    /**
-     * @nocollapse
-     */
-    TapClick.ctorParameters = function () { return [
-        { type: Config, },
-        { type: Platform, },
-        { type: DomController, },
-        { type: App, },
-        { type: GestureController, },
-    ]; };
     return TapClick;
 }());
+TapClick.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+TapClick.ctorParameters = function () { return [
+    { type: Config, },
+    { type: Platform, },
+    { type: DomController, },
+    { type: App, },
+    { type: GestureController, },
+]; };
 /**
  * @param {?} ele
  * @return {?}
@@ -71812,7 +71848,7 @@ Manager.prototype = {
             //      that is being recognized.
             // 3.   allow if the recognizer is allowed to run simultaneous with the current recognized recognizer.
             //      this can be setup with the `recognizeWith()` method on the recognizer.
-            if (session.stopped !== FORCED_STOP && (!curRecognizer || recognizer == curRecognizer || // 2
+            if (session.stopped !== FORCED_STOP && (!curRecognizer || recognizer == curRecognizer ||
                 recognizer.canRecognizeWith(curRecognizer))) {
                 recognizer.recognize(inputData);
             }
@@ -72032,7 +72068,7 @@ win$1.Hammer = Hammer$1;
  *
  * TODO(mlynch): Re-enable the DOM event simulation that was causing issues (or verify hammer does this already, it might);
  */
-var Gesture = /** @class */ (function () {
+var Gesture = (function () {
     /**
      * @param {?} element
      * @param {?=} opts
@@ -72127,7 +72163,8 @@ var Gesture = /** @class */ (function () {
  * import { Events } from 'ionic-angular';
  *
  * // first page (publish an event when a user is created)
- * constructor(public events: Events) {}
+ * constructor(public events: Events) { }
+ *
  * createUser(user) {
  *   console.log('User created!')
  *   this.events.publish('user:created', user, Date.now());
@@ -72145,7 +72182,7 @@ var Gesture = /** @class */ (function () {
  * ```
  * \@demo /docs/demos/src/events/
  */
-var Events = /** @class */ (function () {
+var Events = (function () {
     function Events() {
         this._channels = [];
     }
@@ -72317,13 +72354,13 @@ var __extends$91 = (undefined && undefined.__extends) || (function () {
  * ### IonicErrorHandler Example
  *
  * ```typescript
- * import { NgModule, ErrorHandler } from '\@angular/core';
+ * import { ErrorHandler, NgModule } from '\@angular/core';
  * import { IonicErrorHandler } from 'ionic-angular';
  *
  * \@NgModule({
  *   providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler }]
  * })
- * class AppModule {}
+ * class AppModule { }
  * ```
  *
  *
@@ -72342,12 +72379,12 @@ var __extends$91 = (undefined && undefined.__extends) || (function () {
  * \@NgModule({
  *   providers: [{ provide: ErrorHandler, useClass: MyErrorHandler }]
  * })
- * class AppModule {}
+ * class AppModule { }
  * ```
  *
  * More information about Angular's [`ErrorHandler`](https://angular.io/docs/ts/latest/api/core/index/ErrorHandler-class.html).
  */
-var IonicErrorHandler = /** @class */ (function (_super) {
+var IonicErrorHandler = (function (_super) {
     __extends$91(IonicErrorHandler, _super);
     function IonicErrorHandler() {
         return _super.call(this, false) || this;
@@ -72774,7 +72811,7 @@ var __extends$92 = (undefined && undefined.__extends) || (function () {
  * @hidden
  * This class overrides the default Angular gesture config.
  */
-var IonicGestureConfig = /** @class */ (function (_super) {
+var IonicGestureConfig = (function (_super) {
     __extends$92(IonicGestureConfig, _super);
     function IonicGestureConfig() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -72790,20 +72827,20 @@ var IonicGestureConfig = /** @class */ (function (_super) {
         }
         return mc;
     };
-    IonicGestureConfig.decorators = [
-        { type: Injectable },
-    ];
-    /**
-     * @nocollapse
-     */
-    IonicGestureConfig.ctorParameters = function () { return []; };
     return IonicGestureConfig;
 }(HammerGestureConfig));
+IonicGestureConfig.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+IonicGestureConfig.ctorParameters = function () { return []; };
 
 /**
  * @hidden
  */
-var ClickBlock = /** @class */ (function () {
+var ClickBlock = (function () {
     /**
      * @param {?} app
      * @param {?} config
@@ -72872,23 +72909,23 @@ var ClickBlock = /** @class */ (function () {
     ClickBlock.prototype._setElementClass = function (className, add) {
         this.renderer.setElementClass(this.elementRef.nativeElement, className, add);
     };
-    ClickBlock.decorators = [
-        { type: Directive, args: [{
-                    selector: '.click-block'
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    ClickBlock.ctorParameters = function () { return [
-        { type: App, decorators: [{ type: Inject, args: [forwardRef(function () { return App; }),] },] },
-        { type: Config, },
-        { type: Platform, },
-        { type: ElementRef, },
-        { type: Renderer, },
-    ]; };
     return ClickBlock;
 }());
+ClickBlock.decorators = [
+    { type: Directive, args: [{
+                selector: '.click-block'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+ClickBlock.ctorParameters = function () { return [
+    { type: App, decorators: [{ type: Inject, args: [forwardRef(function () { return App; }),] },] },
+    { type: Config, },
+    { type: Platform, },
+    { type: ElementRef, },
+    { type: Renderer, },
+]; };
 
 /**
  * Import Angular
@@ -72939,7 +72976,7 @@ var ClickBlock = /** @class */ (function () {
  * export class AppModule {}
  * ```
  */
-var IonicModule = /** @class */ (function () {
+var IonicModule = (function () {
     function IonicModule() {
     }
     /**
@@ -73001,219 +73038,219 @@ var IonicModule = /** @class */ (function () {
             ]
         };
     };
-    IonicModule.decorators = [
-        { type: NgModule, args: [{
-                    declarations: [
-                        ActionSheetCmp,
-                        AlertCmp,
-                        ClickBlock,
-                        IonicApp,
-                        OverlayPortal,
-                        Avatar,
-                        Backdrop,
-                        Badge,
-                        Button,
-                        Card,
-                        CardContent,
-                        CardHeader,
-                        CardTitle,
-                        Checkbox,
-                        Chip,
-                        Col,
-                        Content,
-                        DateTime,
-                        FabButton,
-                        FabContainer,
-                        FabList,
-                        Grid,
-                        Img,
-                        Icon,
-                        InfiniteScroll,
-                        InfiniteScrollContent,
-                        Item,
-                        ItemContent,
-                        ItemDivider,
-                        ItemGroup,
-                        ItemOptions,
-                        ItemReorder,
-                        ItemSliding,
-                        Label,
-                        List,
-                        ListHeader,
-                        Reorder,
-                        LoadingCmp,
-                        Menu,
-                        MenuClose,
-                        MenuToggle,
-                        ModalCmp,
-                        Nav,
-                        NavPop,
-                        NavPopAnchor,
-                        NavPush,
-                        NavPushAnchor,
-                        Note,
-                        Option,
-                        PickerCmp,
-                        PickerColumnCmp,
-                        PopoverCmp,
-                        RadioButton,
-                        RadioGroup,
-                        Range,
-                        RangeKnob,
-                        Refresher,
-                        RefresherContent,
-                        Row,
-                        Scroll,
-                        Searchbar,
-                        Segment,
-                        SegmentButton,
-                        Select,
-                        SelectPopover,
-                        ShowWhen,
-                        HideWhen,
-                        Slide,
-                        Slides,
-                        Spinner,
-                        SplitPane,
-                        Tab,
-                        TabButton,
-                        TabHighlight,
-                        Tabs,
-                        TextInput,
-                        Thumbnail,
-                        ToastCmp,
-                        Toggle,
-                        Footer,
-                        Header,
-                        Toolbar,
-                        ToolbarItem,
-                        ToolbarTitle,
-                        Navbar,
-                        Typography,
-                        VirtualFooter,
-                        VirtualHeader,
-                        VirtualItem,
-                        VirtualScroll
-                    ],
-                    imports: [
-                        CommonModule,
-                        FormsModule,
-                        ReactiveFormsModule,
-                    ],
-                    exports: [
-                        CommonModule,
-                        FormsModule,
-                        ReactiveFormsModule,
-                        ActionSheetCmp,
-                        AlertCmp,
-                        ClickBlock,
-                        IonicApp,
-                        OverlayPortal,
-                        Avatar,
-                        Backdrop,
-                        Badge,
-                        Button,
-                        Card,
-                        CardContent,
-                        CardHeader,
-                        CardTitle,
-                        Checkbox,
-                        Chip,
-                        Col,
-                        Content,
-                        DateTime,
-                        FabButton,
-                        FabContainer,
-                        FabList,
-                        Grid,
-                        Img,
-                        Icon,
-                        InfiniteScroll,
-                        InfiniteScrollContent,
-                        Item,
-                        ItemContent,
-                        ItemDivider,
-                        ItemGroup,
-                        ItemOptions,
-                        ItemReorder,
-                        ItemSliding,
-                        Label,
-                        List,
-                        ListHeader,
-                        Reorder,
-                        LoadingCmp,
-                        Menu,
-                        MenuClose,
-                        MenuToggle,
-                        ModalCmp,
-                        Nav,
-                        NavPop,
-                        NavPopAnchor,
-                        NavPush,
-                        NavPushAnchor,
-                        Note,
-                        Option,
-                        PickerCmp,
-                        PickerColumnCmp,
-                        PopoverCmp,
-                        RadioButton,
-                        RadioGroup,
-                        Range,
-                        RangeKnob,
-                        Refresher,
-                        RefresherContent,
-                        Row,
-                        Scroll,
-                        Searchbar,
-                        Segment,
-                        SegmentButton,
-                        Select,
-                        SelectPopover,
-                        ShowWhen,
-                        HideWhen,
-                        Slide,
-                        Slides,
-                        Spinner,
-                        SplitPane,
-                        Tab,
-                        TabButton,
-                        TabHighlight,
-                        Tabs,
-                        TextInput,
-                        Thumbnail,
-                        ToastCmp,
-                        Toggle,
-                        Footer,
-                        Header,
-                        Toolbar,
-                        ToolbarItem,
-                        ToolbarTitle,
-                        Navbar,
-                        Typography,
-                        VirtualFooter,
-                        VirtualHeader,
-                        VirtualItem,
-                        VirtualScroll
-                    ],
-                    entryComponents: [
-                        ActionSheetCmp,
-                        AlertCmp,
-                        IonicApp,
-                        LoadingCmp,
-                        ModalCmp,
-                        PickerCmp,
-                        PopoverCmp,
-                        SelectPopover,
-                        ToastCmp
-                    ]
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    IonicModule.ctorParameters = function () { return []; };
     return IonicModule;
 }());
+IonicModule.decorators = [
+    { type: NgModule, args: [{
+                declarations: [
+                    ActionSheetCmp,
+                    AlertCmp,
+                    ClickBlock,
+                    IonicApp,
+                    OverlayPortal,
+                    Avatar,
+                    Backdrop,
+                    Badge,
+                    Button,
+                    Card,
+                    CardContent,
+                    CardHeader,
+                    CardTitle,
+                    Checkbox,
+                    Chip,
+                    Col,
+                    Content,
+                    DateTime,
+                    FabButton,
+                    FabContainer,
+                    FabList,
+                    Grid,
+                    Img,
+                    Icon,
+                    InfiniteScroll,
+                    InfiniteScrollContent,
+                    Item,
+                    ItemContent,
+                    ItemDivider,
+                    ItemGroup,
+                    ItemOptions,
+                    ItemReorder,
+                    ItemSliding,
+                    Label,
+                    List,
+                    ListHeader,
+                    Reorder,
+                    LoadingCmp,
+                    Menu,
+                    MenuClose,
+                    MenuToggle,
+                    ModalCmp,
+                    Nav,
+                    NavPop,
+                    NavPopAnchor,
+                    NavPush,
+                    NavPushAnchor,
+                    Note,
+                    Option,
+                    PickerCmp,
+                    PickerColumnCmp,
+                    PopoverCmp,
+                    RadioButton,
+                    RadioGroup,
+                    Range,
+                    RangeKnob,
+                    Refresher,
+                    RefresherContent,
+                    Row,
+                    Scroll,
+                    Searchbar,
+                    Segment,
+                    SegmentButton,
+                    Select,
+                    SelectPopover,
+                    ShowWhen,
+                    HideWhen,
+                    Slide,
+                    Slides,
+                    Spinner,
+                    SplitPane,
+                    Tab,
+                    TabButton,
+                    TabHighlight,
+                    Tabs,
+                    TextInput,
+                    Thumbnail,
+                    ToastCmp,
+                    Toggle,
+                    Footer,
+                    Header,
+                    Toolbar,
+                    ToolbarItem,
+                    ToolbarTitle,
+                    Navbar,
+                    Typography,
+                    VirtualFooter,
+                    VirtualHeader,
+                    VirtualItem,
+                    VirtualScroll
+                ],
+                imports: [
+                    CommonModule,
+                    FormsModule,
+                    ReactiveFormsModule,
+                ],
+                exports: [
+                    CommonModule,
+                    FormsModule,
+                    ReactiveFormsModule,
+                    ActionSheetCmp,
+                    AlertCmp,
+                    ClickBlock,
+                    IonicApp,
+                    OverlayPortal,
+                    Avatar,
+                    Backdrop,
+                    Badge,
+                    Button,
+                    Card,
+                    CardContent,
+                    CardHeader,
+                    CardTitle,
+                    Checkbox,
+                    Chip,
+                    Col,
+                    Content,
+                    DateTime,
+                    FabButton,
+                    FabContainer,
+                    FabList,
+                    Grid,
+                    Img,
+                    Icon,
+                    InfiniteScroll,
+                    InfiniteScrollContent,
+                    Item,
+                    ItemContent,
+                    ItemDivider,
+                    ItemGroup,
+                    ItemOptions,
+                    ItemReorder,
+                    ItemSliding,
+                    Label,
+                    List,
+                    ListHeader,
+                    Reorder,
+                    LoadingCmp,
+                    Menu,
+                    MenuClose,
+                    MenuToggle,
+                    ModalCmp,
+                    Nav,
+                    NavPop,
+                    NavPopAnchor,
+                    NavPush,
+                    NavPushAnchor,
+                    Note,
+                    Option,
+                    PickerCmp,
+                    PickerColumnCmp,
+                    PopoverCmp,
+                    RadioButton,
+                    RadioGroup,
+                    Range,
+                    RangeKnob,
+                    Refresher,
+                    RefresherContent,
+                    Row,
+                    Scroll,
+                    Searchbar,
+                    Segment,
+                    SegmentButton,
+                    Select,
+                    SelectPopover,
+                    ShowWhen,
+                    HideWhen,
+                    Slide,
+                    Slides,
+                    Spinner,
+                    SplitPane,
+                    Tab,
+                    TabButton,
+                    TabHighlight,
+                    Tabs,
+                    TextInput,
+                    Thumbnail,
+                    ToastCmp,
+                    Toggle,
+                    Footer,
+                    Header,
+                    Toolbar,
+                    ToolbarItem,
+                    ToolbarTitle,
+                    Navbar,
+                    Typography,
+                    VirtualFooter,
+                    VirtualHeader,
+                    VirtualItem,
+                    VirtualScroll
+                ],
+                entryComponents: [
+                    ActionSheetCmp,
+                    AlertCmp,
+                    IonicApp,
+                    LoadingCmp,
+                    ModalCmp,
+                    PickerCmp,
+                    PopoverCmp,
+                    SelectPopover,
+                    ToastCmp
+                ]
+            },] },
+];
+/**
+ * @nocollapse
+ */
+IonicModule.ctorParameters = function () { return []; };
 /**
  * \@name IonicPageModule
  * \@description
@@ -73242,7 +73279,7 @@ var IonicModule = /** @class */ (function () {
  * export class HomePageModule { }
  * ```
  */
-var IonicPageModule = /** @class */ (function () {
+var IonicPageModule = (function () {
     function IonicPageModule() {
     }
     /**
@@ -73258,18 +73295,18 @@ var IonicPageModule = /** @class */ (function () {
             ]
         };
     };
-    IonicPageModule.decorators = [
-        { type: NgModule, args: [{
-                    imports: [IonicModule],
-                    exports: [IonicModule]
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    IonicPageModule.ctorParameters = function () { return []; };
     return IonicPageModule;
 }());
+IonicPageModule.decorators = [
+    { type: NgModule, args: [{
+                imports: [IonicModule],
+                exports: [IonicModule]
+            },] },
+];
+/**
+ * @nocollapse
+ */
+IonicPageModule.ctorParameters = function () { return []; };
 /**
  * @hidden
  * @param {?} platformLocationStrategy

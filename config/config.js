@@ -119,7 +119,7 @@ import { isArray, isDefined, isFunction, isObject } from '../util/util';
  *
  *
  */
-var Config = /** @class */ (function () {
+var Config = (function () {
     function Config() {
         this._c = {};
         this._s = {};

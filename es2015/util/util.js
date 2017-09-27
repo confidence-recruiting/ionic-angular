@@ -70,7 +70,7 @@ export function debounce(fn, wait, immediate = false) {
  * @param {?=} baseHref
  * @return {?}
  */
-export function normalizeURL(url, baseHref = '') {
+export function normalizeURL(url, baseHref = '/') {
     const /** @type {?} */ ionic = ((window))['Ionic'];
     if (ionic && ionic.normalizeURL) {
         return ionic.normalizeURL(url, baseHref);

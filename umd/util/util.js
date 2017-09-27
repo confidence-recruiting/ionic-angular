@@ -87,7 +87,7 @@
      * @return {?}
      */
     function normalizeURL(url, baseHref) {
-        if (baseHref === void 0) { baseHref = ''; }
+        if (baseHref === void 0) { baseHref = '/'; }
         var /** @type {?} */ ionic = ((window))['Ionic'];
         if (ionic && ionic.normalizeURL) {
             return ionic.normalizeURL(url, baseHref);
