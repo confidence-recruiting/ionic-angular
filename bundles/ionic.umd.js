@@ -23744,7 +23744,9 @@ function requestIonicCallback(functionToLazy) {
  * | `pickerEnter`            | `string`            | The name of the transition to use while a picker is presented.                                                                                   |
  * | `pickerLeave`            | `string`            | The name of the transition to use while a picker is dismissed.                                                                                   |
  * | `popoverEnter`           | `string`            | The name of the transition to use while a popover is presented.                                                                                  |
- * | `popoverLeave`           | `string`            | The name of the transition to use while a popover is dismissed.                                                                                  |
+ * | `popoverLeave`           | `string`            | The name of the transition to use while a popover is dismissed.
+ * | `scrollAssist`           | `boolean`           | Used to avoid the input to be hidden by the keyboard if it's near the bottom of the page.
+ * | `scrollPadding`          | `boolean`           | Used to remove the extra padding on ion-content when keyboard is displayed.
  * | `spinner`                | `string`            | The default spinner to use when a name is not defined.                                                                                           |
  * | `statusbarPadding`       | `boolean`           | Whether to hide extra padding for statusbar.                                                                                                     |
  * | `swipeBackEnabled`       | `boolean`           | Whether native iOS swipe to go back functionality is enabled.                                                                                    |
@@ -47054,6 +47056,16 @@ function parseDate(val) {
     };
 }
 /**
+ * @param {?} d1
+ * @param {?} d2
+ * @return {?}
+ */
+function compareDates(d1, d2) {
+    var /** @type {?} */ date1 = new Date(d1.year, d1.month, d1.day, d1.hour, d1.minute, d1.second);
+    var /** @type {?} */ date2 = new Date(d2.year, d2.month, d2.day, d2.hour, d2.minute, d2.second);
+    return date1.getTime() - date2.getTime();
+}
+/**
  * @param {?} existingData
  * @param {?} newData
  * @return {?}
@@ -47765,7 +47777,7 @@ var DateTime = (function (_super) {
                 };
                 // cool, we've loaded up the columns with options
                 // preselect the option for this column
-                var /** @type {?} */ optValue = getValueFromFormat(_this.getValue(), format);
+                var /** @type {?} */ optValue = getValueFromFormat(_this.getValueOrDefault(), format);
                 var /** @type {?} */ selectedIndex = column.options.findIndex(function (opt) { return opt.value === optValue; });
                 if (selectedIndex >= 0) {
                     // set the select index for this column's options
@@ -47910,6 +47922,47 @@ var DateTime = (function (_super) {
      * @hidden
      * @return {?}
      */
+    DateTime.prototype.getValueOrDefault = function () {
+        if (this.hasValue()) {
+            return this._value;
+        }
+        var /** @type {?} */ initialDateString = this.getDefaultValueDateString();
+        var /** @type {?} */ _default = {};
+        updateDate(_default, initialDateString);
+        return _default;
+    };
+    /**
+     * Get the default value as a date string
+     * @hidden
+     * @return {?}
+     */
+    DateTime.prototype.getDefaultValueDateString = function () {
+        if (this.initialValue) {
+            return this.initialValue;
+        }
+        var /** @type {?} */ nowString = (new Date).toISOString();
+        if (this.max) {
+            var /** @type {?} */ now = parseDate(nowString);
+            var /** @type {?} */ max = parseDate(this.max);
+            var /** @type {?} */ v = void 0;
+            for (var /** @type {?} */ i in max) {
+                v = ((max))[i];
+                if (v === null) {
+                    ((max))[i] = ((now))[i];
+                }
+            }
+            var /** @type {?} */ diff = compareDates(now, max);
+            // If max is before current time, return max
+            if (diff > 0) {
+                return this.max;
+            }
+        }
+        return nowString;
+    };
+    /**
+     * @hidden
+     * @return {?}
+     */
     DateTime.prototype.hasValue = function () {
         var /** @type {?} */ val = this._value;
         return isPresent(val)
@@ -48007,6 +48060,7 @@ DateTime.propDecorators = {
     'min': [{ type: Input },],
     'max': [{ type: Input },],
     'displayFormat': [{ type: Input },],
+    'initialValue': [{ type: Input },],
     'pickerFormat': [{ type: Input },],
     'cancelText': [{ type: Input },],
     'doneText': [{ type: Input },],
@@ -61234,12 +61288,14 @@ function onGestureStart(s, _plt, ev) {
             z.gesture.slide = s._slides[s._activeIndex];
         }
         z.gesture.image = (z.gesture.slide.querySelector('img, svg, canvas, ion-img'));
-        z.gesture.imageWrap = (z.gesture.image.closest('.' + CLS.zoomContainer));
-        if (!z.gesture.imageWrap) {
-            z.gesture.image = undefined;
-            return;
+        if (z.gesture.image) {
+            z.gesture.imageWrap = (z.gesture.image.closest('.' + CLS.zoomContainer));
+            if (!z.gesture.imageWrap) {
+                z.gesture.image = undefined;
+                return;
+            }
+            z.gesture.zoomMax = parseInt(z.gesture.imageWrap.getAttribute('data-swiper-zoom') || (s.zoomMax), 10);
         }
-        z.gesture.zoomMax = parseInt(z.gesture.imageWrap.getAttribute('data-swiper-zoom') || (s.zoomMax), 10);
     }
     transition(z.gesture.image, 0);
     z.isScaling = true;
@@ -61471,9 +61527,9 @@ function toggleZoom(s, plt) {
     if (!z.gesture.slide) {
         z.gesture.slide = s.clickedSlide ? s.clickedSlide : s._slides[s._activeIndex];
         z.gesture.image = (z.gesture.slide.querySelector('img, svg, canvas, ion-img'));
-        z.gesture.imageWrap = (z.gesture.image.closest('.' + CLS.zoomContainer));
+        z.gesture.imageWrap = z.gesture.image && (z.gesture.image.closest('.' + CLS.zoomContainer));
     }
-    if (!z.gesture.image)
+    if (!z.gesture.imageWrap)
         return;
     var /** @type {?} */ touchX;
     var /** @type {?} */ touchY;
